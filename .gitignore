@@ -78,3 +78,10 @@ DerivedDataCache/*
 
 *.pdb
 *.ini
+MbR_eSports/Binaries/Win64/
+
+MbR_eSports/Intermediate/AssetRegistryCache/
+
+MbR_eSports/Intermediate/Build/BuildRules/
+
+MbR_eSports/Intermediate/Build/
