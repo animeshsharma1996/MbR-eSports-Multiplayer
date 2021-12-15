@@ -16,6 +16,7 @@ UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
 public:
 
 	UMbRGameInstance();

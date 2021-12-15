@@ -30,7 +30,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeeded
 {
 	if (Succeeded)
 	{
-		GetWorld()->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+		GetWorld()->ServerTravel("/Game/Maps/DefaultTestMap?listen");
 	}
 }
 
@@ -42,7 +42,8 @@ void UMbRGameInstance::OnFindSessionComplete(bool Succeeded)
 
 		if (SearchResults.Num())
 		{
-			SessionInterface->JoinSession(0, FName("Crete Session"), SearchResults[0]);
+			//Hard Coding the first session result here for testing
+			SessionInterface->JoinSession(0, FName("MbR Session"), SearchResults[0]);
 		}
 	}
 }
@@ -62,7 +63,7 @@ void UMbRGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCo
 
 void UMbRGameInstance::CreateServer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CreateServer"));
+	UE_LOG(LogTemp, Warning, TEXT("MbR Session"));
 	FOnlineSessionSettings SessionSettings;
 	SessionSettings.bAllowJoinInProgress = true;
 	SessionSettings.bIsDedicated = false;
@@ -71,7 +72,7 @@ void UMbRGameInstance::CreateServer()
 	SessionSettings.bUsesPresence = true;
 	SessionSettings.NumPublicConnections = 5;
 
-	SessionInterface->CreateSession(0, FName("Crete Session"), SessionSettings);
+	SessionInterface->CreateSession(0, FName("MbR Session"), SessionSettings);
 }
 
 void UMbRGameInstance::JoinServer()
