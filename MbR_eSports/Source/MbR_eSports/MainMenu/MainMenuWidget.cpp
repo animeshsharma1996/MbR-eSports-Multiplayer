@@ -20,7 +20,6 @@ bool UMainMenuWidget::Initialize()
 
 void UMainMenuWidget::HostButtonClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Trying To Host"));
 	if (mbRGameInstance != NULL)
 	{
 		mbRGameInstance->CreateServer();
