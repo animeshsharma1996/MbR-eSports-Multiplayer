@@ -29,5 +29,5 @@ void AMbR_eSportsGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> newWidg
     playerController->bShowMouseCursor = true;
     playerController->bEnableClickEvents = true;
     playerController->bEnableMouseOverEvents = true;
-    playerController->SetInputMode(FInputModeGameOnly());
+    //playerController->SetInputMode(FInputModeGameOnly());
 }

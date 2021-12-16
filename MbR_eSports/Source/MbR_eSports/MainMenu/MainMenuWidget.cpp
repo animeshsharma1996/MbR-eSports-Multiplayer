@@ -25,6 +25,7 @@ void UMainMenuWidget::HostButtonClicked()
 	{
 		mbRGameInstance->CreateServer();
 	}
+	this->RemoveFromViewport();
 }
 
 void UMainMenuWidget::ConnectButtonClicked()
@@ -33,6 +34,7 @@ void UMainMenuWidget::ConnectButtonClicked()
 	{
 		mbRGameInstance->JoinServer();
 	}
+	this->RemoveFromViewport();
 }
 
 void UMainMenuWidget::ExitButtonClicked()
