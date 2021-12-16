@@ -30,7 +30,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeeded
 {
 	if (Succeeded)
 	{
-		GetWorld()->ServerTravel("/Game/Maps/DefaultTestMap?listen");
+		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
 	}
 }
 

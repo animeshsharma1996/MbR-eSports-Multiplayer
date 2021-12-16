@@ -18,7 +18,7 @@ public :
 		class UButton* connectButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* exitButton;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY()
 		class UMbRGameInstance* mbRGameInstance;
 
 	UFUNCTION()
