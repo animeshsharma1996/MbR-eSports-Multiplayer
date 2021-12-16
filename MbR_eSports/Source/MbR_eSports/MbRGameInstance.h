@@ -18,8 +18,11 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-
 	UMbRGameInstance();
+	UFUNCTION(BlueprintCallable)
+		void CreateServer();
+	UFUNCTION(BlueprintCallable)
+		void JoinServer();
 
 protected:
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
@@ -32,9 +35,5 @@ protected:
 	virtual void OnFindSessionComplete(bool Succeeded);
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
-	UFUNCTION(BlueprintCallable)
-		void CreateServer();
-
-	UFUNCTION(BlueprintCallable)
-		void JoinServer();
+	
 };

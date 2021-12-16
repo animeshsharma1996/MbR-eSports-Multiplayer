@@ -10,7 +10,9 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"FunctionalTesting"
+				"FunctionalTesting",
+				"UMGEditor",
+				"UMG"
 			]
 		}
 	],
