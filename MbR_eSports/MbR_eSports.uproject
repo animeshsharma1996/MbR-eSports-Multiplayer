@@ -11,7 +11,6 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"FunctionalTesting",
-				"UMGEditor",
 				"UMG"
 			]
 		}
