@@ -34,5 +34,4 @@ void AMbR_eSportsGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> newWidg
 
     }
 
-    //playerController->SetInputMode(FInputModeGameOnly());
 }
