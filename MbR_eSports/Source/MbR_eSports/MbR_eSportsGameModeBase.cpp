@@ -22,12 +22,17 @@ void AMbR_eSportsGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> newWidg
         if (currentWidget != nullptr)
         {
             currentWidget->AddToViewport();
+
+            APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+            if (playerController != nullptr)
+            {
+                playerController->bShowMouseCursor = true;
+                playerController->bEnableClickEvents = true;
+                playerController->bEnableMouseOverEvents = true;
+            }
         }
+
     }
 
-    APlayerController* playerController = GetWorld()->GetFirstPlayerController();;
-    playerController->bShowMouseCursor = true;
-    playerController->bEnableClickEvents = true;
-    playerController->bEnableMouseOverEvents = true;
     //playerController->SetInputMode(FInputModeGameOnly());
 }

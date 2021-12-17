@@ -20,5 +20,5 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY()
-        UMainMenuWidget* currentWidget;
+        UUserWidget* currentWidget;
 };
