@@ -15,9 +15,13 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         TSubclassOf<UUserWidget> mainMenuWidget;
+    UPROPERTY(EditAnywhere, Category = "MbR_eSports")
+        TSubclassOf<APawn> thirdPersonCharacterPawn;
+
 
 protected:
     virtual void BeginPlay() override;
+    virtual void Tick(float deltaSeconds) override;
 
     UPROPERTY()
         UUserWidget* currentWidget;

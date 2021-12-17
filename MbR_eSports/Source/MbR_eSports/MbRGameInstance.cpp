@@ -84,3 +84,13 @@ void UMbRGameInstance::JoinServer()
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
+
+void UMbRGameInstance::EndSession()
+{
+
+}
+
+void UMbRGameInstance::OnEndSessionCompleted(FName SessionName, bool Succeeded)
+{
+
+}  
