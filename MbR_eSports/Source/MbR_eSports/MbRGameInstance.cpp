@@ -7,293 +7,92 @@
 #include "OnlineSubsystemUtils.h"
 
 UMbRGameInstance::UMbRGameInstance()
-	: CreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnCreateSessionCompleted))
-	, UpdateSessionCompleteDelegate(FOnUpdateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnUpdateSessionCompleted))
-	, StartSessionCompleteDelegate(FOnStartSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnStartSessionCompleted))
-	, EndSessionCompleteDelegate(FOnEndSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnEndSessionCompleted))
-	, DestroySessionCompleteDelegate(FOnDestroySessionCompleteDelegate::CreateUObject(this, &ThisClass::OnDestroySessionCompleted))
-	, FindSessionsCompleteDelegate(FOnFindSessionsCompleteDelegate::CreateUObject(this, &ThisClass::OnFindSessionsCompleted))
-	, JoinSessionCompleteDelegate(FOnJoinSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnJoinSessionCompleted))
 {
+
 }
 
-void UMbRGameInstance::CreateSession(int32 NumPublicConnections, bool IsLANMatch)
+void UMbRGameInstance::Init()
 {
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
+	if (IOnlineSubsystem* subSystem = IOnlineSubsystem::Get())
 	{
-		OnCreateSessionCompleteEvent.Broadcast(false);
-		return;
-	}
-
-	LastSessionSettings = MakeShareable(new FOnlineSessionSettings());
-	LastSessionSettings->NumPrivateConnections = 0;
-	LastSessionSettings->NumPublicConnections = NumPublicConnections;
-	LastSessionSettings->bAllowInvites = true;
-	LastSessionSettings->bAllowJoinInProgress = true;
-	LastSessionSettings->bAllowJoinViaPresence = true;
-	LastSessionSettings->bAllowJoinViaPresenceFriendsOnly = true;
-	LastSessionSettings->bIsDedicated = false;
-	LastSessionSettings->bUsesPresence = true;
-	LastSessionSettings->bIsLANMatch = IsLANMatch;
-	LastSessionSettings->bShouldAdvertise = true;
-
-	LastSessionSettings->Set(SETTING_MAPNAME, FString("DefaultTestMap"), EOnlineDataAdvertisementType::ViaOnlineService);
-
-	CreateSessionCompleteDelegateHandle = sessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
-
-	const ULocalPlayer* localPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-	if (!sessionInterface->CreateSession(*localPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *LastSessionSettings))
-	{
-		sessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
-
-		OnCreateSessionCompleteEvent.Broadcast(false);
+		SessionInterface = subSystem->GetSessionInterface();
+		if (SessionInterface.IsValid())
+		{
+			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnCreateSessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnFindSessionsComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnJoinSessionComplete);
+		}
 	}
 }
 
-void UMbRGameInstance::OnCreateSessionCompleted(FName SessionName, bool Successful)
+void UMbRGameInstance::CreateServer()
 {
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Create Server"));
 
-	if (Successful)
-	{
-		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-	}
+	FOnlineSessionSettings SessionSettings;
 
-	OnUpdateSessionCompleteEvent.Broadcast(Successful);
-}
+	SessionSettings.bAllowJoinInProgress = true;
+	SessionSettings.bIsDedicated = false;
+	SessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
+	SessionSettings.bUsesPresence = true;
+	SessionSettings.bShouldAdvertise = true;
+	SessionSettings.NumPublicConnections = 5;
 
-void UMbRGameInstance::UpdateSession()
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
-	{
-		OnUpdateSessionCompleteEvent.Broadcast(false);
-		return;
-	}
+	/*SessionSettings.NumPrivateConnections = 5;
+	SessionSettings.bAllowInvites = true;
+	SessionSettings.bAllowJoinViaPresence = true;
+	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;*/
 
-	TSharedPtr<FOnlineSessionSettings> updatedSessionSettings = MakeShareable(new FOnlineSessionSettings(*LastSessionSettings));
-	updatedSessionSettings->Set(SETTING_MAPNAME, FString("DefaultTestMap"), EOnlineDataAdvertisementType::ViaOnlineService);
-
-	UpdateSessionCompleteDelegateHandle =
-		sessionInterface->AddOnUpdateSessionCompleteDelegate_Handle(UpdateSessionCompleteDelegate);
-
-	if (!sessionInterface->UpdateSession(NAME_GameSession, *updatedSessionSettings))
-	{
-		sessionInterface->ClearOnUpdateSessionCompleteDelegate_Handle(UpdateSessionCompleteDelegateHandle);
-
-		OnUpdateSessionCompleteEvent.Broadcast(false);
-	}
-	else
-	{
-		LastSessionSettings = updatedSessionSettings;
-	}
-}
-
-void UMbRGameInstance::OnUpdateSessionCompleted(FName SessionName, bool Successful)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnUpdateSessionCompleteDelegate_Handle(UpdateSessionCompleteDelegateHandle);
-	}
-
-	OnCreateSessionCompleteEvent.Broadcast(Successful);
-}
-
-void UMbRGameInstance::StartSession()
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
-	{
-		OnStartSessionCompleteEvent.Broadcast(false);
-		return;
-	}
-
-	StartSessionCompleteDelegateHandle =
-		sessionInterface->AddOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegate);
-
-	if (!sessionInterface->StartSession(NAME_GameSession))
-	{
-		sessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
-
-		OnStartSessionCompleteEvent.Broadcast(false);
-	}
-}
-
-void UMbRGameInstance::OnStartSessionCompleted(FName SessionName, bool Successful)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
-	}
-
-	OnStartSessionCompleteEvent.Broadcast(Successful);
-}
-
-void UMbRGameInstance::EndSession()
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
-	{
-		OnEndSessionCompleteEvent.Broadcast(false);
-		return;
-	}
-
-	EndSessionCompleteDelegateHandle =
-		sessionInterface->AddOnEndSessionCompleteDelegate_Handle(EndSessionCompleteDelegate);
-
-	if (!sessionInterface->EndSession(NAME_GameSession))
-	{
-		sessionInterface->ClearOnEndSessionCompleteDelegate_Handle(EndSessionCompleteDelegateHandle);
-
-		OnEndSessionCompleteEvent.Broadcast(false);
-	}
-}
-
-void UMbRGameInstance::OnEndSessionCompleted(FName SessionName, bool Successful)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnEndSessionCompleteDelegate_Handle(EndSessionCompleteDelegateHandle);
-	}
-
-	OnEndSessionCompleteEvent.Broadcast(Successful);
-}
-
-void UMbRGameInstance::DestroySession()
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
-	{
-		OnDestroySessionCompleteEvent.Broadcast(false);
-		return;
-	}
-
-	DestroySessionCompleteDelegateHandle =
-		sessionInterface->AddOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegate);
-
-	if (!sessionInterface->DestroySession(NAME_GameSession))
-	{
-		sessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
-
-		OnDestroySessionCompleteEvent.Broadcast(false);
-	}
-}
-
-void UMbRGameInstance::OnDestroySessionCompleted(FName SessionName, bool Successful)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
-	}
-
-	OnDestroySessionCompleteEvent.Broadcast(Successful);
-}
-
-void UMbRGameInstance::FindSessions(int32 MaxSearchResults, bool IsLANQuery)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
-	{
-		OnFindSessionsCompleteEvent.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
-		return;
-	}
-
-	FindSessionsCompleteDelegateHandle =
-		sessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
-
-	LastSessionSearch = MakeShareable(new FOnlineSessionSearch());
-	LastSessionSearch->MaxSearchResults = MaxSearchResults;
-	LastSessionSearch->bIsLanQuery = IsLANQuery;
-
-	LastSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
-
-	const ULocalPlayer* localPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-	if (!sessionInterface->FindSessions(*localPlayer->GetPreferredUniqueNetId(), LastSessionSearch.ToSharedRef()))
-	{
-		sessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-
-		OnFindSessionsCompleteEvent.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
-	}
-}
-
-void UMbRGameInstance::OnFindSessionsCompleted(bool Successful)
-{
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
-	{
-		sessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-	}
-
-	if (LastSessionSearch->SearchResults.Num() <= 0)
-	{
-		OnFindSessionsCompleteEvent.Broadcast(TArray<FOnlineSessionSearchResult>(), Successful);
-		return;
-	}
-
-	OnFindSessionsCompleteEvent.Broadcast(LastSessionSearch->SearchResults, Successful);
+	SessionInterface->CreateSession(0, FName("Game Session"), SessionSettings);
 }
 
 void UMbRGameInstance::JoinServer()
 {
-	//SessionInterface->FindSessions
+	UE_LOG(LogTemp, Warning, TEXT("Join Server"));
+
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	SessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
+	SessionSearch->MaxSearchResults = 10000;
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+
+	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
 
-void UMbRGameInstance::JoinGameSession(const FOnlineSessionSearchResult& SessionResult)
+
+void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessful)
 {
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
+	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), Succeessful);
+	if (Succeessful)
 	{
-		OnJoinGameSessionCompleteEvent.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
-		return;
-	}
-
-	JoinSessionCompleteDelegateHandle =
-		sessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
-
-	const ULocalPlayer* localPlayer = GetWorld()->GetFirstLocalPlayerFromController();
-	if (!sessionInterface->JoinSession(*localPlayer->GetPreferredUniqueNetId(), NAME_GameSession, SessionResult))
-	{
-		sessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
-
-		OnJoinGameSessionCompleteEvent.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
+		//GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
+		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
 	}
 }
 
-void UMbRGameInstance::OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+void UMbRGameInstance::OnFindSessionsComplete(bool Succeessful)
 {
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (sessionInterface)
+	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), Succeessful);
+	if (Succeessful)
 	{
-		sessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
+		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
+		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SearchResults.Num());
+		if (SearchResults.Num())
+		{
+			SessionInterface->JoinSession(0, "Game Session", SearchResults[0]);
+		}
 	}
-
-	OnJoinGameSessionCompleteEvent.Broadcast(Result);
 }
 
-bool UMbRGameInstance::TryTravelToCurrentSession()
+void UMbRGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
-	const IOnlineSessionPtr sessionInterface = Online::GetSessionInterface(GetWorld());
-	if (!sessionInterface.IsValid())
+	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*SessionName.ToString());
+	if (APlayerController* pController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
-		return false;
+		FString joinAddress = "";
+		SessionInterface->GetResolvedConnectString(SessionName, joinAddress);
+		if (joinAddress != "")
+		{
+			pController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
+		}
 	}
-
-	FString connectString;
-	if (!sessionInterface->GetResolvedConnectString(NAME_GameSession, connectString))
-	{
-		return false;
-	}
-
-	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-	playerController->ClientTravel(connectString, TRAVEL_Absolute);
-	return true;
 }

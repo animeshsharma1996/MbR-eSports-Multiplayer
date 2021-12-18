@@ -11,7 +11,7 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 		virtual bool Initialize() override;
 
-public :
+protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* hostButton;
 	UPROPERTY(meta = (BindWidget))
@@ -21,6 +21,7 @@ public :
 	UPROPERTY()
 		class UMbRGameInstance* mbRGameInstance;
 
+private :
 	UFUNCTION()
 		void HostButtonClicked();
 	UFUNCTION()
