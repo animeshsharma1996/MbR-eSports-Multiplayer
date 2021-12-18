@@ -16,7 +16,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         TSubclassOf<UUserWidget> mainMenuWidget;
     UPROPERTY(EditAnywhere, Category = "MbR_eSports")
-        TSubclassOf<APawn> thirdPersonCharacterPawn;
+        TSubclassOf<APawn> thirdPersonCharacterPawn;    
+    UPROPERTY(EditAnywhere, Category = "MbR_eSports")
+        TSubclassOf<APawn> mainMenuPawn;
 
 
 protected:

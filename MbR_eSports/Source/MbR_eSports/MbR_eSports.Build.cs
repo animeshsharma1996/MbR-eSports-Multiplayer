@@ -15,7 +15,6 @@ public class MbR_eSports : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"OnlineSubsystem",
-			"OnlineSubsystemNull", 
 			"OnlineSubsystemSteam" 
 		});
 

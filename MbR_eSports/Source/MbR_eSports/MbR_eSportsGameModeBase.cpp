@@ -11,14 +11,15 @@ void AMbR_eSportsGameModeBase::BeginPlay()
 void AMbR_eSportsGameModeBase::Tick(float deltaSeconds)
 {
     Super::Tick(deltaSeconds);
-    if (GetWorld()->GetCurrentLevel()->GetFName() == "StartingEmptyLevel")
+    /*if (GetWorld()->GetCurrentLevel()->GetFName() != "StartingEmptyLevel")
     {
-        DefaultPawnClass = NULL;
+        UE_LOG(LogTemp, Warning, TEXT("PLAYING"));
+        DefaultPawnClass = thirdPersonCharacterPawn;
     }
     else
     {
-        DefaultPawnClass = thirdPersonCharacterPawn;
-    }
+        DefaultPawnClass = mainMenuPawn;
+    }*/
 }
 
 void AMbR_eSportsGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> newWidget)
