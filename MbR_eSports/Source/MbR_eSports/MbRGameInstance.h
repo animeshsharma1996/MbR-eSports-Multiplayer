@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -9,9 +7,14 @@
 #include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnCreateSessionComplete, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnUpdateSessionComplete, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnStartSessionComplete, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnEndSessionComplete, bool, Successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnDestroySessionComplete, bool, Successful);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FCSOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>& SessionResults, bool Successful);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCSOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
+
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 {
@@ -19,24 +22,61 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 
 public:
 	UMbRGameInstance();
-	UFUNCTION(BlueprintCallable)
-		void CreateServer();
-	UFUNCTION(BlueprintCallable)
-		void JoinServer();
-	UFUNCTION(BlueprintCallable)
-		void EndSession();
+
+	void CreateSession(int32 NumPublicConnections, bool IsLANMatch);
+	void UpdateSession();
+	void StartSession();
+	void EndSession();
+	void DestroySession();
+	void FindSessions(int32 MaxSearchResults, bool IsLANQuery);
+	void JoinGameSession(const FOnlineSessionSearchResult& SessionResult);
+	void JoinServer();
+
+	FCSOnCreateSessionComplete OnCreateSessionCompleteEvent;
+	FCSOnUpdateSessionComplete OnUpdateSessionCompleteEvent;
+	FCSOnStartSessionComplete OnStartSessionCompleteEvent;
+	FCSOnEndSessionComplete OnEndSessionCompleteEvent;
+	FCSOnDestroySessionComplete OnDestroySessionCompleteEvent;
+	FCSOnFindSessionsComplete OnFindSessionsCompleteEvent;
+	FCSOnJoinSessionComplete OnJoinGameSessionCompleteEvent;
 
 protected:
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 	IOnlineSessionPtr SessionInterface;
 
-	virtual void Init() override;
+	void OnCreateSessionCompleted(FName SessionName, bool Successful);
+	void OnUpdateSessionCompleted(FName SessionName, bool Successful);
+	void OnStartSessionCompleted(FName SessionName, bool Successful);
+	void OnEndSessionCompleted(FName SessionName, bool Successful);
+	void OnDestroySessionCompleted(FName SessionName, bool Successful);
+	void OnFindSessionsCompleted(bool Successful);
+	void OnJoinSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	bool TryTravelToCurrentSession();
 
-	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
-	virtual void OnFindSessionComplete(bool Succeeded);
-	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
-	virtual void OnEndSessionCompleted(FName SessionName, bool Succeeded);
+private:
+	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
+	FDelegateHandle CreateSessionCompleteDelegateHandle;
+	TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
+
+	FOnUpdateSessionCompleteDelegate UpdateSessionCompleteDelegate;
+	FDelegateHandle UpdateSessionCompleteDelegateHandle;
+
+	FOnStartSessionCompleteDelegate StartSessionCompleteDelegate;
+	FDelegateHandle StartSessionCompleteDelegateHandle;
+
+	FOnEndSessionCompleteDelegate EndSessionCompleteDelegate;
+	FDelegateHandle EndSessionCompleteDelegateHandle;
+
+	FOnDestroySessionCompleteDelegate DestroySessionCompleteDelegate;
+	FDelegateHandle DestroySessionCompleteDelegateHandle;
+
+	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
+	FDelegateHandle FindSessionsCompleteDelegateHandle;
+	TSharedPtr<FOnlineSessionSearch> LastSessionSearch;
+
+	FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
+	FDelegateHandle JoinSessionCompleteDelegateHandle;
 
 	
 };

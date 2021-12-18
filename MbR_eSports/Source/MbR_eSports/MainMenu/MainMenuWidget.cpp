@@ -22,7 +22,8 @@ void UMainMenuWidget::HostButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
-		mbRGameInstance->CreateServer();
+		mbRGameInstance->CreateSession(5,true);
+		mbRGameInstance->StartSession();
 
 		this->RemoveFromViewport();
 	}
@@ -32,7 +33,8 @@ void UMainMenuWidget::ConnectButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
-		mbRGameInstance->JoinServer();
+		mbRGameInstance->FindSessions(5, true);
+		//mbRGameInstance->JoinGameSession(*Cast<FOnlineSessionSearchResult>(mbRGameInstance->GetOnlineSession()));
 
 		this->RemoveFromViewport();
 	}
@@ -40,6 +42,10 @@ void UMainMenuWidget::ConnectButtonClicked()
 
 void UMainMenuWidget::ExitButtonClicked()
 {
+	if (mbRGameInstance != NULL)
+	{
+		mbRGameInstance->DestroySession();
+	}
 	APlayerController* SpecificPlayer = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(GetWorld(), SpecificPlayer, EQuitPreference::Quit, true);
 }

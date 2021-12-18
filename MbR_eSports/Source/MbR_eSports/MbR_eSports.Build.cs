@@ -8,13 +8,17 @@ public class MbR_eSports : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore"});
+		PublicDependencyModuleNames.AddRange(new string[] 
+		{
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"OnlineSubsystem",
+			"OnlineSubsystemNull", 
+			"OnlineSubsystemSteam" 
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] 
-		{
-			"OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemSteam" 
-		});
 	}
 }
