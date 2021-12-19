@@ -39,7 +39,7 @@ void UMainMenuWidget::OnConnectButtonClicked()
 
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
-	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	//widgetSwitcherServerList->SetActiveWidgetIndex(1);
 }
 
 void UMainMenuWidget::OnBackButtonClicked()
