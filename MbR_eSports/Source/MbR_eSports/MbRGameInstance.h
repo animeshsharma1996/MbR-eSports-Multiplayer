@@ -7,6 +7,19 @@
 #include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
 
+USTRUCT(BlueprintType)
+struct FServerInfo
+{
+	GENERATED_BODY()
+public :
+	UPROPERTY(BlueprintReadOnly)
+		FString serverName;
+	UPROPERTY(BlueprintReadOnly)
+		int32 currentPlayers;
+	UPROPERTY(BlueprintReadOnly)
+		int32 maxPlayers;
+};
+
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 {

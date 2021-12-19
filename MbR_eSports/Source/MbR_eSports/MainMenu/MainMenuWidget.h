@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components.h"
 #include "Blueprint/UserWidget.h"
 #include "MbR_eSports/MbRGameInstance.h"
 #include "MainMenuWidget.generated.h"
@@ -15,17 +16,27 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* hostButton;
 	UPROPERTY(meta = (BindWidget))
-		class UButton* connectButton;
+		class UButton* connectButton;	
 	UPROPERTY(meta = (BindWidget))
-		class UButton* exitButton;
+		class UButton* refreshServersButton;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* backButton;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* exitButton;	
+	UPROPERTY(meta = (BindWidget))
+		class UWidgetSwitcher* widgetSwitcherServerList;
 	UPROPERTY()
 		class UMbRGameInstance* mbRGameInstance;
 
 private :
 	UFUNCTION()
-		void HostButtonClicked();
+		void OnHostButtonClicked();
 	UFUNCTION()
-		void ConnectButtonClicked();
+		void OnConnectButtonClicked();	
 	UFUNCTION()
-		void ExitButtonClicked();
+		void OnRefreshServersButtonClicked();	
+	UFUNCTION()
+		void OnBackButtonClicked();
+	UFUNCTION()
+		void OnExitButtonClicked();
 };

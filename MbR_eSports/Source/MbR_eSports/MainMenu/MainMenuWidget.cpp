@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MainMenuWidget.h"
 #include "Components/Button.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -10,15 +7,17 @@ bool UMainMenuWidget::Initialize()
 {
 	Super::Initialize();
 
-	hostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::HostButtonClicked);
-	connectButton->OnClicked.AddDynamic(this, &UMainMenuWidget::ConnectButtonClicked);
-	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::ExitButtonClicked);
+	hostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostButtonClicked);
+	connectButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnConnectButtonClicked);
+	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
+	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
+	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	return true;
 }
 
-void UMainMenuWidget::HostButtonClicked()
+void UMainMenuWidget::OnHostButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
@@ -28,7 +27,7 @@ void UMainMenuWidget::HostButtonClicked()
 	}
 }
 
-void UMainMenuWidget::ConnectButtonClicked()
+void UMainMenuWidget::OnConnectButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
@@ -38,7 +37,17 @@ void UMainMenuWidget::ConnectButtonClicked()
 	}
 }
 
-void UMainMenuWidget::ExitButtonClicked()
+void UMainMenuWidget::OnRefreshServersButtonClicked()
+{
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+}
+
+void UMainMenuWidget::OnBackButtonClicked()
+{
+
+}
+
+void UMainMenuWidget::OnExitButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
