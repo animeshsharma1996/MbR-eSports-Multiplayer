@@ -6,10 +6,7 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 
-UMbRGameInstance::UMbRGameInstance()
-{
-
-}
+UMbRGameInstance::UMbRGameInstance() {}
 
 void UMbRGameInstance::Init()
 {

@@ -1,4 +1,5 @@
 #include "MainMenuWidget.h"
+#include "Components/WidgetSwitcher.h"
 #include "Components/Button.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
@@ -39,12 +40,12 @@ void UMainMenuWidget::OnConnectButtonClicked()
 
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
-	//widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
 }
 
 void UMainMenuWidget::OnBackButtonClicked()
 {
-
+	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 }
 
 void UMainMenuWidget::OnExitButtonClicked()

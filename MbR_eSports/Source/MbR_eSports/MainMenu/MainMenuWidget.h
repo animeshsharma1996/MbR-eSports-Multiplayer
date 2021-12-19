@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components.h"
 #include "Blueprint/UserWidget.h"
 #include "MbR_eSports/MbRGameInstance.h"
 #include "MainMenuWidget.generated.h"
