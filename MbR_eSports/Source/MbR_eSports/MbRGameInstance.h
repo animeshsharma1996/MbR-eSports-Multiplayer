@@ -20,6 +20,8 @@ public :
 		int32 maxPlayers;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, ServerListDel);
+
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 {
@@ -33,6 +35,8 @@ public:
 		void CreateServer();
 	UFUNCTION(BlueprintCallable)
 		void JoinServer();
+	UPROPERTY(/*BlueprintAssignable*/)
+		FServerDel serverListDel;
 
 protected:
 	IOnlineSessionPtr SessionInterface;
