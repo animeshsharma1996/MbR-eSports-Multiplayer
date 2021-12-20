@@ -15,7 +15,7 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* hostButton;
 	UPROPERTY(meta = (BindWidget))
-		class UButton* connectButton;	
+		class UButton* serversListButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* refreshServersButton;
 	UPROPERTY(meta = (BindWidget))

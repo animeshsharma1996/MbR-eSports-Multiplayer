@@ -9,7 +9,7 @@ bool UMainMenuWidget::Initialize()
 	Super::Initialize();
 
 	hostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostButtonClicked);
-	connectButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
+	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
