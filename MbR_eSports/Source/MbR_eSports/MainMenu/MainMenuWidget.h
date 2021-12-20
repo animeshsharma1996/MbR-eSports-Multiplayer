@@ -31,7 +31,7 @@ private :
 	UFUNCTION()
 		void OnHostButtonClicked();
 	UFUNCTION()
-		void OnConnectButtonClicked();	
+		void OnServersListButtonClicked();	
 	UFUNCTION()
 		void OnRefreshServersButtonClicked();	
 	UFUNCTION()

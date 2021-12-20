@@ -9,9 +9,9 @@ bool UMainMenuWidget::Initialize()
 	Super::Initialize();
 
 	hostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostButtonClicked);
-	connectButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnConnectButtonClicked);
+	connectButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
-	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
+	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -28,7 +28,7 @@ void UMainMenuWidget::OnHostButtonClicked()
 	}
 }
 
-void UMainMenuWidget::OnConnectButtonClicked()
+void UMainMenuWidget::OnServersListButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
