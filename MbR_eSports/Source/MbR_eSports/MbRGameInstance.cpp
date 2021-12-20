@@ -1,5 +1,5 @@
 #include "MbRGameInstance.h"
-
+#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "OnlineSubsystem.h"
@@ -53,6 +53,13 @@ void UMbRGameInstance::JoinServer()
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+
+	ServerRecieved();
+}
+
+void UMbRGameInstance::ServerRecieved()
+{
+	//TSubclassOf<UUserWidget> serverSlotWidget = Cast<UServerSlotWidget>(CreateWidget<UUserWidget>(GetWorld(), newWidget));
 }
 
 

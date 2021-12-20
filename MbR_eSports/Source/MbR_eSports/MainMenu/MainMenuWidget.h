@@ -24,7 +24,7 @@ protected :
 		class UButton* exitButton;	
 	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* widgetSwitcherServerList;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		class UMbRGameInstance* mbRGameInstance;
 
 private :
@@ -38,4 +38,7 @@ private :
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
+
+	UPROPERTY()
+		FServerInfo serverData;
 };

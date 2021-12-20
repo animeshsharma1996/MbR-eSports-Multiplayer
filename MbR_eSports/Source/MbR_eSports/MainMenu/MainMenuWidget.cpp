@@ -30,17 +30,15 @@ void UMainMenuWidget::OnHostButtonClicked()
 
 void UMainMenuWidget::OnServersListButtonClicked()
 {
-	if (mbRGameInstance != NULL)
-	{
-		mbRGameInstance->JoinServer();
-
-		this->RemoveFromViewport();
-	}
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
 }
 
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
-	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	if (mbRGameInstance != NULL)
+	{
+		mbRGameInstance->JoinServer();
+	}
 }
 
 void UMainMenuWidget::OnBackButtonClicked()
