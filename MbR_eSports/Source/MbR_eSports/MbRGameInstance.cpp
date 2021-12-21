@@ -53,20 +53,7 @@ void UMbRGameInstance::JoinServer()
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-
-	ServerRecieved();
 }
-
-void UMbRGameInstance::ServerRecieved()
-{
-	//UServerSlotWidget* serverSlotWidget = Cast<UServerSlotWidget>(CreateWidget<UUserWidget>(GetWorld(), newWidget));
-}
-
-void UMbRGameInstance::SetServerSlotWidget(TSubclassOf<UUserWidget> widget)
-{
-	serverSlotWidget = widget;
-}
-
 
 void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessful)
 {
@@ -84,11 +71,30 @@ void UMbRGameInstance::OnFindSessionsComplete(bool Succeessful)
 	if (Succeessful)
 	{
 		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
+
+		OnAssignSearchResults(SearchResults);
+
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SearchResults.Num());
+
 		if (SearchResults.Num())
 		{
 			SessionInterface->JoinSession(0, "Game Session", SearchResults[0]);
 		}
+	}
+}
+
+void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> searchResults)
+{
+	for (FOnlineSessionSearchResult result : searchResults)
+	{
+		if (!result.IsValid()) { continue; }
+
+		FServerInfo serverInfo;
+		serverInfo.serverName = "Test Server Name";
+		serverInfo.currentPlayers = result.Session.SessionSettings.NumPublicConnections;
+		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
+		serverInfoRecieved = serverInfo;
+		serversListDel.Broadcast(serverInfo);
 	}
 }
 
