@@ -1,15 +1,12 @@
 #include "MbRGameInstance.h"
-
+#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 
-UMbRGameInstance::UMbRGameInstance()
-{
-
-}
+UMbRGameInstance::UMbRGameInstance() {}
 
 void UMbRGameInstance::Init()
 {
@@ -58,7 +55,6 @@ void UMbRGameInstance::JoinServer()
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
 
-
 void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), Succeessful);
@@ -75,11 +71,29 @@ void UMbRGameInstance::OnFindSessionsComplete(bool Succeessful)
 	if (Succeessful)
 	{
 		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
+		//OnAssignSearchResults(SearchResults);
+
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SearchResults.Num());
+
 		if (SearchResults.Num())
 		{
 			SessionInterface->JoinSession(0, "Game Session", SearchResults[0]);
 		}
+	}
+}
+
+void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> searchResults)
+{
+	for (FOnlineSessionSearchResult result : searchResults)
+	{
+		if (!result.IsValid()) { continue; }
+
+		FServerInfo serverInfo;
+		serverInfo.serverName = "Test Server Name";
+		serverInfo.currentPlayers = result.Session.SessionSettings.NumPublicConnections;
+		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
+		serverInfoRecieved = serverInfo;
+		serversListDel.Broadcast(serverInfo);
 	}
 }
 
