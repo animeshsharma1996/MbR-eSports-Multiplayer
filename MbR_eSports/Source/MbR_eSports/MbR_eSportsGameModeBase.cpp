@@ -1,31 +1,22 @@
 #include "MbR_eSportsGameModeBase.h"
 #include "Blueprint/UserWidget.h"
+#include "MainMenu/MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "MbR_eSports.h"
 
 void AMbR_eSportsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
-    mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-    ChangeMenuWidget(mainMenuWidget);
-    if (mbRGameInstance != nullptr)
+    if (mainMenuWidget != nullptr)
     {
-        mbRGameInstance->SetServerSlotWidget(serverSlotWidget);
-    }
-}
+        ChangeMenuWidget(mainMenuWidget);
 
-void AMbR_eSportsGameModeBase::Tick(float deltaSeconds)
-{
-    Super::Tick(deltaSeconds);
-    /*if (GetWorld()->GetCurrentLevel()->GetFName() != "StartingEmptyLevel")
-    {
-        UE_LOG(LogTemp, Warning, TEXT("PLAYING"));
-        DefaultPawnClass = thirdPersonCharacterPawn;
+        UMainMenuWidget* mainMenuWidgetInstance = Cast<UMainMenuWidget>(currentWidget);
+        if (serverSlotWidget != nullptr)
+        {
+            mainMenuWidgetInstance->SetServerSlotWidget(serverSlotWidget);
+        }
     }
-    else
-    {
-        DefaultPawnClass = mainMenuPawn;
-    }*/
 }
 
 void AMbR_eSportsGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> newWidget)

@@ -18,15 +18,12 @@ public:
         TSubclassOf<APawn> thirdPersonCharacterPawn;    
     UPROPERTY(EditAnywhere, Category = "MbR_eSports")
         TSubclassOf<APawn> mainMenuPawn; 
-    UPROPERTY()
-        UMbRGameInstance* mbRGameInstance;
 
     UFUNCTION(BlueprintCallable, Category = "MbR eSports")
         void ChangeMenuWidget(TSubclassOf<UUserWidget> newWidget);
 
 protected:
     virtual void BeginPlay() override;
-    virtual void Tick(float deltaSeconds) override;
 
     UPROPERTY()
         UUserWidget* currentWidget;
