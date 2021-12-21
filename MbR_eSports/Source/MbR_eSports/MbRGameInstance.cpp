@@ -71,8 +71,7 @@ void UMbRGameInstance::OnFindSessionsComplete(bool Succeessful)
 	if (Succeessful)
 	{
 		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
-
-		OnAssignSearchResults(SearchResults);
+		//OnAssignSearchResults(SearchResults);
 
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SearchResults.Num());
 
