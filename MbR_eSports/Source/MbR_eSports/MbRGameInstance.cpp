@@ -59,7 +59,7 @@ void UMbRGameInstance::JoinServer()
 
 void UMbRGameInstance::ServerRecieved()
 {
-	//TSubclassOf<UUserWidget> serverSlotWidget = Cast<UServerSlotWidget>(CreateWidget<UUserWidget>(GetWorld(), newWidget));
+	//UServerSlotWidget* serverSlotWidget = Cast<UServerSlotWidget>(CreateWidget<UUserWidget>(GetWorld(), newWidget));
 }
 
 

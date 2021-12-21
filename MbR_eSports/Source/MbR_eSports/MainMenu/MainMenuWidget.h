@@ -38,7 +38,4 @@ private :
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
-
-	UPROPERTY()
-		FServerInfo serverData;
 };

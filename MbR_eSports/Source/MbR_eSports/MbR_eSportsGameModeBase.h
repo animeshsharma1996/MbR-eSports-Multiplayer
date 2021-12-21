@@ -14,7 +14,9 @@ public:
         void ChangeMenuWidget(TSubclassOf<UUserWidget> newWidget);
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
-        TSubclassOf<UUserWidget> mainMenuWidget;
+        TSubclassOf<UUserWidget> mainMenuWidget;    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+        TSubclassOf<UUserWidget> serverSlotWidget;
     UPROPERTY(EditAnywhere, Category = "MbR_eSports")
         TSubclassOf<APawn> thirdPersonCharacterPawn;    
     UPROPERTY(EditAnywhere, Category = "MbR_eSports")

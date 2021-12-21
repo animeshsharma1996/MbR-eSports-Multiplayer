@@ -1,24 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MbR_eSports/ServerInfoStruct.h"
+#include "MainMenu/ServerSlotWidget.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
-
-USTRUCT(BlueprintType)
-struct FServerInfo
-{
-	GENERATED_BODY()
-public :
-	UPROPERTY(BlueprintReadOnly)
-		FString serverName;
-	UPROPERTY(BlueprintReadOnly)
-		int32 currentPlayers;
-	UPROPERTY(BlueprintReadOnly)
-		int32 maxPlayers;
-};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, serversListDel);
 
@@ -30,7 +19,6 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 public:
 	UMbRGameInstance();
 
-
 	UFUNCTION(BlueprintCallable)
 		void CreateServer();
 	UFUNCTION(BlueprintCallable)
@@ -39,8 +27,6 @@ public:
 		void ServerRecieved();
 	UPROPERTY(BlueprintAssignable)
 		FServerDel serversListDel;
-
-	//FDelegateHandle serverRecieved;
 
 protected:
 	IOnlineSessionPtr SessionInterface;
@@ -52,5 +38,4 @@ protected:
 	virtual void OnCreateSessionComplete(FName ServerName, bool Succeessful);
 	virtual void OnFindSessionsComplete(bool Succeessful);
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
-	
 };

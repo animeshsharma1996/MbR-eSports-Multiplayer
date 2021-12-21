@@ -1,9 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MbR_eSports/MbRGameInstance.h"
+#include "MbR_eSports/ServerInfoStruct.h"
 #include "Blueprint/UserWidget.h"
 #include "ServerSlotWidget.generated.h"
+
+struct FServerInfo;
 
 UCLASS()
 class MBR_ESPORTS_API UServerSlotWidget : public UUserWidget
@@ -16,8 +18,6 @@ protected :
 		class UTextBlock* serverNameText;	
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* playersNumText;
-	UPROPERTY()
-		FServerInfo serverData;
-private :
-
+	UPROPERTY(BlueprintReadOnly)
+		struct FServerInfo serverData;
 };
