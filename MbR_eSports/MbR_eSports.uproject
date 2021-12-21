@@ -7,7 +7,12 @@
 		{
 			"Name": "MbR_eSports",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"FunctionalTesting",
+				"UMG"
+			]
 		}
 	],
 	"Plugins": [
