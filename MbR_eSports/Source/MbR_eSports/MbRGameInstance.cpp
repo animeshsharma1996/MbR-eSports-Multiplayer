@@ -62,6 +62,11 @@ void UMbRGameInstance::ServerRecieved()
 	//UServerSlotWidget* serverSlotWidget = Cast<UServerSlotWidget>(CreateWidget<UUserWidget>(GetWorld(), newWidget));
 }
 
+void UMbRGameInstance::SetServerSlotWidget(TSubclassOf<UUserWidget> widget)
+{
+	serverSlotWidget = widget;
+}
+
 
 void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessful)
 {

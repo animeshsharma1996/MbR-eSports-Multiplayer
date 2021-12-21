@@ -5,5 +5,4 @@
 #include "CoreMinimal.h"
 #include "Engine.h"
 #include "Online.h"
-#include "MbR_eSports/MbRGameInstance.h"
 

@@ -24,7 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void JoinServer();	
 	UFUNCTION(BlueprintCallable)
-		void ServerRecieved();
+		void ServerRecieved();	
+	UFUNCTION()
+		void SetServerSlotWidget(TSubclassOf<UUserWidget> widget);
 	UPROPERTY(BlueprintAssignable)
 		FServerDel serversListDel;
 
@@ -38,4 +40,8 @@ protected:
 	virtual void OnCreateSessionComplete(FName ServerName, bool Succeessful);
 	virtual void OnFindSessionsComplete(bool Succeessful);
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
+private :
+	UPROPERTY()
+		TSubclassOf<UUserWidget> serverSlotWidget;
 };

@@ -5,8 +5,6 @@
 #include "Blueprint/UserWidget.h"
 #include "ServerSlotWidget.generated.h"
 
-struct FServerInfo;
-
 UCLASS()
 class MBR_ESPORTS_API UServerSlotWidget : public UUserWidget
 {

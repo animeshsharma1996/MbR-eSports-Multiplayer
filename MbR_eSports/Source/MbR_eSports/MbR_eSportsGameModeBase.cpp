@@ -1,11 +1,17 @@
 #include "MbR_eSportsGameModeBase.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "MbR_eSports.h"
 
 void AMbR_eSportsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
+    mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
     ChangeMenuWidget(mainMenuWidget);
+    if (mbRGameInstance != nullptr)
+    {
+        mbRGameInstance->SetServerSlotWidget(serverSlotWidget);
+    }
 }
 
 void AMbR_eSportsGameModeBase::Tick(float deltaSeconds)
