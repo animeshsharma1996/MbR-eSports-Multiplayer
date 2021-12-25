@@ -3,6 +3,7 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/PanelWidget.h"
+#include "Components/EditableText.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
 #include <Runtime/Core/Public/Windows/COMPointer.h>
@@ -11,24 +12,21 @@ bool UMainMenuWidget::Initialize()
 {
 	Super::Initialize();
 
-	hostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostButtonClicked);
+	createServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
+	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateCustomServerButtonClicked);
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
+	customServerBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	return true;
 }
 
-void UMainMenuWidget::OnHostButtonClicked()
+void UMainMenuWidget::OnCreateServerButtonClicked()
 {
-	if (mbRGameInstance != NULL)
-	{
-		mbRGameInstance->CreateServer();
-
-		this->RemoveFromViewport();
-	}
+	widgetSwitcherServerList->SetActiveWidgetIndex(2);
 }
 
 void UMainMenuWidget::OnServersListButtonClicked()
@@ -42,6 +40,16 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	{
 		mbRGameInstance->JoinServer();
 		CreateServerSlotWidget();
+	}
+}
+
+void UMainMenuWidget::OnCreateCustomServerButtonClicked()
+{
+	if (mbRGameInstance != NULL)
+	{
+		mbRGameInstance->CreateServer(serverNameTextBox->GetText().ToString(), hostNameTextBox->GetText().ToString());
+
+		this->RemoveFromViewport();
 	}
 }
 

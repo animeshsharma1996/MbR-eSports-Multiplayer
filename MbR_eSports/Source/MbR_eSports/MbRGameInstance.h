@@ -20,7 +20,7 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
-		void CreateServer();
+		void CreateServer(FString serverName, FString hostName);
 	UFUNCTION(BlueprintCallable)
 		void JoinServer();	
 	UPROPERTY(BlueprintReadOnly)

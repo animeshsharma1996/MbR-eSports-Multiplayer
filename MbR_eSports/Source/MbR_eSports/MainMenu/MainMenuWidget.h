@@ -14,7 +14,7 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 
 protected :
 	UPROPERTY(meta = (BindWidget))
-		class UButton* hostButton;
+		class UButton* createServerButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* serversListButton;
 	UPROPERTY(meta = (BindWidget))
@@ -22,11 +22,21 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* backButton;
 	UPROPERTY(meta = (BindWidget))
-		class UButton* exitButton;	
+		class UButton* exitButton;		
 	UPROPERTY(meta = (BindWidget))
-		class UWidgetSwitcher* widgetSwitcherServerList;	
+		class UButton* customHostButton;	
 	UPROPERTY(meta = (BindWidget))
-		class UScrollBox* serverListScrollBox;
+		class UButton* customServerBackButton;
+
+	UPROPERTY(meta = (BindWidget))
+		class UWidgetSwitcher* widgetSwitcherServerList;		
+	UPROPERTY(meta = (BindWidget))
+		class UScrollBox* serverListScrollBox;	
+	UPROPERTY(meta = (BindWidget))
+		class UEditableText* serverNameTextBox;
+	UPROPERTY(meta = (BindWidget))
+		class UEditableText* hostNameTextBox;
+
 	UPROPERTY(BlueprintReadOnly)
 		class UMbRGameInstance* mbRGameInstance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
@@ -34,13 +44,15 @@ protected :
 
 private :
 	UFUNCTION()
-		void OnHostButtonClicked();
+		void OnCreateServerButtonClicked();
 	UFUNCTION()
 		void OnServersListButtonClicked();	
 	UFUNCTION()
-		void OnRefreshServersButtonClicked();
+		void OnRefreshServersButtonClicked();	
 	UFUNCTION()
-		void CreateServerSlotWidget();
+		void OnCreateCustomServerButtonClicked();
+	UFUNCTION()
+		void CreateServerSlotWidget();	
 	UFUNCTION()
 		void OnBackButtonClicked();
 	UFUNCTION()

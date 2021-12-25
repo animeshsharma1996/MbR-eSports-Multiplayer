@@ -22,7 +22,7 @@ void UMbRGameInstance::Init()
 	}
 }
 
-void UMbRGameInstance::CreateServer()
+void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Create Server"));
 
