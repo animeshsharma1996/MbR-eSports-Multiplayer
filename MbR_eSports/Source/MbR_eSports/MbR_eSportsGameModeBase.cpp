@@ -10,12 +10,6 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     if (mainMenuWidget != nullptr)
     {
         ChangeMenuWidget(mainMenuWidget);
-
-        UMainMenuWidget* mainMenuWidgetInstance = Cast<UMainMenuWidget>(currentWidget);
-        if (serverSlotWidget != nullptr)
-        {
-            mainMenuWidgetInstance->SetServerSlotWidget(serverSlotWidget);
-        }
     }
 }
 

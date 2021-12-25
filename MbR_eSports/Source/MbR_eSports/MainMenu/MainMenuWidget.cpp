@@ -40,26 +40,27 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	if (mbRGameInstance != NULL)
 	{
 		mbRGameInstance->JoinServer();
+		CreateServerSlotWidget();
 	}
 }
 
 void UMainMenuWidget::CreateServerSlotWidget()
 {
-	UUserWidget* serverSlotUserWidget = CreateWidget<UUserWidget>(GetWorld(), serverSlotWidget);
-	UServerSlotWidget* serverSlotWidgetInstance = Cast<UServerSlotWidget>(serverSlotUserWidget);
-	serverSlotWidgetInstance->OnServerInfoUpdate(mbRGameInstance->serverInfoRecieved);
-	UPanelWidget* serverSlotPanelWidget = Cast<UPanelWidget>(serverSlotUserWidget);
-	serverSlotPanelWidget->AddChild(serverListScrollBox);
-
-	if (GEngine)
+	if (serverSlotWidget != nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("FOUND SERVER"));
-	}
-}
+		UUserWidget* serverSlotUserWidget = CreateWidget<UUserWidget>(GetWorld(), serverSlotWidget);
+		if (serverSlotUserWidget != nullptr)
+		{
+			UServerSlotWidget* serverSlotWidgetInstance = Cast<UServerSlotWidget>(serverSlotUserWidget);
+			serverSlotWidgetInstance->OnServerInfoUpdate(mbRGameInstance->serverInfoRecieved);
+			serverListScrollBox->AddChild(serverSlotUserWidget);
 
-void UMainMenuWidget::SetServerSlotWidget(TSubclassOf<UUserWidget> widget)
-{
-	serverSlotWidget = widget;
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("FOUND SERVER"));
+			}
+		}
+	}
 }
 
 void UMainMenuWidget::OnBackButtonClicked()

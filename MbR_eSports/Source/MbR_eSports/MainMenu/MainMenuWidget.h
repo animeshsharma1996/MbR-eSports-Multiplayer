@@ -12,10 +12,6 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 		virtual bool Initialize() override;
 
-public :
-	UFUNCTION()
-		void SetServerSlotWidget(TSubclassOf<UUserWidget> widget);
-
 protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* hostButton;
@@ -33,6 +29,8 @@ protected :
 		class UScrollBox* serverListScrollBox;
 	UPROPERTY(BlueprintReadOnly)
 		class UMbRGameInstance* mbRGameInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+		TSubclassOf<UUserWidget> serverSlotWidget;
 
 private :
 	UFUNCTION()
@@ -41,12 +39,10 @@ private :
 		void OnServersListButtonClicked();	
 	UFUNCTION()
 		void OnRefreshServersButtonClicked();
-	void CreateServerSlotWidget();
+	UFUNCTION()
+		void CreateServerSlotWidget();
 	UFUNCTION()
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
-
-	UPROPERTY()
-		TSubclassOf<UUserWidget> serverSlotWidget;
 };

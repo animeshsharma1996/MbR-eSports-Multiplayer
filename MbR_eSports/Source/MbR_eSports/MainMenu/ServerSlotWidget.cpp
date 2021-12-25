@@ -12,4 +12,6 @@ bool UServerSlotWidget::Initialize()
 void UServerSlotWidget::OnServerInfoUpdate(FServerInfo serverInfo)
 {
 	serverData = serverInfo;
+	serverNameText->SetText(FText::AsCultureInvariant(serverData.serverName));
+	playersNumText->SetText(FText::AsCultureInvariant(serverData.currentPlayers + " / " + serverData.maxPlayers));
 }
