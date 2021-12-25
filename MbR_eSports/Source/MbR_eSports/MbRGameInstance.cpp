@@ -90,7 +90,7 @@ void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> 
 
 		FServerInfo serverInfo;
 		serverInfo.serverName = "Test Server Name";
-		serverInfo.currentPlayers = result.Session.SessionSettings.NumPublicConnections;
+		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
 		serverInfoRecieved = serverInfo;
 		serversListDel.Broadcast(serverInfo);

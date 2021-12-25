@@ -5,6 +5,7 @@
 #include "Components/PanelWidget.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
+#include <Runtime/Core/Public/Windows/COMPointer.h>
 
 bool UMainMenuWidget::Initialize()
 {

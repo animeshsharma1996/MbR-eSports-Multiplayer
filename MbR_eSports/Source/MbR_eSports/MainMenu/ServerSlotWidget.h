@@ -9,7 +9,6 @@ UCLASS()
 class MBR_ESPORTS_API UServerSlotWidget : public UUserWidget
 {
 	GENERATED_BODY()
-		virtual bool Initialize() override;
 
 public :
 	UPROPERTY(BlueprintReadOnly)
