@@ -14,7 +14,7 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 
 protected :
 	UPROPERTY(meta = (BindWidget))
-		class UButton* createServerButton;
+		class UButton* customServerButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* serversListButton;
 	UPROPERTY(meta = (BindWidget))

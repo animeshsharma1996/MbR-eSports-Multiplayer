@@ -12,7 +12,7 @@ bool UMainMenuWidget::Initialize()
 {
 	Super::Initialize();
 
-	createServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateServerButtonClicked);
+	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
 	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateCustomServerButtonClicked);
