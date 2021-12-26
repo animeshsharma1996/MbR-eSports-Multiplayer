@@ -9,7 +9,7 @@
 #include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, serversListDel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, serversListDel);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -23,10 +23,8 @@ public:
 		void CreateServer(FString serverName, FString hostName);
 	UFUNCTION(BlueprintCallable)
 		void FindServers();	
-	UPROPERTY(BlueprintReadOnly)
-		struct FServerInfo serverInfoRecieved;
 	UPROPERTY(BlueprintAssignable)
-		FServerDel serversListDel;
+		FDelegateServer serversListDel;
 
 protected:
 	IOnlineSessionPtr SessionInterface;

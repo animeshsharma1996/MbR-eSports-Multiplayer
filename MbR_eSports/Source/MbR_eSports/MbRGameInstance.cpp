@@ -5,6 +5,7 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
+#include <MbR_eSports/MainMenu/MainMenuWidget.h>
 
 UMbRGameInstance::UMbRGameInstance() {}
 
@@ -48,7 +49,7 @@ void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
 
 void UMbRGameInstance::FindServers()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Join Server"));
+	UE_LOG(LogTemp, Warning, TEXT("Find Server"));
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
@@ -101,7 +102,6 @@ void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> 
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
-		serverInfoRecieved = serverInfo;
 		serversListDel.Broadcast(serverInfo);
 	}
 }

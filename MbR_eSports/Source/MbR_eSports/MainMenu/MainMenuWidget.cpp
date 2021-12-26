@@ -21,6 +21,14 @@ bool UMainMenuWidget::Initialize()
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
+	FScriptDelegate serverDelegate;
+	serverDelegate.BindUFunction(this, "CreateServerSlotWidget");
+
+	if (mbRGameInstance != nullptr)
+	{
+		mbRGameInstance->serversListDel.Add(serverDelegate);
+	}
+
 	return true;
 }
 
@@ -32,6 +40,7 @@ void UMainMenuWidget::OnCreateServerButtonClicked()
 void UMainMenuWidget::OnServersListButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	OnRefreshServersButtonClicked();
 }
 
 void UMainMenuWidget::OnRefreshServersButtonClicked()
@@ -39,7 +48,6 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	if (mbRGameInstance != NULL)
 	{
 		mbRGameInstance->FindServers();
-		CreateServerSlotWidget();
 	}
 }
 
@@ -53,7 +61,7 @@ void UMainMenuWidget::OnCreateCustomServerButtonClicked()
 	}
 }
 
-void UMainMenuWidget::CreateServerSlotWidget()
+void UMainMenuWidget::CreateServerSlotWidget(FServerInfo serverInfo)
 {
 	if (serverSlotWidget != nullptr)
 	{
@@ -61,7 +69,7 @@ void UMainMenuWidget::CreateServerSlotWidget()
 		if (serverSlotUserWidget != nullptr)
 		{
 			UServerSlotWidget* serverSlotWidgetInstance = Cast<UServerSlotWidget>(serverSlotUserWidget);
-			serverSlotWidgetInstance->OnServerInfoUpdate(mbRGameInstance->serverInfoRecieved);
+			serverSlotWidgetInstance->OnServerInfoUpdate(serverInfo);
 			serverListScrollBox->AddChild(serverSlotUserWidget);
 
 			if (GEngine)

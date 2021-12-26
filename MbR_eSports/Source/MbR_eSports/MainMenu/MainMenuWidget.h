@@ -52,7 +52,7 @@ private :
 	UFUNCTION()
 		void OnCreateCustomServerButtonClicked();
 	UFUNCTION()
-		void CreateServerSlotWidget();	
+		void CreateServerSlotWidget(FServerInfo serverInfo);
 	UFUNCTION()
 		void OnBackButtonClicked();
 	UFUNCTION()
