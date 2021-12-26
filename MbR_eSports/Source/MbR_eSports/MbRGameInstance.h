@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CreateServer(FString serverName, FString hostName);
 	UFUNCTION(BlueprintCallable)
-		void JoinServer();	
+		void FindServers();	
 	UPROPERTY(BlueprintReadOnly)
 		struct FServerInfo serverInfoRecieved;
 	UPROPERTY(BlueprintAssignable)

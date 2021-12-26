@@ -38,7 +38,7 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
-		mbRGameInstance->JoinServer();
+		mbRGameInstance->FindServers();
 		CreateServerSlotWidget();
 	}
 }

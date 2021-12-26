@@ -35,6 +35,9 @@ void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = 5;
 
+	SessionSettings.Set(FName("SERVER_NAME_KEY"), serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
 	/*SessionSettings.NumPrivateConnections = 5;
 	SessionSettings.bAllowInvites = true;
 	SessionSettings.bAllowJoinViaPresence = true;
@@ -43,7 +46,7 @@ void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
 	SessionInterface->CreateSession(0, FName("Game Session"), SessionSettings);
 }
 
-void UMbRGameInstance::JoinServer()
+void UMbRGameInstance::FindServers()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Join Server"));
 
@@ -89,7 +92,13 @@ void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> 
 		if (!result.IsValid()) { continue; }
 
 		FServerInfo serverInfo;
-		serverInfo.serverName = "Test Server Name";
+		FString serverName = "Empty Server Name";
+		FString hostName = "Empty Host Name";
+
+		result.Session.SessionSettings.Get(FName("SERVER_NAME_KEY"), serverName);
+		result.Session.SessionSettings.Get(FName("SERVER_HOSTNAME_KEY"), hostName);
+
+		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
 		serverInfoRecieved = serverInfo;
