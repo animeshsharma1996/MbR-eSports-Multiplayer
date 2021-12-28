@@ -15,12 +15,9 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     APlayerController* playerController = GetWorld()->GetFirstPlayerController();
     if (playerController != nullptr)
     {
-        playerController->EnableInput(playerController);
         playerController->bShowMouseCursor = true;
         playerController->bEnableClickEvents = true;
         playerController->bEnableMouseOverEvents = true;
-
-        playerController->SetInputMode(InputModeData);
     }
 
     if (GetWorld()->GetMapName() != "DefaultTestMap")

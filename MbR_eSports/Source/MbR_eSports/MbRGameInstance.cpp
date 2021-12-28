@@ -10,11 +10,6 @@ UMbRGameInstance::UMbRGameInstance() {}
 
 void UMbRGameInstance::Init()
 {
-	FScriptDelegate serverCreationDel;
-	serverCreationDel.BindUFunction(this, "RemoveMainMenuFromViewport");
-
-	serverCreation.Add(serverCreationDel);
-
 	if (IOnlineSubsystem* subSystem = IOnlineSubsystem::Get())
 	{
 		SessionInterface = subSystem->GetSessionInterface();
