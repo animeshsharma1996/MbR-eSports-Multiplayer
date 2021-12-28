@@ -12,27 +12,27 @@ bool UMainMenuWidget::Initialize()
 {
 	Super::Initialize();
 
-	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateServerButtonClicked);
+	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
-	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCreateCustomServerButtonClicked);
+	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostCustomServerButtonClicked);
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	customServerBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-	FScriptDelegate serverDelegate;
-	serverDelegate.BindUFunction(this, "CreateServerSlotWidget");
+	FScriptDelegate serversListDelegate;
+	serversListDelegate.BindUFunction(this, "CreateServerSlotWidget");
 
 	if (mbRGameInstance != nullptr)
 	{
-		mbRGameInstance->serversListDel.Add(serverDelegate);
+		mbRGameInstance->serversListDel.Add(serversListDelegate);
 	}
 
 	return true;
 }
 
-void UMainMenuWidget::OnCreateServerButtonClicked()
+void UMainMenuWidget::OnCustomServerButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(2);
 }
@@ -51,13 +51,11 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	}
 }
 
-void UMainMenuWidget::OnCreateCustomServerButtonClicked()
+void UMainMenuWidget::OnHostCustomServerButtonClicked()
 {
 	if (mbRGameInstance != NULL)
 	{
 		mbRGameInstance->CreateServer(serverNameTextBox->GetText().ToString(), hostNameTextBox->GetText().ToString());
-
-		this->RemoveFromViewport();
 	}
 }
 
@@ -68,14 +66,8 @@ void UMainMenuWidget::CreateServerSlotWidget(FServerInfo serverInfo)
 		UUserWidget* serverSlotUserWidget = CreateWidget<UUserWidget>(GetWorld(), serverSlotWidget);
 		if (serverSlotUserWidget != nullptr)
 		{
-			UServerSlotWidget* serverSlotWidgetInstance = Cast<UServerSlotWidget>(serverSlotUserWidget);
-			serverSlotWidgetInstance->OnServerInfoUpdate(serverInfo);
+			Cast<UServerSlotWidget>(serverSlotUserWidget)->OnServerInfoUpdate(serverInfo);
 			serverListScrollBox->AddChild(serverSlotUserWidget);
-
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("FOUND SERVER"));
-			}
 		}
 	}
 }
@@ -86,11 +78,8 @@ void UMainMenuWidget::OnBackButtonClicked()
 }
 
 void UMainMenuWidget::OnExitButtonClicked()
-{
-	if (mbRGameInstance != NULL)
-	{
-		//mbRGameInstance->DestroySession();
-	}
+{	
+	//mbRGameInstance->DestroySession();
 	APlayerController* SpecificPlayer = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(GetWorld(), SpecificPlayer, EQuitPreference::Quit, true);
 }

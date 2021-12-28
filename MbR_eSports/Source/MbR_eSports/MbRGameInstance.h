@@ -6,10 +6,10 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
-#include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, serversListDel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -24,7 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void FindServers();	
 	UPROPERTY(BlueprintAssignable)
-		FDelegateServer serversListDel;
+		FDelegateServer serversListDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateCreation serverCreation;
 
 protected:
 	IOnlineSessionPtr SessionInterface;
@@ -36,7 +38,5 @@ protected:
 	virtual void OnCreateSessionComplete(FName ServerName, bool Succeessful);
 	virtual void OnFindSessionsComplete(bool Succeessful);
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
-
-private :
 	void OnAssignSearchResults(TArray<FOnlineSessionSearchResult> searchResults);
 };

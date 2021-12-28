@@ -9,22 +9,20 @@ UCLASS()
 class MBR_ESPORTS_API AMbR_eSportsGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-public:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
-        TSubclassOf<UUserWidget> mainMenuWidget;    
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
-        TSubclassOf<UUserWidget> serverSlotWidget;
-    UPROPERTY(EditAnywhere, Category = "MbR_eSports")
-        TSubclassOf<APawn> thirdPersonCharacterPawn;    
-    UPROPERTY(EditAnywhere, Category = "MbR_eSports")
-        TSubclassOf<APawn> mainMenuPawn; 
-
-    UFUNCTION(BlueprintCallable, Category = "MbR eSports")
-        void ChangeMenuWidget(TSubclassOf<UUserWidget> newWidget);
 
 protected:
     virtual void BeginPlay() override;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+        TSubclassOf<UUserWidget> mainMenuWidget;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+        TSubclassOf<UUserWidget> serverSlotWidget;
+    UFUNCTION(BlueprintCallable)
+        void CreateMainMenuWidget(TSubclassOf<UUserWidget> newWidget);
+
+private:
     UPROPERTY()
         UUserWidget* currentWidget;
+    UFUNCTION()
+        void RemoveMainMenuFromViewport(bool successful);
 };

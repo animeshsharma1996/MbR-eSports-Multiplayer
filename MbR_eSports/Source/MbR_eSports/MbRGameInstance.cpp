@@ -5,12 +5,16 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
-#include <MbR_eSports/MainMenu/MainMenuWidget.h>
 
 UMbRGameInstance::UMbRGameInstance() {}
 
 void UMbRGameInstance::Init()
 {
+	FScriptDelegate serverCreationDel;
+	serverCreationDel.BindUFunction(this, "RemoveMainMenuFromViewport");
+
+	serverCreation.Add(serverCreationDel);
+
 	if (IOnlineSubsystem* subSystem = IOnlineSubsystem::Get())
 	{
 		SessionInterface = subSystem->GetSessionInterface();
@@ -64,8 +68,9 @@ void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessfu
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), Succeessful);
 	if (Succeessful)
 	{
-		//GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+		serverCreation.Broadcast(Succeessful);
+		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
+		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
 	}
 }
 

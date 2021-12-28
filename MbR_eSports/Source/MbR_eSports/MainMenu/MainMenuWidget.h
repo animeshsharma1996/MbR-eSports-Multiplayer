@@ -44,13 +44,13 @@ protected :
 
 private :
 	UFUNCTION()
-		void OnCreateServerButtonClicked();
+		void OnCustomServerButtonClicked();
 	UFUNCTION()
 		void OnServersListButtonClicked();	
 	UFUNCTION()
 		void OnRefreshServersButtonClicked();	
 	UFUNCTION()
-		void OnCreateCustomServerButtonClicked();
+		void OnHostCustomServerButtonClicked();
 	UFUNCTION()
 		void CreateServerSlotWidget(FServerInfo serverInfo);
 	UFUNCTION()
