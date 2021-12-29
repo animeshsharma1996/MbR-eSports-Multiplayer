@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CreateServer(FString serverName, FString hostName);
 	UFUNCTION(BlueprintCallable)
-		void FindServers();	
+		void FindServers();		
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
 	UPROPERTY(BlueprintAssignable)

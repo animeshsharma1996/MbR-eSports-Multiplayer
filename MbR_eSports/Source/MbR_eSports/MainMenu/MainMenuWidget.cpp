@@ -12,6 +12,7 @@ bool UMainMenuWidget::Initialize()
 {
 	Super::Initialize();
 
+	initialSearchForServers = false;
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
@@ -40,11 +41,16 @@ void UMainMenuWidget::OnCustomServerButtonClicked()
 void UMainMenuWidget::OnServersListButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(1);
-	OnRefreshServersButtonClicked();
+	if (!initialSearchForServers)
+	{
+		OnRefreshServersButtonClicked();
+		initialSearchForServers = true;
+	}
 }
 
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
+	serverListScrollBox->ClearChildren();
 	if (mbRGameInstance != NULL)
 	{
 		mbRGameInstance->FindServers();

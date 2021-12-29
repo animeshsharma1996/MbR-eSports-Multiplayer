@@ -57,4 +57,6 @@ private :
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
+	UPROPERTY()
+		bool initialSearchForServers;
 };
