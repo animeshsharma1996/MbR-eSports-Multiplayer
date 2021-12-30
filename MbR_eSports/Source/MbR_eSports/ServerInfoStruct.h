@@ -12,5 +12,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int32 currentPlayers;
 	UPROPERTY(BlueprintReadOnly)
-		int32 maxPlayers;
+		int32 maxPlayers;	
+	UPROPERTY(BlueprintReadOnly)
+		int32 serverArrayIndex;
 };

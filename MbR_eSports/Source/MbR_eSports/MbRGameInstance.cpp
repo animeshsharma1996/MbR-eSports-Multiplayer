@@ -6,7 +6,10 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 
-UMbRGameInstance::UMbRGameInstance() {}
+UMbRGameInstance::UMbRGameInstance() 
+{
+	defaultSessionName = FName("Game Session");
+}
 
 void UMbRGameInstance::Init()
 {
@@ -22,7 +25,7 @@ void UMbRGameInstance::Init()
 	}
 }
 
-void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
+void UMbRGameInstance::CreateServer(FString sessionName, FString hostName)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Create Server"));
 
@@ -33,21 +36,28 @@ void UMbRGameInstance::CreateServer(FString serverName, FString hostName)
 	SessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
 	SessionSettings.bUsesPresence = true;
 	SessionSettings.bShouldAdvertise = true;
-	SessionSettings.NumPublicConnections = 5;
+	SessionSettings.NumPublicConnections = 10;
+	SessionSettings.NumPrivateConnections = 10;
 
-	SessionSettings.Set(FName("SERVER_NAME_KEY"), serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-
-	/*SessionSettings.NumPrivateConnections = 5;
 	SessionSettings.bAllowInvites = true;
 	SessionSettings.bAllowJoinViaPresence = true;
-	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;*/
+	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
 
-	SessionInterface->CreateSession(0, FName("Game Session"), SessionSettings);
+	SessionSettings.Set(FName("SERVER_NAME_KEY"), sessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
+	if (sessionName.IsEmpty())
+	{
+		defaultSessionName = FName(sessionName);
+	}
+
+	SessionInterface->CreateSession(0, defaultSessionName, SessionSettings);
 }
 
 void UMbRGameInstance::FindServers()
 {
+	searchingForServers.Broadcast(true);
+
 	UE_LOG(LogTemp, Warning, TEXT("Find Server"));
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
@@ -58,37 +68,54 @@ void UMbRGameInstance::FindServers()
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
 
-void UMbRGameInstance::OnCreateSessionComplete(FName ServerName, bool Succeessful)
+void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), Succeessful);
-	if (Succeessful)
+	FOnlineSessionSearchResult result = SessionSearch->SearchResults[arrayIndex];
+	if (result.IsValid())
 	{
-		serverCreation.Broadcast(Succeessful);
-		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
-	}
-}
-
-void UMbRGameInstance::OnFindSessionsComplete(bool Succeessful)
-{
-	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), Succeessful);
-	if (Succeessful)
-	{
-		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
-		OnAssignSearchResults(SearchResults);
-
-		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SearchResults.Num());
-
-	/*	if (SearchResults.Num())
+		UE_LOG(LogTemp, Warning, TEXT("Joining Server at Index: %d"), arrayIndex);
+		if (joinSessionName.ToString().IsEmpty())
 		{
-			SessionInterface->JoinSession(0, "Game Session", SearchResults[0]);
-		}*/
+			SessionInterface->JoinSession(0, defaultSessionName, result);
+		}
+		else
+		{
+			SessionInterface->JoinSession(0, joinSessionName, result);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to Join Server at Index: %d"), arrayIndex);
 	}
 }
 
-void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> searchResults)
+void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool succeessful)
 {
-	for (FOnlineSessionSearchResult result : searchResults)
+	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), succeessful);
+	if (succeessful)
+	{
+		serverCreation.Broadcast(succeessful);
+		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
+		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+	}
+}
+
+void UMbRGameInstance::OnFindSessionsComplete(bool succeessful)
+{
+	searchingForServers.Broadcast(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), succeessful);
+	if (succeessful)
+	{
+		OnAssignSearchResults();
+		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SessionSearch->SearchResults.Num());
+	}
+}
+
+void UMbRGameInstance::OnAssignSearchResults()
+{
+	int32 serverArrayIndex = 0;
+	for (FOnlineSessionSearchResult result : SessionSearch->SearchResults)
 	{
 		if (!result.IsValid()) { continue; }
 
@@ -102,18 +129,21 @@ void UMbRGameInstance::OnAssignSearchResults(TArray<FOnlineSessionSearchResult> 
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
+		serverInfo.serverArrayIndex = serverArrayIndex;
 		serversListDel.Broadcast(serverInfo);
+
+		++serverArrayIndex;
 	}
 }
 
-void UMbRGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*SessionName.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*sessionName.ToString());
 	if (APlayerController* pController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		FString joinAddress = "";
-		SessionInterface->GetResolvedConnectString(SessionName, joinAddress);
-		if (joinAddress != "")
+		SessionInterface->GetResolvedConnectString(sessionName, joinAddress);
+		if (!joinAddress.IsEmpty())
 		{
 			pController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
 		}

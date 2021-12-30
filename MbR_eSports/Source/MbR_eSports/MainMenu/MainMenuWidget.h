@@ -54,6 +54,8 @@ private :
 	UFUNCTION()
 		void CreateServerSlotWidget(FServerInfo serverInfo);
 	UFUNCTION()
+		void SearchingForServers(bool isSearching);
+	UFUNCTION()
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
