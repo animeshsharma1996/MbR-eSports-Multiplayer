@@ -14,5 +14,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int32 maxPlayers;	
 	UPROPERTY(BlueprintReadOnly)
+		bool isLan;	
+	UPROPERTY(BlueprintReadOnly)
+		int32 ping;	
+	UPROPERTY(BlueprintReadOnly)
 		int32 serverArrayIndex;
 };

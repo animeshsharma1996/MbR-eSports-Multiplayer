@@ -129,6 +129,8 @@ void UMbRGameInstance::OnAssignSearchResults()
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
+		serverInfo.isLan = result.Session.SessionSettings.bIsLANMatch;
+		serverInfo.ping = result.PingInMs;
 		serverInfo.serverArrayIndex = serverArrayIndex;
 		serversListDel.Broadcast(serverInfo);
 

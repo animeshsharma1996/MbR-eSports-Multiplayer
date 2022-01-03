@@ -21,7 +21,11 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* serverNameText;	
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* playersNumText;	
+		class UTextBlock* playersNumText;		
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* lanText;
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* pingText;	
 	UPROPERTY(meta = (BindWidget))
 		class UButton* joinButton;
 	UPROPERTY()
