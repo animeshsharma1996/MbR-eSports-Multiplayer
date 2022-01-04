@@ -37,6 +37,14 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UEditableText* hostNameTextBox;
 
+
+	UPROPERTY(meta = (BindWidget))
+		class USlider* maxPlayersNumSlider;
+	UPROPERTY(meta = (BindWidget))
+		class UCheckBox* lanCheckBox;
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* maxPlayersNumText;
+
 	UPROPERTY(BlueprintReadOnly)
 		class UMbRGameInstance* mbRGameInstance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
@@ -51,6 +59,8 @@ private :
 		void OnRefreshServersButtonClicked();	
 	UFUNCTION()
 		void OnHostCustomServerButtonClicked();
+	UFUNCTION()
+		void OnMaxPlayersSliderChanged(float value);
 	UFUNCTION()
 		void CreateServerSlotWidget(FServerInfo serverInfo);
 	UFUNCTION()

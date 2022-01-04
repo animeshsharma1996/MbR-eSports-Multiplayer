@@ -25,7 +25,7 @@ void UMbRGameInstance::Init()
 	}
 }
 
-void UMbRGameInstance::CreateServer(FString sessionName, FString hostName)
+void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Create Server"));
 
@@ -36,19 +36,19 @@ void UMbRGameInstance::CreateServer(FString sessionName, FString hostName)
 	SessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
 	SessionSettings.bUsesPresence = true;
 	SessionSettings.bShouldAdvertise = true;
-	SessionSettings.NumPublicConnections = 10;
-	SessionSettings.NumPrivateConnections = 10;
+	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
+	SessionSettings.NumPrivateConnections = passedServerInfo.maxPlayers;
 
 	SessionSettings.bAllowInvites = true;
 	SessionSettings.bAllowJoinViaPresence = true;
 	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
 
-	SessionSettings.Set(FName("SERVER_NAME_KEY"), sessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	SessionSettings.Set(FName("SERVER_NAME_KEY"), passedServerInfo.serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	//SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
-	if (sessionName.IsEmpty())
+	if (!passedServerInfo.serverName.IsEmpty())
 	{
-		defaultSessionName = FName(sessionName);
+		defaultSessionName = FName(passedServerInfo.serverName);
 	}
 
 	SessionInterface->CreateSession(0, defaultSessionName, SessionSettings);

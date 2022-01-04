@@ -4,6 +4,10 @@
 #include "Components/ScrollBox.h"
 #include "Components/PanelWidget.h"
 #include "Components/EditableText.h"
+#include "Components/TextBlock.h"
+#include "Components/Slider.h"
+#include "Components/CheckBox.h"
+#include "GenericPlatform/GenericPlatformMath.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
 #include <Runtime/Core/Public/Windows/COMPointer.h>
@@ -24,8 +28,11 @@ bool UMainMenuWidget::Initialize()
 
 	FScriptDelegate serversListDelegate;
 	FScriptDelegate serversSearchingDelegate;
+	FScriptDelegate sliderChangeDelegate;
 	serversListDelegate.BindUFunction(this, "CreateServerSlotWidget");
 	serversSearchingDelegate.BindUFunction(this, "SearchingForServers");
+	sliderChangeDelegate.BindUFunction(this, "OnMaxPlayersSliderChanged");
+	maxPlayersNumSlider->OnValueChanged.Add(sliderChangeDelegate);
 
 	if (mbRGameInstance != nullptr)
 	{
@@ -62,10 +69,20 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 
 void UMainMenuWidget::OnHostCustomServerButtonClicked()
 {
+	FPassedServerInfo passedServerInfo;
+	passedServerInfo.serverName = serverNameTextBox->GetText().ToString();
+	passedServerInfo.maxPlayers = FGenericPlatformMath::RoundToInt(maxPlayersNumSlider->GetValue());
+	passedServerInfo.isLan = lanCheckBox->IsChecked();
+
 	if (mbRGameInstance != nullptr)
 	{
-		mbRGameInstance->CreateServer(serverNameTextBox->GetText().ToString(), hostNameTextBox->GetText().ToString());
+		mbRGameInstance->CreateServer(passedServerInfo);
 	}
+}
+
+void UMainMenuWidget::OnMaxPlayersSliderChanged(float value)
+{
+	maxPlayersNumText->SetText(FText::AsCultureInvariant(FString::FromInt(FGenericPlatformMath::RoundToInt(value))));
 }
 
 void UMainMenuWidget::CreateServerSlotWidget(FServerInfo serverInfo)

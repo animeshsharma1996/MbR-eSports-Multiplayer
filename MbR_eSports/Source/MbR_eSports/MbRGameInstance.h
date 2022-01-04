@@ -21,7 +21,7 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
-		void CreateServer(FString serverName, FString hostName);
+		void CreateServer(FPassedServerInfo passedServerInfo);
 	UFUNCTION(BlueprintCallable)
 		void FindServers();		
 	UFUNCTION(BlueprintCallable)
