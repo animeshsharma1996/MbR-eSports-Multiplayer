@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "MbR_eSports/ServerInfoStruct.h"
-#include "MainMenu/ServerSlotWidget.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"

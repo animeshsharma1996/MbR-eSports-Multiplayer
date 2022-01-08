@@ -44,7 +44,6 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
 
 	SessionSettings.Set(FName("SERVER_NAME_KEY"), passedServerInfo.serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	//SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), hostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
 	if (!passedServerInfo.serverName.IsEmpty())
 	{
@@ -121,10 +120,8 @@ void UMbRGameInstance::OnAssignSearchResults()
 
 		FServerInfo serverInfo;
 		FString serverName = "Empty Server Name";
-		FString hostName = "Empty Host Name";
 
 		result.Session.SessionSettings.Get(FName("SERVER_NAME_KEY"), serverName);
-		result.Session.SessionSettings.Get(FName("SERVER_HOSTNAME_KEY"), hostName);
 
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;

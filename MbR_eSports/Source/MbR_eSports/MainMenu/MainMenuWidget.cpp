@@ -1,4 +1,5 @@
 #include "MainMenuWidget.h"
+#include "ServerSlotWidget.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"

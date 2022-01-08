@@ -34,9 +34,6 @@ protected :
 		class UScrollBox* serverListScrollBox;	
 	UPROPERTY(meta = (BindWidget))
 		class UEditableText* serverNameTextBox;
-	UPROPERTY(meta = (BindWidget))
-		class UEditableText* hostNameTextBox;
-
 
 	UPROPERTY(meta = (BindWidget))
 		class USlider* maxPlayersNumSlider;
