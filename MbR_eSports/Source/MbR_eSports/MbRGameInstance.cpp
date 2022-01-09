@@ -8,7 +8,7 @@
 
 UMbRGameInstance::UMbRGameInstance() 
 {
-	defaultSessionName = FName("Game Session");
+	defaultSessionName = FName("MbR_Game Session");
 }
 
 void UMbRGameInstance::Init()
@@ -38,10 +38,11 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
 	SessionSettings.NumPrivateConnections = passedServerInfo.maxPlayers;
-	SessionSettings.BuildUniqueId = 1;
-	SessionSettings.bAllowInvites = true;
-	SessionSettings.bAllowJoinViaPresence = true;
-	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
+
+	//SessionSettings.BuildUniqueId = 1;
+	//SessionSettings.bAllowInvites = true;
+	//SessionSettings.bAllowJoinViaPresence = true;
+	//SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
 
 	SessionSettings.Set(FName("SERVER_NAME_KEY"), passedServerInfo.serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
@@ -95,7 +96,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool succeessfu
 	{
 		serverCreation.Broadcast(succeessful);
 		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
 	}
 }
 
@@ -138,7 +139,7 @@ void UMbRGameInstance::OnAssignSearchResults()
 void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*sessionName.ToString());
-	if (APlayerController* pController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	if (APlayerController* pController = GetFirstLocalPlayerController())// UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		FString joinAddress = "";
 		SessionInterface->GetResolvedConnectString(sessionName, joinAddress);

@@ -16,21 +16,22 @@ public class MbR_eSports : ModuleRules
 			"InputCore", 
 			"OnlineSubsystem",
 			"OnlineSubsystemUtils",
-			"OnlineSubsystemSteam",
-			"Networking", 
-			"Sockets",
-			"OnlineSubsystemNull"
+			"OnlineSubsystemSteam"
+			//"Networking", 
+			//"Sockets",
+			//"OnlineSubsystemNull"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] 
+		/*PrivateDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Slate",
 			"SlateCore",
 			"OnlineSubsystem",
 			"Sockets",
 			"Networking",
-			"OnlineSubsystemSteam",
 			"OnlineSubsystemNull"
-		});
+		});*/
+
+		//DynamicallyLoadedModuleNames.Add("OnlineSubsystemSteam");
 	}
 }
