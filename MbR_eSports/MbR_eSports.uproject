@@ -10,7 +10,6 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"FunctionalTesting",
 				"UMG"
 			]
 		}
@@ -21,8 +20,13 @@
 			"Enabled": true
 		},
 		{
-			"Name": "SteamSockets",
-			"Enabled": true
+			"Name": "SteamVR",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win32",
+				"Win64",
+				"Linux"
+			]
 		}
 	]
 }

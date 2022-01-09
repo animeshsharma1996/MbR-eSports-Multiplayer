@@ -38,7 +38,7 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
 	SessionSettings.NumPrivateConnections = passedServerInfo.maxPlayers;
-
+	SessionSettings.BuildUniqueId = 1;
 	SessionSettings.bAllowInvites = true;
 	SessionSettings.bAllowJoinViaPresence = true;
 	SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
@@ -61,7 +61,7 @@ void UMbRGameInstance::FindServers()
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
-	SessionSearch->MaxSearchResults = 10000;
+	SessionSearch->MaxSearchResults = 9999;
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
@@ -95,7 +95,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool succeessfu
 	{
 		serverCreation.Broadcast(succeessful);
 		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
 	}
 }
 
