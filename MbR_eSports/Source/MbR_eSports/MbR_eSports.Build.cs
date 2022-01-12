@@ -16,7 +16,8 @@ public class MbR_eSports : ModuleRules
 			"InputCore", 
 			"OnlineSubsystem",
 			"OnlineSubsystemUtils",
-			"OnlineSubsystemSteam"
+			"OnlineSubsystemSteam",
+			"Steamworks"
 			//"Networking", 
 			//"Sockets",
 			//"OnlineSubsystemNull"

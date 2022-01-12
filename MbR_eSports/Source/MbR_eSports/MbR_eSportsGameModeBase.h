@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "MainMenu/MainMenuWidget.h"
+#include "Net/UnrealNetwork.h"
 #include "MbR_eSportsGameModeBase.generated.h"
 
 UCLASS()
@@ -22,7 +23,9 @@ protected:
 
 private:
     UPROPERTY()
-        UUserWidget* currentWidget;
+        UUserWidget* currentWidget;    
+    UPROPERTY()
+        UTextRenderComponent* playerNameText;
     UFUNCTION()
         void RemoveMainMenuFromViewport(bool successful);
 };

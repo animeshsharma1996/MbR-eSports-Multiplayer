@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MbR_eSports/ServerInfoStruct.h"
+#include "Components/TextRenderComponent.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
@@ -25,6 +26,10 @@ public:
 		void FindServers();		
 	UFUNCTION(BlueprintCallable)
 		void JoinServer(int32 arrayIndex, FName joinSessionName);
+	UFUNCTION(BlueprintCallable)
+		void SetPlayerCharacter(ACharacter* character);	
+	UFUNCTION(BlueprintCallable)
+		FString GetSteamIDString();
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
 	UPROPERTY(BlueprintAssignable)
@@ -34,14 +39,22 @@ public:
 
 protected:
 	IOnlineSessionPtr SessionInterface;
-
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 	virtual void Init() override;
-
-	virtual void OnCreateSessionComplete(FName sessionName, bool succeessful);
-	virtual void OnFindSessionsComplete(bool succeessful);
+	virtual void OnCreateSessionComplete(FName sessionName, bool successful);
+	virtual void OnFindSessionsComplete(bool successful);
 	virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
-	void OnAssignSearchResults();
-	FName defaultSessionName;
+
+	UFUNCTION()
+		void OnAssignSearchResults();
+	UPROPERTY()
+		FName defaultSessionName;
+
+private:
+	IOnlineSubsystem* onlineSubsystem;
+	UPROPERTY()
+		ACharacter* playerCharacter;	
+	UPROPERTY()
+		UTextRenderComponent* playerNumText;
 };

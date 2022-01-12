@@ -1,7 +1,10 @@
 #include "MbRGameInstance.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "GameFramework/Character.h"
+#include "Components/TextRenderComponent.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
@@ -9,13 +12,14 @@
 UMbRGameInstance::UMbRGameInstance() 
 {
 	defaultSessionName = FName("MbR_Game Session");
+	onlineSubsystem = IOnlineSubsystem::Get();
 }
 
 void UMbRGameInstance::Init()
 {
-	if (IOnlineSubsystem* subSystem = IOnlineSubsystem::Get())
+	if (onlineSubsystem)
 	{
-		SessionInterface = subSystem->GetSessionInterface();
+		SessionInterface = onlineSubsystem->GetSessionInterface();
 		if (SessionInterface.IsValid())
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnCreateSessionComplete);
@@ -39,7 +43,6 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
 	SessionSettings.NumPrivateConnections = passedServerInfo.maxPlayers;
 
-	//SessionSettings.BuildUniqueId = 1;
 	//SessionSettings.bAllowInvites = true;
 	//SessionSettings.bAllowJoinViaPresence = true;
 	//SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
@@ -89,23 +92,46 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 	}
 }
 
-void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool succeessful)
+void UMbRGameInstance::SetPlayerCharacter(ACharacter* character)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), succeessful);
-	if (succeessful)
+	playerCharacter = character;
+	if (playerCharacter != nullptr)
 	{
-		serverCreation.Broadcast(succeessful);
-		GetWorld()->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+		playerNumText = playerCharacter->FindComponentByClass<UTextRenderComponent>();
 	}
 }
 
-void UMbRGameInstance::OnFindSessionsComplete(bool succeessful)
+FString UMbRGameInstance::GetSteamIDString()
+{
+	FString steamID = "";
+	FString playerID = onlineSubsystem->GetIdentityInterface()->GetPlayerNickname(0);
+	if (!playerID.IsEmpty())
+	{
+		steamID = playerID;
+	}
+	return steamID;
+}
+
+void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), successful);
+	if (successful)
+	{
+		serverCreation.Broadcast(successful);
+		if (UWorld* world = GetWorld())
+		{
+			world->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
+		}
+		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+	}
+}
+
+void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 {
 	searchingForServers.Broadcast(false);
 
-	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), succeessful);
-	if (succeessful)
+	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), successful);
+	if (successful)
 	{
 		OnAssignSearchResults();
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SessionSearch->SearchResults.Num());
@@ -139,13 +165,20 @@ void UMbRGameInstance::OnAssignSearchResults()
 void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*sessionName.ToString());
-	if (APlayerController* pController = GetFirstLocalPlayerController())// UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	if (APlayerController* playerController = GetFirstLocalPlayerController())
 	{
+		if (!SessionInterface.IsValid()) { return; }
+
 		FString joinAddress = "";
-		SessionInterface->GetResolvedConnectString(sessionName, joinAddress);
+		if (!SessionInterface->GetResolvedConnectString(sessionName, joinAddress))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Could not get connect string."));
+			return;
+		}
+
 		if (!joinAddress.IsEmpty())
 		{
-			pController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
+			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
 		}
 	}
 }
