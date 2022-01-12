@@ -120,9 +120,9 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 		serverCreation.Broadcast(successful);
 		if (UWorld* world = GetWorld())
 		{
-			world->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
+			//world->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
 		}
-		//UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
+		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
 	}
 }
 
