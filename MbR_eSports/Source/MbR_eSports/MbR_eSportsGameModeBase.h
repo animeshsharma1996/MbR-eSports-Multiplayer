@@ -24,8 +24,6 @@ protected:
 private:
     UPROPERTY()
         UUserWidget* currentWidget;    
-    UPROPERTY()
-        UTextRenderComponent* playerNameText;
     UFUNCTION()
         void RemoveMainMenuFromViewport(bool successful);
 };

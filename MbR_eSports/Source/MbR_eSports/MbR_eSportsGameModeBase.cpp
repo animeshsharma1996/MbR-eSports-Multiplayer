@@ -12,18 +12,6 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     FInputModeUIOnly InputModeData;
     InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
-    playerNameText = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->FindComponentByClass<UTextRenderComponent>();
-
-    if (playerNameText != nullptr)
-    {
-        //playerNameText->SetText(FText::FromString(IOnlineSubsystem::Get()->GetIdentityInterface()->GetPlayerNickname(0)));
-    }
-
- /*   if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, playerNameText->Text.ToString());
-    }*/
-
     APlayerController* playerController = GetWorld()->GetFirstPlayerController();
     if (playerController != nullptr)
     {
@@ -43,7 +31,6 @@ void AMbR_eSportsGameModeBase::BeginPlay()
 
     if (mbRGameInstance != nullptr)
     {
-        mbRGameInstance->SetPlayerCharacter(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
         mbRGameInstance->serverCreation.Add(serverCreationDel);
     }
 }

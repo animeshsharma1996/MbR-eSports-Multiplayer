@@ -43,10 +43,6 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
 	SessionSettings.NumPrivateConnections = passedServerInfo.maxPlayers;
 
-	//SessionSettings.bAllowInvites = true;
-	//SessionSettings.bAllowJoinViaPresence = true;
-	//SessionSettings.bAllowJoinViaPresenceFriendsOnly = true;
-
 	SessionSettings.Set(FName("SERVER_NAME_KEY"), passedServerInfo.serverName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
 	if (!passedServerInfo.serverName.IsEmpty())
@@ -92,26 +88,6 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 	}
 }
 
-void UMbRGameInstance::SetPlayerCharacter(ACharacter* character)
-{
-	playerCharacter = character;
-	if (playerCharacter != nullptr)
-	{
-		playerNumText = playerCharacter->FindComponentByClass<UTextRenderComponent>();
-	}
-}
-
-FString UMbRGameInstance::GetSteamIDString()
-{
-	FString steamID = "";
-	FString playerID = onlineSubsystem->GetIdentityInterface()->GetPlayerNickname(0);
-	if (!playerID.IsEmpty())
-	{
-		steamID = playerID;
-	}
-	return steamID;
-}
-
 void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), successful);
@@ -119,10 +95,6 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	{
 		serverCreation.Broadcast(successful);
 		UGameplayStatics::OpenLevel(GetWorld(), "DefaultTestMap", true, "listen");
-		if (UWorld* world = GetWorld())
-		{
-			//world->ServerTravel("/Game/_Maps/DefaultTestMap?listen");
-		}
 	}
 }
 

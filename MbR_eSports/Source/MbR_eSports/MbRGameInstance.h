@@ -26,10 +26,6 @@ public:
 		void FindServers();		
 	UFUNCTION(BlueprintCallable)
 		void JoinServer(int32 arrayIndex, FName joinSessionName);
-	UFUNCTION(BlueprintCallable)
-		void SetPlayerCharacter(ACharacter* character);	
-	UFUNCTION(BlueprintCallable)
-		FString GetSteamIDString();
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
 	UPROPERTY(BlueprintAssignable)
@@ -53,8 +49,4 @@ protected:
 
 private:
 	IOnlineSubsystem* onlineSubsystem;
-	UPROPERTY()
-		ACharacter* playerCharacter;	
-	UPROPERTY()
-		UTextRenderComponent* playerNumText;
 };
