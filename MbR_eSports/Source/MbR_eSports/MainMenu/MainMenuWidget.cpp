@@ -4,7 +4,7 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/PanelWidget.h"
-#include "Components/EditableText.h"
+#include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
 #include "Components/Slider.h"
 #include "Components/CheckBox.h"
@@ -71,7 +71,7 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 void UMainMenuWidget::OnHostCustomServerButtonClicked()
 {
 	FPassedServerInfo passedServerInfo;
-	passedServerInfo.serverName = serverNameTextBox->GetText().ToString();
+	passedServerInfo.serverName = serverNameEditableTextBox->GetText().ToString();
 	passedServerInfo.maxPlayers = FGenericPlatformMath::RoundToInt(maxPlayersNumSlider->GetValue());
 	passedServerInfo.isLan = lanCheckBox->IsChecked();
 

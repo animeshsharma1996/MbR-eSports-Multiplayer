@@ -33,7 +33,7 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UScrollBox* serverListScrollBox;	
 	UPROPERTY(meta = (BindWidget))
-		class UEditableText* serverNameTextBox;
+		class UEditableTextBox* serverNameEditableTextBox;
 
 	UPROPERTY(meta = (BindWidget))
 		class USlider* maxPlayersNumSlider;
