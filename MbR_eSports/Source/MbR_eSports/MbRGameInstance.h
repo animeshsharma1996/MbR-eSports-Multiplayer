@@ -2,14 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "MbR_eSports/ServerInfoStruct.h"
-#include "MainMenu/ServerSlotWidget.h"
+#include "Components/TextRenderComponent.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
-#include "Engine/GameInstance.h"
 #include "MbRGameInstance.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, serversListDel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, serversListDel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServerSearching, bool, searchingForServers);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -20,25 +21,32 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
-		void CreateServer();
+		void CreateServer(FPassedServerInfo passedServerInfo);
 	UFUNCTION(BlueprintCallable)
-		void JoinServer();	
-	UPROPERTY(BlueprintReadOnly)
-		struct FServerInfo serverInfoRecieved;
+		void FindServers();		
+	UFUNCTION(BlueprintCallable)
+		void JoinServer(int32 arrayIndex, FName joinSessionName);
 	UPROPERTY(BlueprintAssignable)
-		FServerDel serversListDel;
+		FDelegateServer serversListDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateCreation serverCreation;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateServerSearching searchingForServers;
 
 protected:
 	IOnlineSessionPtr SessionInterface;
-
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 	virtual void Init() override;
+	virtual void OnCreateSessionComplete(FName sessionName, bool successful);
+	virtual void OnFindSessionsComplete(bool successful);
+	virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
 
-	virtual void OnCreateSessionComplete(FName ServerName, bool Succeessful);
-	virtual void OnFindSessionsComplete(bool Succeessful);
-	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	UFUNCTION()
+		void OnAssignSearchResults();
+	UPROPERTY()
+		FName defaultSessionName;
 
-private :
-	void OnAssignSearchResults(TArray<FOnlineSessionSearchResult> searchResults);
+private:
+	IOnlineSubsystem* onlineSubsystem;
 };

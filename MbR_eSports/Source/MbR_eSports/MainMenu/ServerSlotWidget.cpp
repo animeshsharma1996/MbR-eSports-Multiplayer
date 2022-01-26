@@ -1,15 +1,22 @@
 #include "ServerSlotWidget.h"
+#include "Components/Button.h"
 #include "Components/TextBlock.h"
 
-bool UServerSlotWidget::Initialize()
+void UServerSlotWidget::OnServerInfoUpdate(FServerInfo serverInfo, UMbRGameInstance* gameInstance)
 {
-	Super::Initialize();
+	joinButton->OnClicked.AddDynamic(this, &UServerSlotWidget::OnJoinButtonClicked);
+
+	serverData = serverInfo;
 	serverNameText->SetText(FText::AsCultureInvariant(serverData.serverName));
-	playersNumText->SetText(FText::AsCultureInvariant(serverData.currentPlayers + " / " + serverData.maxPlayers));
-	return true;
+	FString currentMaxPlayers = FString::FromInt(serverData.currentPlayers) + " / " + FString::FromInt(serverData.maxPlayers);
+	playersNumText->SetText(FText::AsCultureInvariant(currentMaxPlayers));
+	lanText->SetText(((serverData.isLan) == true) ? FText::AsCultureInvariant("Yes") : FText::AsCultureInvariant("No"));
+	pingText->SetText(FText::AsCultureInvariant(FString::FromInt(serverData.ping)));
+	arrayIndex = serverInfo.serverArrayIndex;
+	mbRGameInstance = gameInstance;
 }
 
-void UServerSlotWidget::OnServerInfoUpdate(FServerInfo serverInfo)
+void UServerSlotWidget::OnJoinButtonClicked()
 {
-	serverData = serverInfo;
+	mbRGameInstance->JoinServer(arrayIndex, FName(serverData.serverName));
 }

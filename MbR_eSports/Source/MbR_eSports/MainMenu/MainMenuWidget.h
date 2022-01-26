@@ -12,13 +12,9 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 		virtual bool Initialize() override;
 
-public :
-	UFUNCTION()
-		void SetServerSlotWidget(TSubclassOf<UUserWidget> widget);
-
 protected :
 	UPROPERTY(meta = (BindWidget))
-		class UButton* hostButton;
+		class UButton* customServerButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* serversListButton;
 	UPROPERTY(meta = (BindWidget))
@@ -26,27 +22,50 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* backButton;
 	UPROPERTY(meta = (BindWidget))
-		class UButton* exitButton;	
+		class UButton* exitButton;		
 	UPROPERTY(meta = (BindWidget))
-		class UWidgetSwitcher* widgetSwitcherServerList;	
+		class UButton* customHostButton;	
 	UPROPERTY(meta = (BindWidget))
-		class UScrollBox* serverListScrollBox;
+		class UButton* customServerBackButton;
+
+	UPROPERTY(meta = (BindWidget))
+		class UWidgetSwitcher* widgetSwitcherServerList;		
+	UPROPERTY(meta = (BindWidget))
+		class UScrollBox* serverListScrollBox;	
+	UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* serverNameEditableTextBox;
+
+	UPROPERTY(meta = (BindWidget))
+		class USlider* maxPlayersNumSlider;
+	UPROPERTY(meta = (BindWidget))
+		class UCheckBox* lanCheckBox;
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* maxPlayersNumText;
+
 	UPROPERTY(BlueprintReadOnly)
 		class UMbRGameInstance* mbRGameInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+		TSubclassOf<UUserWidget> serverSlotWidget;
 
 private :
 	UFUNCTION()
-		void OnHostButtonClicked();
+		void OnCustomServerButtonClicked();
 	UFUNCTION()
 		void OnServersListButtonClicked();	
 	UFUNCTION()
-		void OnRefreshServersButtonClicked();
-	void CreateServerSlotWidget();
+		void OnRefreshServersButtonClicked();	
+	UFUNCTION()
+		void OnHostCustomServerButtonClicked();
+	UFUNCTION()
+		void OnMaxPlayersSliderChanged(float value);
+	UFUNCTION()
+		void CreateServerSlotWidget(FServerInfo serverInfo);
+	UFUNCTION()
+		void SearchingForServers(bool isSearching);
 	UFUNCTION()
 		void OnBackButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
-
 	UPROPERTY()
-		TSubclassOf<UUserWidget> serverSlotWidget;
+		bool initialSearchForServers;
 };

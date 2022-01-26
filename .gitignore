@@ -77,7 +77,6 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 *.pdb
-*.ini
 MbR_eSports/Binaries/Win64/
 
 MbR_eSports/Intermediate/AssetRegistryCache/

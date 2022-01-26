@@ -15,9 +15,9 @@ public class MbR_eSports : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"OnlineSubsystem",
-			"OnlineSubsystemSteam" 
+			"OnlineSubsystemUtils",
+			"OnlineSubsystemSteam",
+			"Steamworks"
 		});
-
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 	}
 }
