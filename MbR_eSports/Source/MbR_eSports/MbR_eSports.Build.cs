@@ -14,9 +14,9 @@ public class MbR_eSports : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore", 
-			"OnlineSubsystem",
+			"OnlineSubsystem",       
 			"OnlineSubsystemUtils",
-			"OnlineSubsystemSteam",
+			"OnlineSubsystemSteam", //Build depends on OnlineSubsystemSteam Module
 			"Steamworks"
 		});
 	}

@@ -18,6 +18,8 @@ bool UMainMenuWidget::Initialize()
 	Super::Initialize();
 
 	initialSearchForServers = false;
+	
+	//Bind each variable defined in the header file with the "meta = (BindWidget)" with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
@@ -25,8 +27,11 @@ bool UMainMenuWidget::Initialize()
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	customServerBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
-	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
+    /*
+    Logic to bind delegates to their relevant functions. Servers List and Servers Searching are added to the 
+    game instance counter parts
+    */
 	FScriptDelegate serversListDelegate;
 	FScriptDelegate serversSearchingDelegate;
 	FScriptDelegate sliderChangeDelegate;
@@ -35,6 +40,7 @@ bool UMainMenuWidget::Initialize()
 	sliderChangeDelegate.BindUFunction(this, "OnMaxPlayersSliderChanged");
 	maxPlayersNumSlider->OnValueChanged.Add(sliderChangeDelegate);
 
+	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (mbRGameInstance != nullptr)
 	{
 		mbRGameInstance->serversListDel.Add(serversListDelegate);
@@ -44,11 +50,13 @@ bool UMainMenuWidget::Initialize()
 	return true;
 }
 
+//Takes the player to host menu which can be used to host custom server
 void UMainMenuWidget::OnCustomServerButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(2);
 }
 
+//Takes the player to the server list menu 
 void UMainMenuWidget::OnServersListButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(1);
@@ -59,6 +67,7 @@ void UMainMenuWidget::OnServersListButtonClicked()
 	}
 }
 
+//Clears the list of the servers and researches to find servers
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
 	serverListScrollBox->ClearChildren();
@@ -68,6 +77,10 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	}
 }
 
+/*
+Create a custom server when the host button is clicked. Get the information of the server from the entered data through 
+the custom server menu
+*/
 void UMainMenuWidget::OnHostCustomServerButtonClicked()
 {
 	FPassedServerInfo passedServerInfo;
@@ -81,11 +94,13 @@ void UMainMenuWidget::OnHostCustomServerButtonClicked()
 	}
 }
 
+//Increase or decrease the max players according to the player slider
 void UMainMenuWidget::OnMaxPlayersSliderChanged(float value)
 {
 	maxPlayersNumText->SetText(FText::AsCultureInvariant(FString::FromInt(FGenericPlatformMath::RoundToInt(value))));
 }
 
+//Create server slot widget with the help of the passed parameter containing the custom created server info
 void UMainMenuWidget::CreateServerSlotWidget(FServerInfo serverInfo)
 {
 	if (serverSlotWidget != nullptr)
@@ -99,6 +114,7 @@ void UMainMenuWidget::CreateServerSlotWidget(FServerInfo serverInfo)
 	}
 }
 
+//Search for servers when refresh button is clicked. Also disable the refresh button while searching
 void UMainMenuWidget::SearchingForServers(bool isSearching)
 {
 	if (isSearching)
@@ -111,11 +127,16 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 	}
 }
 
+//Back button takes the player back to the main menu
 void UMainMenuWidget::OnBackButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 }
 
+/*
+Exits the game when exit button is clicked. This also disconnects the client from the server. If the client is the one
+who hosted the server, then the server session is destroyed as well.
+*/
 void UMainMenuWidget::OnExitButtonClicked()
 {	
 	APlayerController* SpecificPlayer = GetWorld()->GetFirstPlayerController();

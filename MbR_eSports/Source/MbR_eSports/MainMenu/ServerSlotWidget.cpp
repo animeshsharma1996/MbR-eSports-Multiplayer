@@ -2,6 +2,10 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 
+/*
+Function defined to be called as soon as the server slot widget is created and the game instance and server info are 
+are passed as parameters. Also binds join button with the OnJoinButtonClicked function dynamically
+*/
 void UServerSlotWidget::OnServerInfoUpdate(FServerInfo serverInfo, UMbRGameInstance* gameInstance)
 {
 	joinButton->OnClicked.AddDynamic(this, &UServerSlotWidget::OnJoinButtonClicked);

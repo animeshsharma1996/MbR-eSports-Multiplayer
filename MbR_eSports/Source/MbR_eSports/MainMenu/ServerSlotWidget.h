@@ -6,6 +6,11 @@
 #include "MbR_eSports/MbRGameInstance.h"
 #include "ServerSlotWidget.generated.h"
 
+/*
+Server Slot Widget class created to contain the line slot of server data which will be displayed when servers are found.
+Each slot line will have server name, players numbers, lan info, ping and join button
+*/
+
 UCLASS()
 class MBR_ESPORTS_API UServerSlotWidget : public UUserWidget
 {

@@ -9,12 +9,14 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 
+//Constructor to define default session name and the online subsystem
 UMbRGameInstance::UMbRGameInstance() 
 {
 	defaultSessionName = FName("MbR_Game Session");
 	onlineSubsystem = IOnlineSubsystem::Get();
 }
 
+//Initialise the GameInstance by binding the inherited and inbuilt functions to the session interface
 void UMbRGameInstance::Init()
 {
 	if (onlineSubsystem)
@@ -29,6 +31,7 @@ void UMbRGameInstance::Init()
 	}
 }
 
+//Create a server by passing custom server info through the custom server menu
 void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Create Server"));
@@ -53,6 +56,7 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionInterface->CreateSession(0, defaultSessionName, SessionSettings);
 }
 
+//Find servers function, called when server list is opened or the refresh button is clicked
 void UMbRGameInstance::FindServers()
 {
 	searchingForServers.Broadcast(true);
@@ -67,6 +71,7 @@ void UMbRGameInstance::FindServers()
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
 
+//Join server according to the server slot, called when join button is clicked
 void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 {
 	FOnlineSessionSearchResult result = SessionSearch->SearchResults[arrayIndex];
@@ -88,6 +93,11 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 	}
 }
 
+/*
+Delegate function, called when a session creation is completed. Makes the server and the relevant client travel to the 
+DefaultTestMap. The map name is hard coded here, obviously, this should be changed accordingly and passed as a variable.
+The variable can be assigned in the child blueprint class
+*/
 void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), successful);
@@ -98,6 +108,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	}
 }
 
+//Delegate function, called when sessions search is completed
 void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 {
 	searchingForServers.Broadcast(false);
@@ -110,6 +121,7 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	}
 }
 
+//Function called to assign search results upon completion of sessions search
 void UMbRGameInstance::OnAssignSearchResults()
 {
 	int32 serverArrayIndex = 0;
@@ -134,6 +146,7 @@ void UMbRGameInstance::OnAssignSearchResults()
 	}
 }
 
+//Delegate function, called when session join is completed. This effectively makes the client travel to the main map
 void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*sessionName.ToString());
