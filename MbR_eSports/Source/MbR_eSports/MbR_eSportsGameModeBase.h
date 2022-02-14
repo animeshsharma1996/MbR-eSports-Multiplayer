@@ -25,6 +25,8 @@ protected:
         TSubclassOf<UUserWidget> mainMenuWidget;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         TSubclassOf<UUserWidget> serverSlotWidget;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+        FString defaultGameMapName;
     UFUNCTION(BlueprintCallable)
         void CreateMainMenuWidget(TSubclassOf<UUserWidget> newWidget);
 

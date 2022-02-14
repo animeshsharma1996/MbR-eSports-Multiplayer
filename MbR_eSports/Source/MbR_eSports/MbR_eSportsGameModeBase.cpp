@@ -25,10 +25,14 @@ void AMbR_eSportsGameModeBase::BeginPlay()
         playerController->bEnableMouseOverEvents = true;
     }
     
-    //Create the main Menu widget when in the main menu -> Might have to change accordingly
-    if (GetWorld()->GetMapName() != "DefaultTestMap")
+    //Create the main Menu widget when in the main menu only -> Might have to change accordingly
+    if (GetWorld()->GetMapName() != defaultGameMapName)
     {
         CreateMainMenuWidget(mainMenuWidget);
+    }
+    else //In-Game Menu
+    {
+        
     }
 
     //Logic to bind server creation delegate function -> Fires the RemoveMainMenuFromViewport upon creation

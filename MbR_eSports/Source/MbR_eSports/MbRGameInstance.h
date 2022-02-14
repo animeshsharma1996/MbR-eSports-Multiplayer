@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void FindServers();		
 	UFUNCTION(BlueprintCallable)
+		void FindServersOfFriends();		
+	UFUNCTION(BlueprintCallable)
 		void JoinServer(int32 arrayIndex, FName joinSessionName);
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
@@ -46,6 +48,7 @@ protected:
 	virtual void Init() override;
 	virtual void OnCreateSessionComplete(FName sessionName, bool successful);
 	virtual void OnFindSessionsComplete(bool successful);
+	virtual void OnFindFriendSessionComplete(bool successful);
 	virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
 
 	UFUNCTION()

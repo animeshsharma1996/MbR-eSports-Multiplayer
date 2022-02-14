@@ -16,7 +16,7 @@ UMbRGameInstance::UMbRGameInstance()
 	onlineSubsystem = IOnlineSubsystem::Get();
 }
 
-//Initialise the GameInstance by binding the inherited and inbuilt functions to the session interface
+//Initialise the GameInstance and SessionInterface by binding the inherited and inbuilt functions to the session interface
 void UMbRGameInstance::Init()
 {
 	if (onlineSubsystem)
@@ -26,6 +26,7 @@ void UMbRGameInstance::Init()
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnFindSessionsComplete);
+			//SessionInterface->OnFindFriendSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnFindFriendSessionComplete);
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnJoinSessionComplete);
 		}
 	}
@@ -56,7 +57,7 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 	SessionInterface->CreateSession(0, defaultSessionName, SessionSettings);
 }
 
-//Find servers function, called when server list is opened or the refresh button is clicked
+//Find servers function, called when server list is opened or the refresh button in the menu is clicked
 void UMbRGameInstance::FindServers()
 {
 	searchingForServers.Broadcast(true);
@@ -69,6 +70,19 @@ void UMbRGameInstance::FindServers()
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+}
+
+//Find friends servers function, called when friends server list is opened or the refresh button in the menu is clicked
+void UMbRGameInstance::FindServersOfFriends()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Find Friends' Server"));
+    
+    SessionSearch = MakeShareable(new FOnlineSessionSearch());
+    SessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
+    SessionSearch->MaxSearchResults = 1000;
+    SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+
+    //SessionInterface->FindFriendSession(0, SessionSearch.ToSharedRef());
 }
 
 //Join server according to the server slot, called when join button is clicked
@@ -114,6 +128,19 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	searchingForServers.Broadcast(false);
 
 	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), successful);
+	if (successful)
+	{
+		OnAssignSearchResults();
+		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), SessionSearch->SearchResults.Num());
+	}
+}
+
+//Delegate function, called when friends' sessions search is completed
+void UMbRGameInstance::OnFindFriendSessionComplete(bool successful)
+{
+    searchingForServers.Broadcast(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("OnFindFriendSessionsComplete, Succeeded: %d"), successful);
 	if (successful)
 	{
 		OnAssignSearchResults();
