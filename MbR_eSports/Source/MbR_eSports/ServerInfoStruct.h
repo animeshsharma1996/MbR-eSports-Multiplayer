@@ -2,6 +2,11 @@
 
 #include "ServerInfoStruct.generated.h"
 
+/*
+Struct File created to define Server Info and Passer Server Info as parameters to contain information of the server,
+name, current/max players, lan check, ping and array index
+*/
+
 USTRUCT(BlueprintType)
 struct FServerInfo
 {

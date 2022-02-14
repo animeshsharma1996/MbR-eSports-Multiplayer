@@ -6,6 +6,12 @@
 #include "MbR_eSports/MbRGameInstance.h"
 #include "MainMenuWidget.generated.h"
 
+/*
+The MainMenuWidget class derived from UserWidget to bind and create functionalities of UI elements such as buttons,
+texts, scrollbox, slider, checkbox created in the MainMenu along with the widget switcher.
+The variables and functions names are self explanatory.
+*/
+
 UCLASS()
 class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 {
