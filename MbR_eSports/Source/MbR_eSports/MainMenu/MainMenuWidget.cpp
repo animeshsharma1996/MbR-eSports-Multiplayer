@@ -8,6 +8,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Slider.h"
 #include "Components/CheckBox.h"
+#include "Components/Image.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
@@ -27,7 +28,10 @@ bool UMainMenuWidget::Initialize()
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	customServerBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
-
+    inGameMenuBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
+    cancelButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCancelButtonClicked);
+    inGameMenuExitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
+    
     /*
     Logic to bind delegates to their relevant functions. Servers List and Servers Searching are added to the 
     game instance counter parts
@@ -48,6 +52,13 @@ bool UMainMenuWidget::Initialize()
 	}
 
 	return true;
+}
+
+//Bring up the in-game menu along with it's functionality 
+void UMainMenuWidget::InGameMenu()
+{
+    backgroundImage->SetIsEnabled(false);
+    widgetSwitcherServerList->SetActiveWidgetIndex(3);
 }
 
 //Takes the player to host menu which can be used to host custom server
@@ -130,7 +141,17 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 //Back button takes the player back to the main menu
 void UMainMenuWidget::OnBackButtonClicked()
 {
+    backgroundImage->SetIsEnabled(true);
 	widgetSwitcherServerList->SetActiveWidgetIndex(0);
+}
+
+//Cancel Button removes the in game menu and unpauses for the local player
+void UMainMenuWidget::OnCancelButtonClicked()
+{
+    if (mbRGameInstance != nullptr)
+ 	{
+        mbRGameInstance->serverCreation.Broadcast(true);
+    }
 }
 
 /*

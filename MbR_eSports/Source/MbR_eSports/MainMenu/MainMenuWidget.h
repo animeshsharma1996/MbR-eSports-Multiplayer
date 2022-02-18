@@ -18,6 +18,10 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 		virtual bool Initialize() override;
 
+public :
+    UFUNCTION()
+        void InGameMenu();
+
 protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* customServerButton;
@@ -33,7 +37,15 @@ protected :
 		class UButton* customHostButton;	
 	UPROPERTY(meta = (BindWidget))
 		class UButton* customServerBackButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* inGameMenuBackButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* cancelButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* inGameMenuExitButton;
 
+    UPROPERTY(meta = (BindWidget))
+        class UImage* backgroundImage;
 	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* widgetSwitcherServerList;		
 	UPROPERTY(meta = (BindWidget))
@@ -70,6 +82,8 @@ private :
 		void SearchingForServers(bool isSearching);
 	UFUNCTION()
 		void OnBackButtonClicked();
+	UFUNCTION()	
+		void OnCancelButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
 	UPROPERTY()

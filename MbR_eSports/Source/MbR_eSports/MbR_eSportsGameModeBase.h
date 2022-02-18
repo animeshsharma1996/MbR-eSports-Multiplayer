@@ -19,20 +19,28 @@ class MBR_ESPORTS_API AMbR_eSportsGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 protected:
+    AMbR_eSportsGameModeBase();
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         TSubclassOf<UUserWidget> mainMenuWidget;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         TSubclassOf<UUserWidget> serverSlotWidget;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
-        FString defaultGameMapName;
+        FString defaultGameMapName;    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+        FString mainMenuMapName;
     UFUNCTION(BlueprintCallable)
-        void CreateMainMenuWidget(TSubclassOf<UUserWidget> newWidget);
+        void CreateMainMenuWidget();
 
 private:
     UPROPERTY()
-        UUserWidget* currentWidget;    
+        UUserWidget* currentWidget; 
+    UPROPERTY()
+        UUserWidget* mainMenuUserWidget;   
+    UPROPERTY()   
+        APlayerController* playerController;
     UFUNCTION()
         void RemoveMainMenuFromViewport(bool successful);
 };
