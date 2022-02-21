@@ -9,6 +9,7 @@
 #include "Components/Slider.h"
 #include "Components/CheckBox.h"
 #include "Components/Image.h"
+#include "Components/Widget.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
@@ -20,7 +21,7 @@ bool UMainMenuWidget::Initialize()
 
 	initialSearchForServers = false;
 	
-	//Bind each variable defined in the header file with the "meta = (BindWidget)" with relevant function dynamically
+	//Bind each button variable defined in the header file with the "meta = (BindWidget)" with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
@@ -57,7 +58,7 @@ bool UMainMenuWidget::Initialize()
 //Bring up the in-game menu along with it's functionality 
 void UMainMenuWidget::InGameMenu()
 {
-    backgroundImage->SetIsEnabled(false);
+    backgroundImage->SetVisibility(ESlateVisibility::Hidden);
     widgetSwitcherServerList->SetActiveWidgetIndex(3);
 }
 
@@ -141,7 +142,7 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 //Back button takes the player back to the main menu
 void UMainMenuWidget::OnBackButtonClicked()
 {
-    backgroundImage->SetIsEnabled(true);
+    backgroundImage->SetVisibility(ESlateVisibility::Visible);
 	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 }
 

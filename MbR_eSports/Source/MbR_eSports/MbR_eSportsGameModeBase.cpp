@@ -9,7 +9,6 @@
 AMbR_eSportsGameModeBase::AMbR_eSportsGameModeBase()
 {
     //Enabling the Tick function for this game mode base class
-    PrimaryActorTick.bStartWithTickEnabled = true;
     PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -71,8 +70,8 @@ void AMbR_eSportsGameModeBase::Tick(float DeltaTime)
            {
                UE_LOG(LogTemp, Warning, TEXT("In-GameMenu Locally"));
                currentWidget = mainMenuUserWidget;
-               currentWidget->AddToViewport();
                Cast<UMainMenuWidget>(currentWidget)->InGameMenu();
+               currentWidget->AddToViewport();
            }
            else
            {
