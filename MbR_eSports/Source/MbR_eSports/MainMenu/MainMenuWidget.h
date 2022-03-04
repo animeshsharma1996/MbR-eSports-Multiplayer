@@ -18,11 +18,19 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 		virtual bool Initialize() override;
 
+public :
+    UFUNCTION()
+        void InGameMenu(); 
+	UFUNCTION()
+        void PublicTick();
+
 protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* customServerButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* serversListButton;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* friendsServersListButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* refreshServersButton;
 	UPROPERTY(meta = (BindWidget))
@@ -33,7 +41,15 @@ protected :
 		class UButton* customHostButton;	
 	UPROPERTY(meta = (BindWidget))
 		class UButton* customServerBackButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* inGameMenuBackButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* cancelButton;
+	UPROPERTY(meta = (BindWidget))
+	    class UButton* inGameMenuExitButton;
 
+    UPROPERTY(meta = (BindWidget))
+        class UImage* backgroundImage;
 	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* widgetSwitcherServerList;		
 	UPROPERTY(meta = (BindWidget))
@@ -70,8 +86,14 @@ private :
 		void SearchingForServers(bool isSearching);
 	UFUNCTION()
 		void OnBackButtonClicked();
+	UFUNCTION()	
+		void OnCancelButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
 	UPROPERTY()
-		bool initialSearchForServers;
+		bool initialSearchForServers;	
+	UPROPERTY()
+		bool isServersListPressed;	
+	UPROPERTY()
+		bool isFriendsListPressed;
 };

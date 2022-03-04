@@ -27,13 +27,18 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
+		void AssignMapNames(FName lobbyMap, FName mainMenuMap);
+	UFUNCTION(BlueprintCallable)
 		void CreateServer(FPassedServerInfo passedServerInfo);
 	UFUNCTION(BlueprintCallable)
 		void FindServers();		
 	UFUNCTION(BlueprintCallable)
 		void FindServersOfFriends();		
 	UFUNCTION(BlueprintCallable)
-		void JoinServer(int32 arrayIndex, FName joinSessionName);
+		void JoinServer(int32 arrayIndex, FName joinSessionName);	
+	UFUNCTION(BlueprintCallable)
+		void EndServer();
+
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
 	UPROPERTY(BlueprintAssignable)
@@ -42,14 +47,16 @@ public:
 		FDelegateServerSearching searchingForServers;
 
 protected:
-	IOnlineSessionPtr SessionInterface;
-	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+	IOnlineSessionPtr sessionInterface;
+	IOnlineFriendsPtr friendInterface;
+	TSharedPtr<FOnlineSessionSearch> sessionSearch;
 
 	virtual void Init() override;
 	virtual void OnCreateSessionComplete(FName sessionName, bool successful);
 	virtual void OnFindSessionsComplete(bool successful);
 	virtual void OnFindFriendSessionComplete(bool successful);
 	virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
+	virtual void OnEndSessionComplete(FName sessionName, bool successful);
 
 	UFUNCTION()
 		void OnAssignSearchResults();
@@ -58,4 +65,13 @@ protected:
 
 private:
 	IOnlineSubsystem* onlineSubsystem;
+	UPROPERTY()
+		FName lobbyMapName;
+	UPROPERTY()
+		FName mainMenuMapName;
+	TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
+	TArray<TSharedRef<const FUniqueNetId>> friendList;
+	UPROPERTY()
+		FString friendListName;
+	const FUniqueNetId* localUserId;
 };
