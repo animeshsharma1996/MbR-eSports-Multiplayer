@@ -20,10 +20,13 @@ bool UMainMenuWidget::Initialize()
 	Super::Initialize();
 
 	initialSearchForServers = false;
+	isServersListPressed = false;
+	isFriendsListPressed = false;
 	
 	//Bind each button variable defined in the header file with the "meta = (BindWidget)" with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
+	friendsServersListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
 	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostCustomServerButtonClicked);
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
@@ -53,6 +56,19 @@ bool UMainMenuWidget::Initialize()
 	}
 
 	return true;
+}
+
+void UMainMenuWidget::PublicTick()
+{
+	if (serversListButton->IsPressed())
+	{
+		isServersListPressed = true;
+	}
+
+	if (friendsServersListButton->IsPressed())
+	{
+		isFriendsListPressed = true;
+	}
 }
 
 //Bring up the in-game menu along with it's functionality 
@@ -85,7 +101,17 @@ void UMainMenuWidget::OnRefreshServersButtonClicked()
 	serverListScrollBox->ClearChildren();
 	if (mbRGameInstance != nullptr)
 	{
-		mbRGameInstance->FindServers();
+		if (isServersListPressed)
+		{
+			mbRGameInstance->FindServers();
+			isServersListPressed = false;
+		}
+
+		if (isFriendsListPressed)
+		{
+			mbRGameInstance->FindServersOfFriends();
+			isFriendsListPressed = false;
+		}
 	}
 }
 
@@ -142,6 +168,10 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 //Back button takes the player back to the main menu
 void UMainMenuWidget::OnBackButtonClicked()
 {
+	if (mbRGameInstance != nullptr)
+	{
+		mbRGameInstance->EndServer();
+	}
     backgroundImage->SetVisibility(ESlateVisibility::Visible);
 	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 }
@@ -151,6 +181,7 @@ void UMainMenuWidget::OnCancelButtonClicked()
 {
     if (mbRGameInstance != nullptr)
  	{
+ 	    //This delegate removes the widget from the viewport, thus it's being reused here
         mbRGameInstance->serverCreation.Broadcast(true);
     }
 }

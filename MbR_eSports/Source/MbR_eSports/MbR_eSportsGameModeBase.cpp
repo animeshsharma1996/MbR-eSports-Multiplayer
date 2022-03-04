@@ -52,6 +52,7 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     if (mbRGameInstance != nullptr)
     {
         mbRGameInstance->serverCreation.Add(serverCreationDel);
+        mbRGameInstance->AssignMapNames(FName(defaultGameMapName), FName(mainMenuMapName));
     }
 }
 
@@ -60,25 +61,13 @@ void AMbR_eSportsGameModeBase::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
-    if(GetWorld()->GetMapName() != mainMenuMapName && playerController != nullptr)
+    BringUpInGameMenu();
+
+    if (GetWorld()->GetMapName() != defaultGameMapName)
     {
-        //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
-        if(playerController->IsInputKeyDown(EKeys::Escape) && mainMenuUserWidget != nullptr)
+        if (mainMenuUserWidget != nullptr && currentWidget != nullptr)
         {
-           if(currentWidget == nullptr)
-           {
-               UE_LOG(LogTemp, Warning, TEXT("In-GameMenu Locally"));
-               currentWidget = mainMenuUserWidget;
-               Cast<UMainMenuWidget>(currentWidget)->InGameMenu();
-               currentWidget->AddToViewport();
-           }
-           else
-           {
-               UE_LOG(LogTemp, Warning, TEXT("Remove the In-GameMenu Locally"));
-               currentWidget->RemoveFromViewport();
-               currentWidget = nullptr;
-           }
+            Cast<UMainMenuWidget>(currentWidget)->PublicTick();
         }
     }
 }
@@ -95,6 +84,31 @@ void AMbR_eSportsGameModeBase::CreateMainMenuWidget()
     {
         currentWidget->RemoveFromViewport();
         currentWidget = nullptr;
+    }
+}
+
+//The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
+void AMbR_eSportsGameModeBase::BringUpInGameMenu()
+{
+    if (GetWorld()->GetMapName() != mainMenuMapName && playerController != nullptr)
+    {
+        //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
+        if (playerController->IsInputKeyDown(EKeys::Escape) && mainMenuUserWidget != nullptr)
+        {
+            if (currentWidget == nullptr)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("In-GameMenu Locally"));
+                currentWidget = mainMenuUserWidget;
+                Cast<UMainMenuWidget>(currentWidget)->InGameMenu();
+                currentWidget->AddToViewport();
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Remove the In-GameMenu Locally"));
+                currentWidget->RemoveFromViewport();
+                currentWidget = nullptr;
+            }
+        }
     }
 }
 

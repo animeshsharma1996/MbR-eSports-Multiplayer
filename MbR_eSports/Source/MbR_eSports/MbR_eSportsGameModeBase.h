@@ -32,7 +32,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
         FString mainMenuMapName;
     UFUNCTION(BlueprintCallable)
-        void CreateMainMenuWidget();
+        void CreateMainMenuWidget();    
+    UFUNCTION(BlueprintCallable)
+        void BringUpInGameMenu();
 
 private:
     UPROPERTY()

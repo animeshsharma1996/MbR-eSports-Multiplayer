@@ -20,13 +20,17 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 
 public :
     UFUNCTION()
-        void InGameMenu();
+        void InGameMenu(); 
+	UFUNCTION()
+        void PublicTick();
 
 protected :
 	UPROPERTY(meta = (BindWidget))
 		class UButton* customServerButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* serversListButton;
+	UPROPERTY(meta = (BindWidget))
+		class UButton* friendsServersListButton;
 	UPROPERTY(meta = (BindWidget))
 		class UButton* refreshServersButton;
 	UPROPERTY(meta = (BindWidget))
@@ -87,5 +91,9 @@ private :
 	UFUNCTION()
 		void OnExitButtonClicked();
 	UPROPERTY()
-		bool initialSearchForServers;
+		bool initialSearchForServers;	
+	UPROPERTY()
+		bool isServersListPressed;	
+	UPROPERTY()
+		bool isFriendsListPressed;
 };
