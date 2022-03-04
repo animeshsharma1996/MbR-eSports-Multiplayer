@@ -65,13 +65,13 @@ protected:
 
 private:
 	IOnlineSubsystem* onlineSubsystem;
+	TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
+	TArray<TSharedRef<const FUniqueNetId>> friendList;
+	const FUniqueNetId* localUserId;
 	UPROPERTY()
 		FName lobbyMapName;
 	UPROPERTY()
 		FName mainMenuMapName;
-	TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
-	TArray<TSharedRef<const FUniqueNetId>> friendList;
 	UPROPERTY()
 		FString friendListName;
-	const FUniqueNetId* localUserId;
 };
