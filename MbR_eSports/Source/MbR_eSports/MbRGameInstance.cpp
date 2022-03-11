@@ -7,7 +7,9 @@
 #include "Components/TextRenderComponent.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
+#include "OnlineSubsystemNames.h"
 #include "OnlineSubsystemUtils.h"
+#include "Interfaces/OnlineSharingInterface.h"
 #include "Templates/SharedPointer.h"
 
 //Constructor to define default session name and the online subsystem
@@ -19,14 +21,12 @@ UMbRGameInstance::UMbRGameInstance()
 	if (onlineSubsystem)
 	{
 		friendInterface = onlineSubsystem->GetFriendsInterface();
+		localUserId = (onlineSubsystem->GetIdentityInterface()->GetUniquePlayerId(0)).Get();
+		FOnReadFriendsListComplete friendDelegate;
+		friendDelegate.BindUObject(this, &UMbRGameInstance::OnReadFriendsComplete);
 		if (friendInterface.IsValid())
 		{
-			friendInterface->GetFriendsList(0, friendListName, onlineFriendList);
-		}
-		localUserId = (onlineSubsystem->GetIdentityInterface()->GetUniquePlayerId(0)).Get();
-		for (TSharedRef<FOnlineFriend> onlineFriend : onlineFriendList)
-		{
-			friendList.Add(onlineFriend->GetUserId());
+			friendInterface->ReadFriendsList(0, friendListName, friendDelegate);
 		}
 	}
 }
@@ -158,6 +158,20 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	{
 		OnAssignSearchResults();
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionSearch->SearchResults.Num());
+	}
+}
+
+//Delegate function, called when friends' list read is completed
+void UMbRGameInstance::OnReadFriendsComplete(int32 localPlayer, bool successful, const FString& listName, const FString& errorStr)
+{
+	if (successful)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnReadFriendsComplete, Succeeded: %d"), successful);
+		friendInterface->GetFriendsList(localPlayer, listName, onlineFriendList);
+		for (TSharedRef<FOnlineFriend> onlineFriend : onlineFriendList)
+		{
+			friendList.Add(onlineFriend->GetUserId());
+		}
 	}
 }
 
