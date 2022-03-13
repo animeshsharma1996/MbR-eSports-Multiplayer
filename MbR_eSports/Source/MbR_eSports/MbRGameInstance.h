@@ -27,7 +27,7 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
-		void AssignMapNames(FName lobbyMap, FName mainMenuMap);
+		void SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController);
 	UFUNCTION(BlueprintCallable)
 		void CreateServer(FPassedServerInfo passedServerInfo);
 	UFUNCTION(BlueprintCallable)
@@ -55,20 +55,20 @@ protected:
 	virtual void OnCreateSessionComplete(FName sessionName, bool successful);
 	virtual void OnFindSessionsComplete(bool successful);
 	virtual void OnReadFriendsComplete(int32 localPlayer, bool successful, const FString& listName, const FString& errorStr);
-	virtual void OnFindFriendSessionComplete(bool successful);
+	virtual void OnFindFriendSessionComplete(int32 localPlayer, bool successful, const TArray<FOnlineSessionSearchResult>& sessionInfo);
 	virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
 	virtual void OnEndSessionComplete(FName sessionName, bool successful);
 
-	UFUNCTION()
-		void OnAssignSearchResults();
+	void OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo);
+
 	UPROPERTY()
 		FName defaultSessionName;
 
 private:
 	IOnlineSubsystem* onlineSubsystem;
 	TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
-	TArray<TSharedRef<const FUniqueNetId>> friendList;
-	const FUniqueNetId* localUserId;
+	UPROPERTY()
+		APlayerController* playerController;
 	UPROPERTY()
 		FName lobbyMapName;
 	UPROPERTY()

@@ -23,7 +23,7 @@ bool UMainMenuWidget::Initialize()
 	isServersListPressed = false;
 	isFriendsListPressed = false;
 	
-	//Bind each button variable defined in the header file with the "meta = (BindWidget)" with relevant function dynamically
+	//Bind each button variable defined in the header file (with "meta = (BindWidget)") with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
 	friendsServersListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
@@ -84,18 +84,17 @@ void UMainMenuWidget::OnCustomServerButtonClicked()
 	widgetSwitcherServerList->SetActiveWidgetIndex(2);
 }
 
-//Takes the player to the server list menu 
+//Takes the player to the server list menu/friends' servers list menu
 void UMainMenuWidget::OnServersListButtonClicked()
 {
 	widgetSwitcherServerList->SetActiveWidgetIndex(1);
-	if (!initialSearchForServers)
+	if (initialSearchForServers || isFriendsListPressed)
 	{
 		OnRefreshServersButtonClicked();
-		initialSearchForServers = true;
 	}
 }
 
-//Clears the list of the servers and researches to find servers
+//Clears the list of the servers/friends' servers and researches to find servers/friends' servers
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {
 	serverListScrollBox->ClearChildren();

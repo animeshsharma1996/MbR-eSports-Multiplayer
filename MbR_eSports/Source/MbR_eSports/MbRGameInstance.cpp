@@ -5,10 +5,13 @@
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/Engine.h"
+#include "GameFramework/PlayerState.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemNames.h"
 #include "OnlineSubsystemUtils.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "Interfaces/OnlineSharingInterface.h"
 #include "Templates/SharedPointer.h"
 
@@ -17,18 +20,6 @@ UMbRGameInstance::UMbRGameInstance()
 {
 	defaultSessionName = FName("Custom Name");
 	onlineSubsystem = IOnlineSubsystem::Get();
-
-	if (onlineSubsystem)
-	{
-		friendInterface = onlineSubsystem->GetFriendsInterface();
-		localUserId = (onlineSubsystem->GetIdentityInterface()->GetUniquePlayerId(0)).Get();
-		FOnReadFriendsListComplete friendDelegate;
-		friendDelegate.BindUObject(this, &UMbRGameInstance::OnReadFriendsComplete);
-		if (friendInterface.IsValid())
-		{
-			friendInterface->ReadFriendsList(0, friendListName, friendDelegate);
-		}
-	}
 }
 
 //Initialise the GameInstance and SessionInterface by binding the inherited and inbuilt functions to the session interface
@@ -36,21 +27,31 @@ void UMbRGameInstance::Init()
 {
 	if (onlineSubsystem)
 	{
+		friendInterface = onlineSubsystem->GetFriendsInterface();
+		FOnReadFriendsListComplete friendDelegate;
+		friendDelegate.BindUObject(this, &UMbRGameInstance::OnReadFriendsComplete);
+		if (friendInterface.IsValid())
+		{
+			friendInterface->ReadFriendsList(0, friendListName, friendDelegate);
+		}
+
 		sessionInterface = onlineSubsystem->GetSessionInterface();
 		if (sessionInterface.IsValid())
 		{
 			sessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnCreateSessionComplete);
 			sessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnFindSessionsComplete);
+			sessionInterface->OnFindFriendSessionCompleteDelegates->AddUObject(this, &UMbRGameInstance::OnFindFriendSessionComplete);
 			sessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnJoinSessionComplete);
 			sessionInterface->OnEndSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnEndSessionComplete);
 		}
 	}
 }
 
-void UMbRGameInstance::AssignMapNames(FName lobbyMap, FName mainMenuMap)
+void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController)
 {
 	lobbyMapName = lobbyMap;
 	mainMenuMapName = mainMenuMap;
+	playerController = pController;
 }
 
 //Create a server by passing custom server info through the custom server menu
@@ -75,6 +76,11 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 		defaultSessionName = FName(passedServerInfo.serverName);
 	}
 
+	if (sessionInterface->GetNamedSession(defaultSessionName) != nullptr)
+	{
+		sessionInterface->DestroySession(defaultSessionName);
+	}
+
 	sessionInterface->CreateSession(0, defaultSessionName, SessionSettings);
 }
 
@@ -97,13 +103,19 @@ void UMbRGameInstance::FindServers()
 void UMbRGameInstance::FindServersOfFriends()
 {
     UE_LOG(LogTemp, Warning, TEXT("Find Friends' Server"));
-    
+
     sessionSearch = MakeShareable(new FOnlineSessionSearch());
     sessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
-    sessionSearch->MaxSearchResults = 1000;
+    sessionSearch->MaxSearchResults = 9999;
     sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
-    sessionInterface->FindFriendSession(*localUserId, friendList);
+	if (onlineFriendList.Num() != 0)
+	{
+		for (TSharedRef<FOnlineFriend> onlineFriend : onlineFriendList)
+		{
+			sessionInterface->FindFriendSession(0, onlineFriend->GetUserId().Get());
+		}
+	}
 }
 
 //Join server according to the server slot, called when join button is clicked
@@ -156,7 +168,7 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	UE_LOG(LogTemp, Warning, TEXT("OnFindSessionsComplete, Succeeded: %d"), successful);
 	if (successful)
 	{
-		OnAssignSearchResults();
+		OnAssignSearchResults(sessionSearch->SearchResults);
 		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionSearch->SearchResults.Num());
 	}
 }
@@ -168,31 +180,28 @@ void UMbRGameInstance::OnReadFriendsComplete(int32 localPlayer, bool successful,
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OnReadFriendsComplete, Succeeded: %d"), successful);
 		friendInterface->GetFriendsList(localPlayer, listName, onlineFriendList);
-		for (TSharedRef<FOnlineFriend> onlineFriend : onlineFriendList)
-		{
-			friendList.Add(onlineFriend->GetUserId());
-		}
 	}
 }
 
 //Delegate function, called when friends' sessions search is completed
-void UMbRGameInstance::OnFindFriendSessionComplete(bool successful)
+void UMbRGameInstance::OnFindFriendSessionComplete(int32 localPlayer, bool successful, const TArray<FOnlineSessionSearchResult>& sessionInfo)
 {
     searchingForServers.Broadcast(false);
 
 	UE_LOG(LogTemp, Warning, TEXT("OnFindFriendSessionsComplete, Succeeded: %d"), successful);
 	if (successful)
 	{
-		OnAssignSearchResults();
-		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionSearch->SearchResults.Num());
+		sessionSearch->SearchResults = sessionInfo;
+		OnAssignSearchResults(sessionInfo);
+		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionInfo.Num());
 	}
 }
 
 //Function called to assign search results upon completion of sessions search
-void UMbRGameInstance::OnAssignSearchResults()
+void UMbRGameInstance::OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo)
 {
 	int32 serverArrayIndex = 0;
-	for (FOnlineSessionSearchResult result : sessionSearch->SearchResults)
+	for (FOnlineSessionSearchResult result : sessionInfo)
 	{
 		if (!result.IsValid()) { continue; }
 
@@ -217,7 +226,7 @@ void UMbRGameInstance::OnAssignSearchResults()
 void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionsComplete, SessionName: %s"),*sessionName.ToString());
-	if (APlayerController* playerController = GetFirstLocalPlayerController())
+	if (playerController != nullptr)
 	{
 		if (!sessionInterface.IsValid()) { return; }
 

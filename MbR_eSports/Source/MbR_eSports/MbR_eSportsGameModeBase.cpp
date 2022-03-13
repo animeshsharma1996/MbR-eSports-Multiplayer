@@ -52,7 +52,7 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     if (mbRGameInstance != nullptr)
     {
         mbRGameInstance->serverCreation.Add(serverCreationDel);
-        mbRGameInstance->AssignMapNames(FName(defaultGameMapName), FName(mainMenuMapName));
+        mbRGameInstance->SetAssignables(FName(defaultGameMapName), FName(mainMenuMapName), playerController);
     }
 }
 
