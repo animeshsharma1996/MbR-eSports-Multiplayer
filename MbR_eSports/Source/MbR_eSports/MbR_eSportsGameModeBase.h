@@ -43,6 +43,8 @@ private:
         UUserWidget* mainMenuUserWidget;   
     UPROPERTY()   
         APlayerController* playerController;
+    UPROPERTY()
+        bool isInGameMenuUp;
     UFUNCTION()
         void RemoveMainMenuFromViewport(bool successful);
 };

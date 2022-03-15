@@ -17,6 +17,7 @@ void AMbR_eSportsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    isInGameMenuUp = false;
     FInputModeUIOnly InputModeData;
     InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
@@ -93,7 +94,7 @@ void AMbR_eSportsGameModeBase::BringUpInGameMenu()
     if (GetWorld()->GetMapName() != mainMenuMapName && playerController != nullptr)
     {
         //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
-        if (playerController->IsInputKeyDown(EKeys::Escape) && mainMenuUserWidget != nullptr)
+        if (playerController->IsInputKeyDown(EKeys::Escape) && mainMenuUserWidget != nullptr && !isInGameMenuUp)
         {
             if (currentWidget == nullptr)
             {
@@ -101,6 +102,7 @@ void AMbR_eSportsGameModeBase::BringUpInGameMenu()
                 currentWidget = mainMenuUserWidget;
                 Cast<UMainMenuWidget>(currentWidget)->InGameMenu();
                 currentWidget->AddToViewport();
+                isInGameMenuUp = true;
             }
             else
             {
@@ -124,5 +126,6 @@ void AMbR_eSportsGameModeBase::RemoveMainMenuFromViewport(bool successful)
     {
         currentWidget->RemoveFromParent();
         currentWidget = nullptr;
+        isInGameMenuUp = false;
     }
 }
