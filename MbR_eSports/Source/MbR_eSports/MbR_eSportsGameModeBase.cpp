@@ -89,7 +89,7 @@ void AMbR_eSportsGameModeBase::CreateMainMenuWidget()
 }
 
 //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
-void AMbR_eSportsGameModeBase::BringUpInGameMenu()
+void AMbR_eSportsGameModeBase::BringUpInGameMenu_Implementation()
 {
     if (GetWorld()->GetMapName() != mainMenuMapName && playerController != nullptr)
     {

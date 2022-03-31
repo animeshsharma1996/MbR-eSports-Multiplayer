@@ -85,15 +85,21 @@ private :
 	UFUNCTION()
 		void SearchingForServers(bool isSearching);
 	UFUNCTION()
-		void OnBackButtonClicked();
+		void OnBackButtonClicked();	
+	UFUNCTION()
+		void OnBackToMainMenuButtonClicked();
 	UFUNCTION()	
 		void OnCancelButtonClicked();
 	UFUNCTION()
 		void OnExitButtonClicked();
+	UFUNCTION()
+		void OnServerEnded(bool ended);
 	UPROPERTY()
 		bool initialSearchForServers;	
 	UPROPERTY()
 		bool isServersListPressed;	
 	UPROPERTY()
 		bool isFriendsListPressed;
+	UPROPERTY()
+		bool isServerEnded;
 };

@@ -1,0 +1,128 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "MbR_eSports (Debug)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSports Win64 Debug Build",
+			"program": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\Binaries\\Win64\\UE4-Win64-Debug.exe",
+			"args": [
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSports (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSports Win64 DebugGame Build",
+			"program": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\Binaries\\Win64\\UE4-Win64-DebugGame.exe",
+			"args": [
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSports (Development)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSports Win64 Development Build",
+			"program": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\Binaries\\Win64\\UE4.exe",
+			"args": [
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSports (Shipping)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSports Win64 Shipping Build",
+			"program": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\Binaries\\Win64\\UE4-Win64-Shipping.exe",
+			"args": [
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSports (Test)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSports Win64 Test Build",
+			"program": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\Binaries\\Win64\\UE4-Win64-Test.exe",
+			"args": [
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSportsEditor (Debug)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSportsEditor Win64 Debug Build",
+			"program": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor-Win64-Debug.exe",
+			"args": [
+				"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\MbR_eSports.uproject"
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSportsEditor (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSportsEditor Win64 DebugGame Build",
+			"program": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor-Win64-DebugGame.exe",
+			"args": [
+				"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\MbR_eSports.uproject"
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "MbR_eSportsEditor (Development)",
+			"request": "launch",
+			"preLaunchTask": "MbR_eSportsEditor Win64 Development Build",
+			"program": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor.exe",
+			"args": [
+				"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\MbR_eSports.uproject"
+			],
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "Generate Project Files",
+			"type": "clr",
+			"request": "launch",
+			"program": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Binaries\\DotNET\\UnrealBuildTool.exe",
+			"console": "externalTerminal",
+			"args": [
+				"-projectfiles",
+				"-vscode",
+				"-project=E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\MbR_eSports.uproject",
+				"-game",
+				"-engine"
+			],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "E:\\Unreal Engine\\UE 4\\UE_4.26"
+		}
+	]
+}

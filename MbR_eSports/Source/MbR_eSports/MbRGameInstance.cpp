@@ -131,7 +131,8 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 		}
 		else
 		{
-			sessionInterface->JoinSession(0, joinSessionName, result);
+			defaultSessionName = joinSessionName;
+			sessionInterface->JoinSession(0, defaultSessionName, result);
 		}
 	}
 	else
@@ -155,6 +156,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), successful);
 	if (successful && !lobbyMapName.ToString().IsEmpty())
 	{
+		sessionInterface->StartSession(serverName);
 		serverCreation.Broadcast(successful);
 		UGameplayStatics::OpenLevel(GetWorld(), lobbyMapName, true, "listen");
 	}
@@ -245,18 +247,27 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 }
 
 //Delegate function, called when a session/server is ended after the match is over
-void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
+void UMbRGameInstance::OnEndSessionComplete_Implementation(FName sessionName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnEndSessionComplete, Succeeded: %d"), successful);
 
-    for(FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
-    {
-        APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
-        if(playerControllerClient && !playerControllerClient->IsLocalPlayerController())
-        {
-			UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
-        }
-    }
-	UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
-	sessionInterface->DestroySession(defaultSessionName);
+	if (successful)
+	{
+		for (FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
+		{
+			APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
+			if (playerControllerClient && !playerControllerClient->IsLocalPlayerController())
+			{
+				UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
+
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "WorksForTheClients");
+				}
+			}
+		}
+	}
+	endSessionDel.Broadcast(successful);
+	//UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
+	//sessionInterface->DestroySession(defaultSessionName);
 }

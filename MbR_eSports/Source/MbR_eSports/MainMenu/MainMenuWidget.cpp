@@ -32,7 +32,7 @@ bool UMainMenuWidget::Initialize()
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	customServerBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
 	exitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
-    inGameMenuBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
+    inGameMenuBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackToMainMenuButtonClicked);
     cancelButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCancelButtonClicked);
     inGameMenuExitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
     
@@ -43,16 +43,18 @@ bool UMainMenuWidget::Initialize()
 	FScriptDelegate serversListDelegate;
 	FScriptDelegate serversSearchingDelegate;
 	FScriptDelegate sliderChangeDelegate;
+	FScriptDelegate serverEndDelegate;
 	serversListDelegate.BindUFunction(this, "CreateServerSlotWidget");
 	serversSearchingDelegate.BindUFunction(this, "SearchingForServers");
 	sliderChangeDelegate.BindUFunction(this, "OnMaxPlayersSliderChanged");
+	serverEndDelegate.BindUFunction(this, "OnServerEnded");
 	maxPlayersNumSlider->OnValueChanged.Add(sliderChangeDelegate);
-
 	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (mbRGameInstance != nullptr)
 	{
 		mbRGameInstance->serversListDel.Add(serversListDelegate);
 		mbRGameInstance->searchingForServers.Add(serversSearchingDelegate);
+		mbRGameInstance->endSessionDel.Add(serverEndDelegate);
 	}
 
 	return true;
@@ -164,15 +166,27 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 	}
 }
 
-//Back button takes the player back to the main menu
+//Back button (from host screen) takes the player back to the main menu 
 void UMainMenuWidget::OnBackButtonClicked()
+{
+	backgroundImage->SetVisibility(ESlateVisibility::Visible);
+	widgetSwitcherServerList->SetActiveWidgetIndex(0);
+
+}
+
+//Back button (from in-game menu) takes the player back to the main menu
+void UMainMenuWidget::OnBackToMainMenuButtonClicked()
 {
 	if (mbRGameInstance != nullptr)
 	{
 		mbRGameInstance->EndServer();
+
+		if (isServerEnded)
+		{
+			backgroundImage->SetVisibility(ESlateVisibility::Visible);
+			widgetSwitcherServerList->SetActiveWidgetIndex(0);
+		}
 	}
-    backgroundImage->SetVisibility(ESlateVisibility::Visible);
-	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 }
 
 //Cancel Button removes the in game menu and unpauses for the local player
@@ -193,5 +207,11 @@ void UMainMenuWidget::OnExitButtonClicked()
 {	
 	APlayerController* SpecificPlayer = GetWorld()->GetFirstPlayerController();
 	UKismetSystemLibrary::QuitGame(GetWorld(), SpecificPlayer, EQuitPreference::Quit, true);
+}
+
+//Delegate Function to set the isServerEnded
+void UMainMenuWidget::OnServerEnded(bool ended)
+{
+	isServerEnded = ended;
 }
 
