@@ -33,7 +33,7 @@ protected:
         FString mainMenuMapName;
     UFUNCTION(BlueprintCallable)
         void CreateMainMenuWidget();    
-    UFUNCTION(BlueprintCallable, Client, Reliable)
+    UFUNCTION(BlueprintCallable)
         void BringUpInGameMenu();
 
 private:
