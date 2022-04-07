@@ -47,11 +47,12 @@ void UMbRGameInstance::Init()
 	}
 }
 
-void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController)
+void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld)
 {
 	lobbyMapName = lobbyMap;
 	mainMenuMapName = mainMenuMap;
 	playerController = pController;
+	world = uWorld;
 }
 
 //Create a server by passing custom server info through the custom server menu
@@ -63,7 +64,7 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 
 	SessionSettings.bAllowJoinInProgress = true;
 	SessionSettings.bIsDedicated = false;
-	SessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
+	SessionSettings.bIsLANMatch = (onlineSubsystem->GetSubsystemName() == "NULL") ? true : false;
 	SessionSettings.bUsesPresence = true;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
@@ -144,7 +145,7 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 //Should end the server when the match is finished or when the host leaves the lobby/match
 void UMbRGameInstance::EndServer()
 {
-	if (GetWorld()->IsServer())
+	if (world->IsServer())
 	{
 		Client_HandleEndSession(defaultSessionName);
 		sessionInterface->EndSession(defaultSessionName);
@@ -162,7 +163,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	{
 		sessionInterface->StartSession(serverName);
 		serverCreation.Broadcast(successful);
-		UGameplayStatics::OpenLevel(GetWorld(), lobbyMapName, true, "listen");
+		UGameplayStatics::OpenLevel(world, lobbyMapName, true, "listen");
 	}
 }
 
@@ -262,9 +263,9 @@ void UMbRGameInstance::Client_HandleEndSession_Implementation(FName sessionName)
 	for (FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
 	{
 		//APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
-		if (!GetWorld()->IsServer())
+		if (!world->IsServer())
 		{
-			UGameplayStatics::OpenLevel(GetWorld(), "MainMenu", true);
+			UGameplayStatics::OpenLevel(world, "MainMenu", true);
 			IOnlineSubsystem::Get()->GetSessionInterface()->EndSession(sessionName);
 
 			if (GEngine)
@@ -273,6 +274,6 @@ void UMbRGameInstance::Client_HandleEndSession_Implementation(FName sessionName)
 			}
 		}
 	}
-	//UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
+	//UGameplayStatics::OpenLevel(world, mainMenuMapName, true, "listen");
 	//sessionInterface->DestroySession(defaultSessionName);
 }

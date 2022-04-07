@@ -28,7 +28,7 @@ public:
 	UMbRGameInstance();
 
 	UFUNCTION(BlueprintCallable)
-		void SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController);
+		void SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld);
 	UFUNCTION(BlueprintCallable)
 		void CreateServer(FPassedServerInfo passedServerInfo);
 	UFUNCTION(BlueprintCallable)
@@ -74,6 +74,8 @@ private:
 		TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
 	UPROPERTY()
 		APlayerController* playerController;
+	UPROPERTY()
+		UWorld* world;
 	UPROPERTY()
 		FName lobbyMapName;
 	UPROPERTY()

@@ -19,10 +19,13 @@ void AMbR_eSportsGameModeBase::BeginPlay()
     Super::BeginPlay();
     
     playerController = GetWorld()->GetFirstPlayerController();
-    uIManager = Cast<AUIManager>(playerController->GetHUD());
-    if(uIManager != nullptr)
+    if(playerController != nullptr)
     {
-        uIManager->Initialise(playerController);
+        uIManager = Cast<AUIManager>(playerController->GetHUD());
+        if(uIManager != nullptr && GetWorld())
+        {
+            uIManager->Initialise(playerController, GetWorld());
+        }
     }
 }
 

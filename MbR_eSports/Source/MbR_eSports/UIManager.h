@@ -17,7 +17,7 @@ class MBR_ESPORTS_API AUIManager : public AHUD
 
 public:
 	UFUNCTION(BlueprintCallable)
-		void Initialise(APlayerController* playerController);
+		void Initialise(APlayerController* playerController, UWorld* world);
 	UFUNCTION(BlueprintCallable)
 		void OnTick(float DeltaTime);	
 
@@ -43,6 +43,8 @@ private:
         UUserWidget* mainMenuUserWidget;   
     UPROPERTY()   
         APlayerController* playerController;
+    UPROPERTY() 
+        UWorld* world;
     UPROPERTY()
         bool isInGameMenuUp;
 
