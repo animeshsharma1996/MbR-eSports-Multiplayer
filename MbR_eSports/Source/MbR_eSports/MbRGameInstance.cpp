@@ -144,7 +144,11 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 //Should end the server when the match is finished or when the host leaves the lobby/match
 void UMbRGameInstance::EndServer()
 {
-    sessionInterface->EndSession(defaultSessionName);
+	if (GetWorld()->IsServer())
+	{
+		Client_HandleEndSession(defaultSessionName);
+		sessionInterface->EndSession(defaultSessionName);
+	}
 }
 
 /*
@@ -247,27 +251,28 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 }
 
 //Delegate function, called when a session/server is ended after the match is over
-void UMbRGameInstance::OnEndSessionComplete_Implementation(FName sessionName, bool successful)
+void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnEndSessionComplete, Succeeded: %d"), successful);
+}
 
-	if (successful)
+//
+void UMbRGameInstance::Client_HandleEndSession_Implementation(FName sessionName)
+{
+	for (FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
 	{
-		for (FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
+		//APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
+		if (!GetWorld()->IsServer())
 		{
-			APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
-			if (playerControllerClient && !playerControllerClient->IsLocalPlayerController())
-			{
-				UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
+			UGameplayStatics::OpenLevel(GetWorld(), "MainMenu", true);
+			IOnlineSubsystem::Get()->GetSessionInterface()->EndSession(sessionName);
 
-				if (GEngine)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "WorksForTheClients");
-				}
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "ChangeWorks?");
 			}
 		}
 	}
-	endSessionDel.Broadcast(successful);
 	//UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
 	//sessionInterface->DestroySession(defaultSessionName);
 }

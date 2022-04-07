@@ -60,9 +60,11 @@ protected:
 		virtual void OnReadFriendsComplete(int32 localPlayer, bool successful, const FString& listName, const FString& errorStr);
 		virtual void OnFindFriendSessionComplete(int32 localPlayer, bool successful, const TArray<FOnlineSessionSearchResult>& sessionInfo);
 		virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
-	UFUNCTION(Server, Reliable)
 		virtual void OnEndSessionComplete(FName sessionName, bool successful);
 		void OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo);
+
+	UFUNCTION(Client, Reliable)
+			void Client_HandleEndSession(FName sessionName);
 
 	UPROPERTY()
 		FName defaultSessionName;

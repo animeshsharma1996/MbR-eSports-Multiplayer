@@ -1,19 +1,14 @@
 {
-    "configurations": [
-        {
-            "name": "MbR_eSportsEditor Editor Win64 Development (MbR_eSports)",
-            "intelliSenseMode": "msvc-x64",
-            "compileCommands": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_MbR_eSports.json",
-            "cStandard": "c17",
-            "cppStandard": "c++17"
-        },
-        {
-            "name": "Win32",
-            "intelliSenseMode": "msvc-x64",
-            "compileCommands": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_Default.json",
-            "cStandard": "c17",
-            "cppStandard": "c++17"
-        }
-    ],
-    "version": 4
+	"configurations": [
+		{
+			"name": "MbR_eSportsEditor Editor Win64 Development (MbR_eSports)",
+			"intelliSenseMode": "msvc-x64",
+			"compileCommands": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_MbR_eSports.json"
+		},
+		{
+			"name": "Win32",
+			"intelliSenseMode": "msvc-x64",
+			"compileCommands": "E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_Default.json"
+		}
+	]
 }

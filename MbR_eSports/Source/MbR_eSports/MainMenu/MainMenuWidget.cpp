@@ -187,6 +187,12 @@ void UMainMenuWidget::OnBackToMainMenuButtonClicked()
 			widgetSwitcherServerList->SetActiveWidgetIndex(0);
 		}
 	}
+
+	if (!GetWorld()->IsServer())
+	{
+		backgroundImage->SetVisibility(ESlateVisibility::Visible);
+		widgetSwitcherServerList->SetActiveWidgetIndex(0);
+	}
 }
 
 //Cancel Button removes the in game menu and unpauses for the local player
