@@ -16,10 +16,8 @@ class MBR_ESPORTS_API AUIManager : public AHUD
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-		void Initialise(APlayerController* playerController, UWorld* world);
-	UFUNCTION(BlueprintCallable)
-		void OnTick(float DeltaTime);	
+		virtual void BeginPlay() override;
+		virtual void Tick(float DeltaTime) override;	
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")

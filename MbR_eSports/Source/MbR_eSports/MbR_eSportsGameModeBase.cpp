@@ -24,7 +24,7 @@ void AMbR_eSportsGameModeBase::BeginPlay()
         uIManager = Cast<AUIManager>(playerController->GetHUD());
         if(uIManager != nullptr && GetWorld())
         {
-            uIManager->Initialise(playerController, GetWorld());
+            //uIManager->Initialise(playerController, GetWorld());
         }
     }
 }
@@ -36,6 +36,6 @@ void AMbR_eSportsGameModeBase::Tick(float DeltaTime)
 
    if(uIManager != nullptr)
    {
-        uIManager->OnTick(DeltaTime);
+        //uIManager->OnTick(DeltaTime);
    }
 }

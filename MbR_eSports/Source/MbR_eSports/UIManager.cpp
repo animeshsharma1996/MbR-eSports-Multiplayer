@@ -7,8 +7,10 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MbR_eSports.h"
 
-void AUIManager::Initialise(APlayerController* pC, UWorld* uWorld)
+void AUIManager::BeginPlay()
 {
+    Super::BeginPlay();
+
     bReplicates = true;
     isInGameMenuUp = false;
     FInputModeUIOnly InputModeData;
@@ -23,8 +25,8 @@ void AUIManager::Initialise(APlayerController* pC, UWorld* uWorld)
     /*
     Logic to enable mouse cursor and mouse events
     */
-    world = uWorld;
-    playerController = pC;
+    world = GetWorld();
+    playerController = GetWorld()->GetFirstPlayerController();
     if (playerController != nullptr)
     {
         playerController->bShowMouseCursor = true;
@@ -50,8 +52,10 @@ void AUIManager::Initialise(APlayerController* pC, UWorld* uWorld)
     }
 }
 
-void AUIManager::OnTick(float DeltaTime)
+void AUIManager::Tick(float DeltaTime)
 {
+    Super::Tick(DeltaTime);
+
     if(world)
     {
         if (world->GetMapName() != defaultGameMapName)
@@ -82,8 +86,8 @@ void AUIManager::CreateMainMenuWidget()
 //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
 void AUIManager::BringUpInGameMenu()
 {
-    if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
-    {
+   /* if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
+    {*/
         //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
         if (mainMenuUserWidget != nullptr && !isInGameMenuUp)
         {
@@ -102,7 +106,7 @@ void AUIManager::BringUpInGameMenu()
                 currentWidget = nullptr;
             }
         }
-    }
+    
 }
 
 /*
