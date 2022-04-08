@@ -86,8 +86,8 @@ void AUIManager::CreateMainMenuWidget()
 //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
 void AUIManager::BringUpInGameMenu()
 {
-   /* if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
-    {*/
+    if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
+    {
         //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
         if (mainMenuUserWidget != nullptr && !isInGameMenuUp)
         {
@@ -106,7 +106,7 @@ void AUIManager::BringUpInGameMenu()
                 currentWidget = nullptr;
             }
         }
-    
+    }
 }
 
 /*

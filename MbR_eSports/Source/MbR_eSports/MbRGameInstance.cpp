@@ -150,6 +150,10 @@ void UMbRGameInstance::EndServer()
 		Client_HandleEndSession(defaultSessionName);
 		sessionInterface->EndSession(defaultSessionName);
 	}
+	else
+	{
+		sessionInterface->EndSession(defaultSessionName);
+	}
 }
 
 /*
@@ -255,6 +259,7 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnEndSessionComplete, Succeeded: %d"), successful);
+	UGameplayStatics::OpenLevel(world, "MainMenu", true);
 }
 
 //

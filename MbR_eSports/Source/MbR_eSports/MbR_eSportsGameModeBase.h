@@ -19,12 +19,4 @@ class MBR_ESPORTS_API AMbR_eSportsGameModeBase : public AGameModeBase
 
 public:
         AMbR_eSportsGameModeBase();
-        virtual void BeginPlay() override;
-        virtual void Tick(float DeltaTime) override;
-
-private:
-    UPROPERTY()   
-        APlayerController* playerController;
-    UPROPERTY()
-        class AUIManager* uIManager;
 };
