@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "MbRGameInstance.h"
+#include "Net/UnrealNetwork.h"
+#include "RPCActor.h"
 #include "UIManager.generated.h"
 
 /**
@@ -20,13 +23,15 @@ public:
 		virtual void Tick(float DeltaTime) override;	
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> mainMenuWidget;
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> serverSlotWidget;
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
+        TSubclassOf<AActor> rpcActorClass;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         FString defaultGameMapName;    
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MbR_eSports")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         FString mainMenuMapName;
 
     UFUNCTION(BlueprintCallable)
@@ -43,6 +48,10 @@ private:
         APlayerController* playerController;
     UPROPERTY() 
         UWorld* world;
+    UPROPERTY()
+        UMbRGameInstance* mbRGameInstance;
+    UPROPERTY()
+        ARPCActor* rPCActor;
     UPROPERTY()
         bool isInGameMenuUp;
 

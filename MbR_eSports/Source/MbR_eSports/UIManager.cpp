@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenu/MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MbR_eSports.h"
 
@@ -11,44 +12,67 @@ void AUIManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    bReplicates = true;
     isInGameMenuUp = false;
     FInputModeUIOnly InputModeData;
     InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
+    if (GetWorld())
+    {
+        world = GetWorld();
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No World Found"));
+        return;
+    }
+
+    mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(world));
+    playerController = world->GetFirstPlayerController();
+
     //Set a reference for the Main Menu variable
     if (mainMenuWidget != nullptr)
     {
-         mainMenuUserWidget = Cast<UMainMenuWidget>(CreateWidget<UUserWidget>(GetWorld(), mainMenuWidget));
+         mainMenuUserWidget = Cast<UMainMenuWidget>(CreateWidget<UUserWidget>(world, mainMenuWidget));
     }
     
-    /*
-    Logic to enable mouse cursor and mouse events
-    */
-    world = GetWorld();
-    playerController = GetWorld()->GetFirstPlayerController();
-    if (playerController != nullptr)
-    {
-        playerController->bShowMouseCursor = true;
-        playerController->bEnableClickEvents = true;
-        playerController->bEnableMouseOverEvents = true;
-    }
-    
+    //Logic to bind server creation delegate function -> Fires the RemoveMainMenuFromViewport upon creation
+    FScriptDelegate serverCreationDel;
+    serverCreationDel.BindUFunction(this, "RemoveMainMenuFromViewport");
+
     //Create the main Menu widget when in the main menu only -> Might have to change accordingly
     if (world->GetMapName() != defaultGameMapName)
     {
         CreateMainMenuWidget();
+
+       
+    }
+    else
+    {
+        if (rpcActorClass != nullptr)
+        {
+            rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
+        }
     }
 
-    //Logic to bind server creation delegate function -> Fires the RemoveMainMenuFromViewport upon creation
-    UMbRGameInstance* mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-    FScriptDelegate serverCreationDel;
-    serverCreationDel.BindUFunction(this, "RemoveMainMenuFromViewport");
-    
+    //Assinging the Game Instance variables
     if (mbRGameInstance != nullptr)
     {
         mbRGameInstance->serverCreation.Add(serverCreationDel);
-        mbRGameInstance->SetAssignables(FName(defaultGameMapName), FName(mainMenuMapName), playerController, world);
+        if (playerController != nullptr)
+        {
+            //Logic to enable mouse cursor and mouse events
+            playerController->bShowMouseCursor = true;
+            playerController->bEnableClickEvents = true;
+            playerController->bEnableMouseOverEvents = true;
+
+            mbRGameInstance->SetAssignables(FName(defaultGameMapName), FName(mainMenuMapName), playerController, world);
+        }
+
+        if (rPCActor != nullptr)
+        {
+            rPCActor->Initialise(mbRGameInstance, world);
+            mbRGameInstance->SetRPCActor(rPCActor);
+        }
     }
 }
 

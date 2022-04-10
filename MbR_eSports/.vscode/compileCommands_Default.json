@@ -55,6 +55,16 @@
 		"directory": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Source"
 	},
 	{
+		"file": "E:\\\\Projects\\\\Unreal Engine\\\\MbR-eSports\\\\MbR-eSports-Multiplayer\\\\MbR_eSports\\\\Source\\\\MbR_eSports\\\\MbRPlayerController.cpp",
+		"command": "cl.exe @\"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_Default\\MbR_eSports.180.rsp\"",
+		"directory": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\Projects\\\\Unreal Engine\\\\MbR-eSports\\\\MbR-eSports-Multiplayer\\\\MbR_eSports\\\\Source\\\\MbR_eSports\\\\MbRPlayerController.h",
+		"command": "cl.exe @\"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_Default\\MbR_eSports.180.rsp\"",
+		"directory": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Source"
+	},
+	{
 		"file": "E:\\\\Projects\\\\Unreal Engine\\\\MbR-eSports\\\\MbR-eSports-Multiplayer\\\\MbR_eSports\\\\Source\\\\MbR_eSports\\\\ServerInfoStruct.h",
 		"command": "cl.exe @\"E:\\Projects\\Unreal Engine\\MbR-eSports\\MbR-eSports-Multiplayer\\MbR_eSports\\.vscode\\compileCommands_Default\\MbR_eSports.180.rsp\"",
 		"directory": "E:\\Unreal Engine\\UE 4\\UE_4.26\\Engine\\Source"

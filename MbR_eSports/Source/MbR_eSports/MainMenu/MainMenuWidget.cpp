@@ -54,7 +54,7 @@ bool UMainMenuWidget::Initialize()
 	{
 		mbRGameInstance->serversListDel.Add(serversListDelegate);
 		mbRGameInstance->searchingForServers.Add(serversSearchingDelegate);
-		mbRGameInstance->endSessionDel.Add(serverEndDelegate);
+		mbRGameInstance->endServerDel.Add(serverEndDelegate);
 	}
 
 	return true;
@@ -219,5 +219,9 @@ void UMainMenuWidget::OnExitButtonClicked()
 void UMainMenuWidget::OnServerEnded(bool ended)
 {
 	isServerEnded = ended;
+	if(isServerEnded)
+	{
+		OnBackButtonClicked();
+	}
 }
 

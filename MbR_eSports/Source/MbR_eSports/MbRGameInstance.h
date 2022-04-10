@@ -6,6 +6,7 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "RPCActor.h"
 #include "MbRGameInstance.generated.h"
 
 /*
@@ -17,7 +18,7 @@ The variables and functions names are self explanatory.
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, serversListDel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServerSearching, bool, searchingForServers);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateEndSession, bool, successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateEndServer, bool, successful);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -39,6 +40,10 @@ public:
 		void JoinServer(int32 arrayIndex, FName joinSessionName);	
 	UFUNCTION(BlueprintCallable)
 		void EndServer();
+	UFUNCTION(BlueprintCallable)
+		void OnEndServer();
+	UFUNCTION(BlueprintCallable)
+		void SetRPCActor(ARPCActor* actor) { rPCActor = actor; }
 
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
@@ -47,7 +52,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServerSearching searchingForServers;
 	UPROPERTY(BlueprintAssignable)
-		FDelegateEndSession endSessionDel;
+		FDelegateEndServer endServerDel;
 
 protected:
 		IOnlineSessionPtr sessionInterface;
@@ -62,9 +67,6 @@ protected:
 		virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
 		virtual void OnEndSessionComplete(FName sessionName, bool successful);
 		void OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo);
-
-	UFUNCTION(Client, Reliable)
-			void Client_HandleEndSession(FName sessionName);
 
 	UPROPERTY()
 		FName defaultSessionName;
@@ -82,4 +84,6 @@ private:
 		FName mainMenuMapName;
 	UPROPERTY()
 		FString friendListName;
+	UPROPERTY()
+		ARPCActor* rPCActor;
 };
