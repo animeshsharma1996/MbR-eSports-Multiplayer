@@ -102,4 +102,8 @@ private :
 		bool isFriendsListPressed;
 	UPROPERTY()
 		bool isServerEnded;
+	UPROPERTY()
+		APlayerController* playerController;
+	UPROPERTY()
+		UWorld* world;
 };

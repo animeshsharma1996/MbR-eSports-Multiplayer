@@ -49,7 +49,9 @@ bool UMainMenuWidget::Initialize()
 	sliderChangeDelegate.BindUFunction(this, "OnMaxPlayersSliderChanged");
 	serverEndDelegate.BindUFunction(this, "OnServerEnded");
 	maxPlayersNumSlider->OnValueChanged.Add(sliderChangeDelegate);
-	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	world = GetWorld();
+	playerController = world->GetFirstPlayerController();
+	mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(world));
 	if (mbRGameInstance != nullptr)
 	{
 		mbRGameInstance->serversListDel.Add(serversListDelegate);
@@ -180,15 +182,8 @@ void UMainMenuWidget::OnBackToMainMenuButtonClicked()
 
 		if (isServerEnded)
 		{
-			backgroundImage->SetVisibility(ESlateVisibility::Visible);
-			widgetSwitcherServerList->SetActiveWidgetIndex(0);
+			OnBackButtonClicked();
 		}
-	}
-
-	if (!GetWorld()->IsServer())
-	{
-		backgroundImage->SetVisibility(ESlateVisibility::Visible);
-		widgetSwitcherServerList->SetActiveWidgetIndex(0);
 	}
 }
 
@@ -208,8 +203,11 @@ who hosted the server, then the server session is destroyed as well.
 */
 void UMainMenuWidget::OnExitButtonClicked()
 {	
-	APlayerController* SpecificPlayer = GetWorld()->GetFirstPlayerController();
-	UKismetSystemLibrary::QuitGame(GetWorld(), SpecificPlayer, EQuitPreference::Quit, true);
+	if (mbRGameInstance != nullptr)
+	{
+		mbRGameInstance->EndServer();
+	}
+	UKismetSystemLibrary::QuitGame(world, playerController, EQuitPreference::Quit, true);
 }
 
 //Delegate Function to set the isServerEnded
