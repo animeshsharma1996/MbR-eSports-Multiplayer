@@ -71,7 +71,6 @@ void AUIManager::BeginPlay()
         if (rPCActor != nullptr)
         {
             rPCActor->Initialise(mbRGameInstance, world);
-            mbRGameInstance->SetRPCActor(rPCActor);
         }
     }
 }

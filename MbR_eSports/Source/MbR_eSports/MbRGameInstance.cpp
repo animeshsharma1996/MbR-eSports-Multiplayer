@@ -150,11 +150,7 @@ Also called if the client tries to leave the server/session
 */
 void UMbRGameInstance::EndServer()
 {
-	//endServerDel.Broadcast(true);
-	if (rPCActor != nullptr)
-	{
-		rPCActor->HandleEndSession(true);
-	}
+	endServerDel.Broadcast(true);
 }
 
 /*

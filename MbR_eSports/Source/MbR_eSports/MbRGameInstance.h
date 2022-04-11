@@ -42,8 +42,6 @@ public:
 		void EndServer();
 	UFUNCTION(BlueprintCallable)
 		void OnEndServer();
-	UFUNCTION(BlueprintCallable)
-		void SetRPCActor(ARPCActor* actor) { rPCActor = actor; }
 
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	
@@ -84,6 +82,4 @@ private:
 		FName mainMenuMapName;
 	UPROPERTY()
 		FString friendListName;
-	UPROPERTY()
-		ARPCActor* rPCActor;
 };
