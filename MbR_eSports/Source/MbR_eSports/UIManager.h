@@ -19,8 +19,7 @@ class MBR_ESPORTS_API AUIManager : public AHUD
 	GENERATED_BODY()
 
 public:
-		virtual void BeginPlay() override;
-		virtual void Tick(float DeltaTime) override;	
+		virtual void BeginPlay() override;	
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")

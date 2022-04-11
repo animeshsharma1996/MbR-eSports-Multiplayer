@@ -26,7 +26,7 @@ bool UMainMenuWidget::Initialize()
 	//Bind each button variable defined in the header file (with "meta = (BindWidget)") with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
 	serversListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
-	friendsServersListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnServersListButtonClicked);
+	friendsServersListButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnFriendsListButtonClicked);
 	refreshServersButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnRefreshServersButtonClicked);
 	customHostButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnHostCustomServerButtonClicked);
 	backButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnBackButtonClicked);
@@ -60,19 +60,6 @@ bool UMainMenuWidget::Initialize()
 	return true;
 }
 
-void UMainMenuWidget::PublicTick()
-{
-	if (serversListButton->IsPressed())
-	{
-		isServersListPressed = true;
-	}
-
-	if (friendsServersListButton->IsPressed())
-	{
-		isFriendsListPressed = true;
-	}
-}
-
 //Bring up the in-game menu along with it's functionality 
 void UMainMenuWidget::InGameMenu()
 {
@@ -86,32 +73,42 @@ void UMainMenuWidget::OnCustomServerButtonClicked()
 	widgetSwitcherServerList->SetActiveWidgetIndex(2);
 }
 
-//Takes the player to the server list menu/friends' servers list menu
+//Takes the player to the server list menu
 void UMainMenuWidget::OnServersListButtonClicked()
 {
-	widgetSwitcherServerList->SetActiveWidgetIndex(1);
-	if (initialSearchForServers || isFriendsListPressed)
-	{
-		OnRefreshServersButtonClicked();
-	}
+	isServersListPressed = true;
+	initialSearchForServers = true;
+	OnRefreshServersButtonClicked();
+}
+
+//Takes the player to the friends' servers list menu
+void UMainMenuWidget::OnFriendsListButtonClicked()
+{
+	isFriendsListPressed = true;
+	initialSearchForServers = true;
+	OnRefreshServersButtonClicked();
 }
 
 //Clears the list of the servers/friends' servers and researches to find servers/friends' servers
 void UMainMenuWidget::OnRefreshServersButtonClicked()
-{
-	serverListScrollBox->ClearChildren();
-	if (mbRGameInstance != nullptr)
+{	
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	if (initialSearchForServers)
 	{
-		if (isServersListPressed)
+		serverListScrollBox->ClearChildren();
+		if (mbRGameInstance != nullptr)
 		{
-			mbRGameInstance->FindServers();
-			isServersListPressed = false;
-		}
+			if (isServersListPressed)
+			{
+				mbRGameInstance->FindServers();
+				isServersListPressed = false;
+			}
 
-		if (isFriendsListPressed)
-		{
-			mbRGameInstance->FindServersOfFriends();
-			isFriendsListPressed = false;
+			if (isFriendsListPressed)
+			{
+				mbRGameInstance->FindServersOfFriends();
+				isFriendsListPressed = false;
+			}
 		}
 	}
 }

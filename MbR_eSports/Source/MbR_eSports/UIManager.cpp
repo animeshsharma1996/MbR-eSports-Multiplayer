@@ -76,22 +76,6 @@ void AUIManager::BeginPlay()
     }
 }
 
-void AUIManager::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-
-    if(world)
-    {
-        if (world->GetMapName() != defaultGameMapName)
-        {
-            if (mainMenuUserWidget != nullptr && currentWidget != nullptr)
-            {
-                Cast<UMainMenuWidget>(currentWidget)->PublicTick();
-            }
-        }
-    }
-}
-
 //Create the Main Menu Widget and add it to the viewport upon start of the game
 void AUIManager::CreateMainMenuWidget()
 {
