@@ -21,8 +21,6 @@ class MBR_ESPORTS_API UMainMenuWidget : public UUserWidget
 public :
     UFUNCTION()
         void InGameMenu(); 
-	UFUNCTION()
-        void PublicTick();
 
 protected :
 	UPROPERTY(meta = (BindWidget))
@@ -75,6 +73,8 @@ private :
 	UFUNCTION()
 		void OnServersListButtonClicked();	
 	UFUNCTION()
+		void OnFriendsListButtonClicked();
+	UFUNCTION()
 		void OnRefreshServersButtonClicked();	
 	UFUNCTION()
 		void OnHostCustomServerButtonClicked();
@@ -102,4 +102,8 @@ private :
 		bool isFriendsListPressed;
 	UPROPERTY()
 		bool isServerEnded;
+	UPROPERTY()
+		APlayerController* playerController;
+	UPROPERTY()
+		UWorld* world;
 };

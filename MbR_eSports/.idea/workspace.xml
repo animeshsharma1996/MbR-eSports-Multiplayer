@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="de6fe88e-b580-41fd-9f16-a386f4ea7ed3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/_Blueprints/Player/BP_MbRPlayerController.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MbR_eSports/MbRPlayerController.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/MbR_eSports/MbRPlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/compileCommands_Default.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/compileCommands_Default.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/compileCommands_MbR_eSports.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/compileCommands_MbR_eSports.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/_Blueprints/BP_MbR_eSportsGameModeBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/_Blueprints/BP_MbR_eSportsGameModeBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/_Blueprints/BP_UIManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/_Blueprints/BP_UIManager.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/_Maps/DefaultTestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/_Maps/DefaultTestMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/_Maps/MainMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/_Maps/MainMenu.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/.Rider/Win64/Development/Editor/MbR_eSports.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/.Rider/Win64/Development/Editor/UE4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/MbR_eSports.vcxproj.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/UE4.vcxproj.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/x64/BuiltWithUnrealBuildTool/UE4.tlog/CL.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/x64/BuiltWithUnrealBuildTool/UE4.tlog/CL.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/x64/BuiltWithUnrealBuildTool/UE4.tlog/CL.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/x64/BuiltWithUnrealBuildTool/UE4.tlog/UE4.lastbuildstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/ProjectFiles/x64/BuiltWithUnrealBuildTool/UE4.tlog/unsuccessfulbuild" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MbR_eSports/MainMenu/MainMenuWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MbR_eSports/MainMenu/MainMenuWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MbR_eSports/MbRGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MbR_eSports/MbRGameInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MbR_eSports/MbRGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MbR_eSports/MbRGameInstance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MbR_eSports/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MbR_eSports/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/MbR_eSports/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MbR_eSports/UIManager.h" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="27aO3GyRe0Ntfras0ZpnnS4NHrq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="settings.editor.selected.configurable" value="build.tools" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="de6fe88e-b580-41fd-9f16-a386f4ea7ed3" name="Changes" comment="" />
+      <created>1649554533509</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649554533509</updated>
+      <workItem from="1649554535373" duration="124000" />
+      <workItem from="1649554665259" duration="227000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

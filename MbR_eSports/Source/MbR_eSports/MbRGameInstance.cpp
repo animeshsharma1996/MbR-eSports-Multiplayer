@@ -47,11 +47,14 @@ void UMbRGameInstance::Init()
 	}
 }
 
-void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController)
+void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Game Instance Assinables Set"));
+
 	lobbyMapName = lobbyMap;
 	mainMenuMapName = mainMenuMap;
 	playerController = pController;
+	world = uWorld;
 }
 
 //Create a server by passing custom server info through the custom server menu
@@ -63,7 +66,7 @@ void UMbRGameInstance::CreateServer(FPassedServerInfo passedServerInfo)
 
 	SessionSettings.bAllowJoinInProgress = true;
 	SessionSettings.bIsDedicated = false;
-	SessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL") ? true : false;
+	SessionSettings.bIsLANMatch = (onlineSubsystem->GetSubsystemName() == "NULL") ? true : false;
 	SessionSettings.bUsesPresence = true;
 	SessionSettings.bShouldAdvertise = true;
 	SessionSettings.NumPublicConnections = passedServerInfo.maxPlayers;
@@ -141,20 +144,26 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 	}
 }
 
-//Should end the server when the match is finished or when the host leaves the lobby/match
+/*
+Should end the server when the match is finished or when the host leaves the lobby/match
+Also called if the client tries to leave the server/session
+*/
 void UMbRGameInstance::EndServer()
 {
-	if (GetWorld()->IsServer())
-	{
-		Client_HandleEndSession(defaultSessionName);
-		sessionInterface->EndSession(defaultSessionName);
-	}
+	endServerDel.Broadcast(true);
 }
 
 /*
-Delegate function, called when a session creation is completed. Makes the server and the relevant client travel to the 
-lobbyMap
+When the RPC ClientOnEndSession is called from the UI Manager -> this function gets called to end the session
+on each connected player
 */
+void UMbRGameInstance::OnEndServer()
+{
+	sessionInterface->EndSession(defaultSessionName);
+}
+
+/*Delegate function, called when a session creation is completed. Makes the server and the relevant client travel to the 
+lobbyMap*/
 void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSessionComplete, Succeeded: %d"), successful);
@@ -162,7 +171,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	{
 		sessionInterface->StartSession(serverName);
 		serverCreation.Broadcast(successful);
-		UGameplayStatics::OpenLevel(GetWorld(), lobbyMapName, true, "listen");
+		UGameplayStatics::OpenLevel(world, lobbyMapName, true, "listen");
 	}
 }
 
@@ -247,6 +256,7 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 		{
 			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
 		}
+		sessionInterface->StartSession(sessionName);
 	}
 }
 
@@ -254,25 +264,13 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnEndSessionComplete, Succeeded: %d"), successful);
-}
-
-//
-void UMbRGameInstance::Client_HandleEndSession_Implementation(FName sessionName)
-{
-	for (FConstPlayerControllerIterator pControllerIt = GetWorld()->GetPlayerControllerIterator(); pControllerIt; ++pControllerIt)
+	if(successful)
 	{
-		//APlayerController* playerControllerClient = Cast<APlayerController>(pControllerIt->Get());
-		if (!GetWorld()->IsServer())
+		UGameplayStatics::OpenLevel(world, "MainMenu", successful);
+		if (world->IsServer())
 		{
-			UGameplayStatics::OpenLevel(GetWorld(), "MainMenu", true);
-			IOnlineSubsystem::Get()->GetSessionInterface()->EndSession(sessionName);
-
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "ChangeWorks?");
-			}
+			UE_LOG(LogTemp, Warning, TEXT("Destroy Session"));
+			sessionInterface->DestroySession(sessionName);
 		}
 	}
-	//UGameplayStatics::OpenLevel(GetWorld(), mainMenuMapName, true, "listen");
-	//sessionInterface->DestroySession(defaultSessionName);
 }
