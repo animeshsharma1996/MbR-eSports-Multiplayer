@@ -48,13 +48,14 @@ void AUIManager::BeginPlay()
     }
     else
     {
+        //Spawn the replicated RPC actor in the level
         if (rpcActorClass != nullptr)
         {
             rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
         }
     }
 
-    //Assinging the Game Instance variables
+    //Assinging the Game Instance variables and adding server creation delegates
     if (mbRGameInstance != nullptr)
     {
         mbRGameInstance->serverCreation.Add(serverCreationDel);
@@ -68,9 +69,10 @@ void AUIManager::BeginPlay()
             mbRGameInstance->SetAssignables(FName(defaultGameMapName), FName(mainMenuMapName), playerController, world);
         }
 
+        //Initialise the replicated RPC actor
         if (rPCActor != nullptr)
         {
-            rPCActor->Initialise(mbRGameInstance, world);
+            rPCActor->Initialise(mbRGameInstance);
         }
     }
 }

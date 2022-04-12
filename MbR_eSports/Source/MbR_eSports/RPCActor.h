@@ -8,6 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "RPCActor.generated.h"
 
+//RPC Actor class to have atleast one replicated actor in the level owned by clients
 UCLASS()
 class MBR_ESPORTS_API ARPCActor : public AActor
 {
@@ -15,15 +16,13 @@ class MBR_ESPORTS_API ARPCActor : public AActor
 
 public:
     UFUNCTION()
-        void Initialise(UMbRGameInstance* gameInstance, UWorld* uWorld);
+        void Initialise(UMbRGameInstance* gameInstance);
     UFUNCTION(BlueprintCallable)
         void HandleEndSession(bool successful);
     UFUNCTION(BlueprintCallable)
         UMbRGameInstance* GetGameInstance() { return mbRGameInstance; }
 
 private:
-    UPROPERTY()
-        UWorld* world;
     UPROPERTY()
         UMbRGameInstance* mbRGameInstance;
 
