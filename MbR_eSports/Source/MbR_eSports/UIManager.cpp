@@ -3,6 +3,7 @@
 #include "UIManager.h"
 #include "Blueprint/UserWidget.h"
 #include "MainMenu/MainMenuWidget.h"
+#include "ChatSystem/ChatWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
@@ -43,8 +44,6 @@ void AUIManager::BeginPlay()
     if (world->GetMapName() != defaultGameMapName)
     {
         CreateMainMenuWidget();
-
-       
     }
     else
     {
@@ -52,6 +51,19 @@ void AUIManager::BeginPlay()
         if (rpcActorClass != nullptr)
         {
             rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
+        }
+
+        //Set a reference for the Chat Widget variable
+        if(chatWidget != nullptr)
+        {
+            chatUserWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(world, chatWidget));
+        }
+
+        //Add the chat widget in the viewport
+        if(chatUserWidget != nullptr)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Chat Added"));
+            chatUserWidget->AddToViewport();
         }
     }
 
@@ -95,7 +107,7 @@ void AUIManager::CreateMainMenuWidget()
 //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
 void AUIManager::BringUpInGameMenu()
 {
-    if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
+    if (world && world->GetMapName() != mainMenuMapName)
     {
         //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
         if (mainMenuUserWidget != nullptr && !isInGameMenuUp)
