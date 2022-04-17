@@ -1,9 +1,8 @@
 #include "MbR_eSportsGameModeBase.h"
 #include "Blueprint/UserWidget.h"
-#include "MainMenu/MainMenuWidget.h"
-#include "UIManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Engine/World.h"
 #include "MbR_eSports.h"
 
 //Constructor for GameModeBase

@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "MbRGameInstance.h"
 #include "Net/UnrealNetwork.h"
+#include "MbRPlayerState.h"
 #include "RPCActor.h"
 #include "UIManager.generated.h"
 
@@ -19,7 +20,7 @@ class MBR_ESPORTS_API AUIManager : public AHUD
 	GENERATED_BODY()
 
 public:
-		virtual void BeginPlay() override;	
+		virtual void BeginPlay() override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
@@ -27,7 +28,7 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> serverSlotWidget;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
-        TSubclassOf<UUserWidget> chatWidget;
+        TSubclassOf<UUserWidget> chatWidget;    
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<AActor> rpcActorClass;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
@@ -45,10 +46,10 @@ private:
         UUserWidget* currentWidget; 
     UPROPERTY()
         UUserWidget* mainMenuUserWidget;   
-    UPROPERTY()
-        UUserWidget* chatUserWidget; 
     UPROPERTY()   
-        APlayerController* playerController;
+        APlayerController* playerController;   
+    UPROPERTY()   
+        AMbRPlayerState* playerState;
     UPROPERTY() 
         UWorld* world;
     UPROPERTY()

@@ -6,6 +6,7 @@
 #include "ChatSystem/ChatWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MbR_eSports.h"
 
@@ -50,20 +51,7 @@ void AUIManager::BeginPlay()
         //Spawn the replicated RPC actor in the level
         if (rpcActorClass != nullptr)
         {
-            rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
-        }
-
-        //Set a reference for the Chat Widget variable
-        if(chatWidget != nullptr)
-        {
-            chatUserWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(world, chatWidget));
-        }
-
-        //Add the chat widget in the viewport
-        if(chatUserWidget != nullptr)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Chat Added"));
-            chatUserWidget->AddToViewport();
+             rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
         }
     }
 
