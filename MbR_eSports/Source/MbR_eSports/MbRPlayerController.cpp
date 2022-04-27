@@ -26,25 +26,24 @@ void AMbRPlayerController::BeginPlay()
 }
 
 //Create the chat widget function RPC
-void AMbRPlayerController::CreateChatWidget()
+void AMbRPlayerController::CreateChatWidget_Implementation()
 {
     //Set a reference for the Chat Widget variable
-    if (chatWidgetClass != nullptr)
+    if (chatWidgetClass != nullptr && chatWidget == nullptr)
     {
-        chatWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
-    }
-
-    //Add the chat widget in the viewport
-    if (chatWidget != nullptr)
-    {
-        chatWidget->AddToViewport();
-        SetWidget();
+        if (Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass)))
+        {
+            UChatWidget* createdWidget;
+            chatWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
+            SetWidgetServer(chatWidget);
+            chatWidget->AddToViewport();
+            SetWidget();
+        }
     }
 }
 
 void AMbRPlayerController::SetWidget()
 {
-    SetWidgetServer(chatWidget);
     FScriptDelegate messageSendDelegate;
     messageSendDelegate.BindUFunction(this, "SendChatMessageToServer");
     chatWidget->messageSendDel.Add(messageSendDelegate);
@@ -63,11 +62,9 @@ void AMbRPlayerController::SendChatMessageToServer_Implementation(const FString&
 
 void AMbRPlayerController::SendMessageToAll_Implementation(const FString& message)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
-
     if (chatWidget != nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("huh?"));
+        UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients FN Invoke"));
 
         chatWidget->OnChatMessageTypedToAll(message);
     }

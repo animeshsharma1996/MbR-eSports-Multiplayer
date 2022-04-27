@@ -31,9 +31,9 @@ void UChatWidget::OnChatMessageTypedToServer()
 
 void UChatWidget::OnChatMessageTypedToAll(const FString& message)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Sent Message To All working"));
+    UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
     UChatMessageWidget* chatTextWidget = nullptr;
-
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *message);
     if (chatMessageWidget != nullptr)
     {
         chatTextWidget = Cast<UChatMessageWidget>(CreateWidget<UUserWidget>(GetWorld(), chatMessageWidget));

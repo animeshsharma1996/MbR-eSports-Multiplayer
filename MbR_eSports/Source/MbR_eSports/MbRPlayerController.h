@@ -24,9 +24,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> chatWidgetClass;
 
-    UFUNCTION(BlueprintCallable)
-        void SetChatWidgetClass(TSubclassOf<UUserWidget> widget) { chatWidgetClass = widget; }
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(Client, Unreliable)
         void CreateChatWidget();
     UFUNCTION(BlueprintCallable)
         void SetWidget();
