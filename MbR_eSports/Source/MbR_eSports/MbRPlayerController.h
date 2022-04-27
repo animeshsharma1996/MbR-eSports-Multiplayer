@@ -6,19 +6,18 @@
 #include "ChatSystem/ChatWidget.h"
 #include "Net/UnrealNetwork.h"
 #include "ChatSystem/ChatMessageWidget.h"
-#include "GameFramework/PlayerState.h"
-#include "MbRPlayerState.generated.h"
+#include "GameFramework/PlayerController.h"
+#include "MbRPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MBR_ESPORTS_API AMbRPlayerState : public APlayerState
+class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
-    GENERATED_BODY()
-        AMbRPlayerState(const class FObjectInitializer& PCIP);
+	GENERATED_BODY()
+        AMbRPlayerController(const class FObjectInitializer& PCIP);
         virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
-        virtual void ClientInitialize(class AController* InController) override;
         virtual void BeginPlay() override;
 
 public:
@@ -28,23 +27,19 @@ public:
     UFUNCTION(BlueprintCallable)
         void SetChatWidgetClass(TSubclassOf<UUserWidget> widget) { chatWidgetClass = widget; }
     UFUNCTION(BlueprintCallable)
-        void SetWidget();    
+        void CreateChatWidget();
+    UFUNCTION(BlueprintCallable)
+        void SetWidget();
     UFUNCTION(Server, Unreliable)
         void SetWidgetServer(UChatWidget* widget);
-
-    UFUNCTION()
-        void CreateChatWidget();
     UFUNCTION(Server, Unreliable)
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(NetMulticast, Unreliable)
         void SendMessageToAll(const FString& message);
 
-private:
-    
+protected:
     UPROPERTY(replicated)
-        UChatWidget* chatWidget; 
+        UChatWidget* chatWidget;
     UPROPERTY(replicated)
         FString chatMessage;
-
- 
 };

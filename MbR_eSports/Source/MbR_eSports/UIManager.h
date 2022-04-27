@@ -6,7 +6,6 @@
 #include "GameFramework/HUD.h"
 #include "MbRGameInstance.h"
 #include "Net/UnrealNetwork.h"
-#include "MbRPlayerState.h"
 #include "RPCActor.h"
 #include "UIManager.generated.h"
 
@@ -48,8 +47,6 @@ private:
         UUserWidget* mainMenuUserWidget;   
     UPROPERTY()   
         APlayerController* playerController;   
-    UPROPERTY()   
-        AMbRPlayerState* playerState;
     UPROPERTY() 
         UWorld* world;
     UPROPERTY()
