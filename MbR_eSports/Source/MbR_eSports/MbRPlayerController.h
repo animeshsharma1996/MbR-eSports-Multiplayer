@@ -9,15 +9,15 @@
 #include "GameFramework/PlayerController.h"
 #include "MbRPlayerController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
+
 /**
- * 
+ *  
  */
 UCLASS()
 class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-        AMbRPlayerController(const class FObjectInitializer& PCIP);
-        virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
         virtual void BeginPlay() override;
 
 public:
@@ -29,15 +29,11 @@ public:
     UFUNCTION(BlueprintCallable)
         void SetWidget();
     UFUNCTION(Server, Unreliable)
-        void SetWidgetServer(UChatWidget* widget);
-    UFUNCTION(Server, Unreliable)
         void SendChatMessageToServer(const FString& message);
-    UFUNCTION(NetMulticast, Unreliable)
+    UFUNCTION(Client, Unreliable)
         void SendMessageToAll(const FString& message);
 
 protected:
-    UPROPERTY(replicated)
+    UPROPERTY()
         UChatWidget* chatWidget;
-    UPROPERTY(replicated)
-        FString chatMessage;
 };

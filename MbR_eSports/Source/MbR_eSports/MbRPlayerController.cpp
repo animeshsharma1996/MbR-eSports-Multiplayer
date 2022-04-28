@@ -5,18 +5,6 @@
 #include "Blueprint/WidgetTree.h"
 #include "Engine/World.h"
 
-AMbRPlayerController::AMbRPlayerController(const class FObjectInitializer& PCIP) : Super(PCIP)
-{
-    bReplicates = true;
-}
-
-void AMbRPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    DOREPLIFETIME(AMbRPlayerController, chatWidget);
-    DOREPLIFETIME(AMbRPlayerController, chatMessage);
-}
-
 void AMbRPlayerController::BeginPlay()
 {
     if (GetWorld()->GetMapName() != "MainMenu")
@@ -33,9 +21,8 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
     {
         if (Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass)))
         {
-            UChatWidget* createdWidget;
-            chatWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
-            SetWidgetServer(chatWidget);
+            UChatWidget* createdWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
+            chatWidget = createdWidget;
             chatWidget->AddToViewport();
             SetWidget();
         }
@@ -49,15 +36,13 @@ void AMbRPlayerController::SetWidget()
     chatWidget->messageSendDel.Add(messageSendDelegate);
 }
 
-void AMbRPlayerController::SetWidgetServer_Implementation(UChatWidget* widget)
-{
-    chatWidget = widget;
-}
-
 void AMbRPlayerController::SendChatMessageToServer_Implementation(const FString& message)
 {
-    chatMessage = *message;
-    SendMessageToAll(chatMessage);
+    for (FConstPlayerControllerIterator pC = GetWorld()->GetPlayerControllerIterator(); pC; ++pC)
+    {
+        AMbRPlayerController* pController = Cast<AMbRPlayerController>(*pC);
+        pController->SendMessageToAll(message);
+    }
 }
 
 void AMbRPlayerController::SendMessageToAll_Implementation(const FString& message)

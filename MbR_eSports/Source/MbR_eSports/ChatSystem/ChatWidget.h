@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/EditableText.h"
+#include "Net/UnrealNetwork.h"
 #include "ChatMessageWidget.h"
 #include "ChatWidget.generated.h"
 
