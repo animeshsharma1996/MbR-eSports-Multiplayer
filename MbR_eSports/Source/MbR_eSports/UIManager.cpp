@@ -83,7 +83,7 @@ void AUIManager::CreateMainMenuWidget()
     if (currentWidget == nullptr)
     {
         currentWidget = mainMenuUserWidget;
-        currentWidget->AddToViewport();
+        //currentWidget->AddToViewport();
     }
     else
     {
