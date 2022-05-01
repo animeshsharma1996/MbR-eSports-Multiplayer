@@ -2,30 +2,30 @@
 
 
 #include "ChatWidget.h"
-#include "Widgets/Text/SMultiLineEditableText.h"
 #include "Components/EditableText.h"
 #include "Engine/World.h"
 #include "Components/ScrollBox.h"
 #include "GameFramework/Controller.h"
 #include "Kismet/GameplayStatics.h"
 
-void UChatWidget::OnChatMessageTyped()
+void UChatWidget::NativeConstruct()
 {
-    OnChatMessageTypedToServer();
+    Super::NativeConstruct();
+    chatMessageTextBox->OnTextCommitted.AddDynamic(this, &UChatWidget::OnChatMessageTyped);
 }
 
-void UChatWidget::OnChatMessageTypedToServer()
+void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type CommitMethod)
 {
-    FString chatMessage = chatMessageTextBox->GetText().ToString();
-    FText chatText = chatMessageTextBox->GetText();
-
-    if (chatMessage.IsEmpty())
+    if(CommitMethod == ETextCommit::OnEnter)
     {
-        return;
+        FString textString = Text.ToString();
+        if (!playerName.IsEmpty() && !textString.IsEmpty())
+        {
+            FString messageString = playerName + ": " + textString;
+            messageSendDel.Broadcast(messageString);
+            chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
+        }
     }
-   
-    messageSendDel.Broadcast(chatMessage);
-    chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
 }
 
 void UChatWidget::OnChatMessageTypedToAll(const FString& message)

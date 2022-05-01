@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/EditableText.h"
+#include "Widgets/SWidget.h"
+#include "Types/SlateEnums.h"
 #include "Net/UnrealNetwork.h"
+#include "SlateBasics.h"
 #include "ChatMessageWidget.h"
 #include "ChatWidget.generated.h"
 
@@ -20,13 +23,15 @@ class MBR_ESPORTS_API UChatWidget : public UUserWidget
 	GENERATED_BODY()
 
 public :
+	virtual void NativeConstruct() override;
+
 	UPROPERTY(BlueprintAssignable)
 		FDelegateSendMessage messageSendDel;	
 
 	UFUNCTION(BlueprintCallable)
-		void OnChatMessageTyped();	
+		void SetPlayerName(FString name) { playerName = name; }
 	UFUNCTION(BlueprintCallable)
-		void OnChatMessageTypedToServer();
+		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
 	UFUNCTION(BlueprintCallable)
 		void OnChatMessageTypedToAll(const FString& chatMessage);
 
@@ -43,8 +48,10 @@ protected :
 
 private :
 	UPROPERTY()
+		FString playerName;
+	UPROPERTY()
 		float maxHeight = 370.0F;
 	UPROPERTY()
-		float minHeight = 70.0F;
+		float minHeight = 90.0F;
 
 };

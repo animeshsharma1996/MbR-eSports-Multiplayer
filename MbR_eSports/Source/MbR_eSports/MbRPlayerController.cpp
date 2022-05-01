@@ -3,6 +3,7 @@
 
 #include "MbRPlayerController.h"
 #include "Blueprint/WidgetTree.h"
+#include "GameFramework/Controller.h"
 #include "Engine/World.h"
 
 void AMbRPlayerController::BeginPlay()
@@ -24,6 +25,12 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
             UChatWidget* createdWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
             chatWidget = createdWidget;
             chatWidget->AddToViewport();
+            chatWidget->SetPlayerName("ForNow");
+            
+            if (PlayerState != nullptr)
+            {
+                chatWidget->SetPlayerName(PlayerState->GetPlayerName());
+            }
             SetWidget();
         }
     }
