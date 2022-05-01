@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/EditableText.h"
+#include "Components/Border.h"
 #include "Widgets/SWidget.h"
 #include "Types/SlateEnums.h"
 #include "Net/UnrealNetwork.h"
@@ -39,7 +41,9 @@ protected :
 	UPROPERTY(meta = (BindWidget))
 		class UScrollBox* chatMessagesScrollBox;
 	UPROPERTY(meta = (BindWidget))
-		class UEditableText* chatMessageTextBox;
+		class UEditableText* chatMessageTextBox;	
+	UPROPERTY(meta = (BindWidget))
+		class UBorder* chatWidgetBorder;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TSubclassOf<UUserWidget> chatMessageWidget;
 
@@ -48,10 +52,18 @@ protected :
 
 private :
 	UPROPERTY()
+		UChatMessageWidget* chatTextWidget;
+	UPROPERTY()
+		UCanvasPanelSlot* canvasPanelSlot;
+	UPROPERTY()
 		FString playerName;
 	UPROPERTY()
-		float maxHeight = 370.0F;
+		float currentY = 0.0F;
 	UPROPERTY()
-		float minHeight = 90.0F;
+		float currentX = 0.0F;
+	UPROPERTY()
+		float maxY = 370.0F;
+	UPROPERTY()
+		float minY = 90.0F;
 
 };

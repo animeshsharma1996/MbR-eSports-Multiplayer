@@ -25,7 +25,7 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
             UChatWidget* createdWidget = Cast<UChatWidget>(CreateWidget<UUserWidget>(GetWorld(), chatWidgetClass));
             chatWidget = createdWidget;
             chatWidget->AddToViewport();
-            chatWidget->SetPlayerName("ForNow");
+            chatWidget->SetPlayerName("PC");
             
             if (PlayerState != nullptr)
             {
