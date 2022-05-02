@@ -49,14 +49,20 @@ protected :
 
 	UFUNCTION(BlueprintCallable)
 		void SetMessageText(FText text) { chatMessageTextBox->SetText(text); }	
+	UFUNCTION(BlueprintCallable)
+		void HideChatWidget();
 
 private :
+	FTimerHandle timerHandle;
+
 	UPROPERTY()
 		UChatMessageWidget* chatTextWidget;
 	UPROPERTY()
 		UCanvasPanelSlot* canvasPanelSlot;
 	UPROPERTY()
 		FString playerName;
+	UPROPERTY()
+		float chatHideDelay = 5.0F;
 	UPROPERTY()
 		float currentY = 0.0F;
 	UPROPERTY()

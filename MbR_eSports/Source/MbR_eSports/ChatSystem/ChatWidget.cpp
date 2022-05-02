@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Components/ScrollBox.h"
 #include "GameFramework/Controller.h"
+#include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 
 void UChatWidget::NativeConstruct()
@@ -37,6 +38,7 @@ void UChatWidget::OnChatMessageTypedToAll(const FString& message)
 {
     UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
     SetVisibility(ESlateVisibility::Visible);
+
     if (chatMessageWidget)
     {
         chatTextWidget = Cast<UChatMessageWidget>(CreateWidget<UUserWidget>(GetWorld(), chatMessageWidget));
@@ -46,7 +48,9 @@ void UChatWidget::OnChatMessageTypedToAll(const FString& message)
         }
         chatTextWidget->SetChatText(FText::AsCultureInvariant(message));
     }
+
     chatMessagesScrollBox->AddChild(chatTextWidget);
+
     if (canvasPanelSlot != nullptr)
     {
         float incrementY = currentY + 40.0f;
@@ -56,4 +60,12 @@ void UChatWidget::OnChatMessageTypedToAll(const FString& message)
             canvasPanelSlot->SetSize(FVector2D(currentX, incrementY));
         }
     }
+    GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &UChatWidget::HideChatWidget, chatHideDelay, false);
+}
+
+void UChatWidget::HideChatWidget()
+{
+    SetVisibility(ESlateVisibility::Hidden);
+    canvasPanelSlot->SetSize(FVector2D(currentX, minY));
+    GetWorld()->GetTimerManager().ClearTimer(timerHandle);
 }
