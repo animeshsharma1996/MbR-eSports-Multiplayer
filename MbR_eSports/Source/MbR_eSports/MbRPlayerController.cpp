@@ -52,6 +52,7 @@ void AMbRPlayerController::SetWidget()
 void AMbRPlayerController::BringUpChat()
 {
     chatWidget->SetVisibility(ESlateVisibility::Visible);
+    chatWidget->SetKeyboardFocusOnText();
 }
 
 void AMbRPlayerController::SendChatMessageToServer_Implementation(const FString& message)

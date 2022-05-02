@@ -13,11 +13,17 @@
 void UChatWidget::NativeConstruct()
 {
     Super::NativeConstruct();
+    chatMessageTextBox->SetClearKeyboardFocusOnCommit(false);
     chatMessageTextBox->OnTextCommitted.AddDynamic(this, &UChatWidget::OnChatMessageTyped);
     chatTextWidget = nullptr;
     canvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(chatWidgetBorder);
     currentY = canvasPanelSlot->GetSize().Y;
     currentX = canvasPanelSlot->GetSize().X;
+}
+
+void UChatWidget::SetKeyboardFocusOnText()
+{
+    chatMessageTextBox->SetKeyboardFocus();
 }
 
 void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type CommitMethod)
@@ -53,7 +59,7 @@ void UChatWidget::OnChatMessageTypedToAll(const FString& message)
 
     if (canvasPanelSlot != nullptr)
     {
-        float incrementY = currentY + 40.0f;
+        float incrementY = currentY + 40.0F;
         if (incrementY <= maxY)
         {
             currentY = incrementY;
@@ -67,5 +73,6 @@ void UChatWidget::HideChatWidget()
 {
     SetVisibility(ESlateVisibility::Hidden);
     canvasPanelSlot->SetSize(FVector2D(currentX, minY));
+    chatMessagesScrollBox->ScrollToEnd();
     GetWorld()->GetTimerManager().ClearTimer(timerHandle);
 }
