@@ -84,16 +84,6 @@ void AUIManager::CreateMainMenuWidget()
     {
         currentWidget = mainMenuUserWidget;
         //currentWidget->AddToViewport();
-
-//        bool runInEditor = false;
-//#if WITH_EDITOR
-//        runInEditor = true;
-//#endif
-//        if (!runInEditor)
-//        {
-//            currentWidget->AddToViewport();
-//        }
-
     }
     else
     {

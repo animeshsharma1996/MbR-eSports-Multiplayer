@@ -6,9 +6,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Engine/World.h"
 #include "Components/ScrollBox.h"
-#include "GameFramework/Controller.h"
 #include "TimerManager.h"
-#include "Kismet/GameplayStatics.h"
 
 void UChatWidget::NativeConstruct()
 {
@@ -19,11 +17,6 @@ void UChatWidget::NativeConstruct()
     canvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(chatWidgetBorder);
     currentY = canvasPanelSlot->GetSize().Y;
     currentX = canvasPanelSlot->GetSize().X;
-}
-
-void UChatWidget::SetKeyboardFocusOnText()
-{
-    chatMessageTextBox->SetKeyboardFocus();
 }
 
 void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type CommitMethod)

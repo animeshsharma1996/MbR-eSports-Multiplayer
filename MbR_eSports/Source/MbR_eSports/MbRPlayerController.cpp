@@ -4,12 +4,12 @@
 #include "MbRPlayerController.h"
 #include "Blueprint/WidgetTree.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/PlayerState.h"
 #include "Engine/World.h"
 
 void AMbRPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-
     InputComponent->BindAction("BringChat", IE_Pressed, this, &AMbRPlayerController::BringUpChat);
 }
 
@@ -33,10 +33,6 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
             chatWidget = createdWidget;
             chatWidget->AddToViewport();
             chatWidget->SetPlayerName("PC");
-            if (PlayerState != nullptr)
-            {
-                chatWidget->SetPlayerName(PlayerState->GetPlayerName());
-            }
             SetWidget();
         }
     }
@@ -53,6 +49,10 @@ void AMbRPlayerController::BringUpChat()
 {
     chatWidget->SetVisibility(ESlateVisibility::Visible);
     chatWidget->SetKeyboardFocusOnText();
+    if (PlayerState != nullptr)
+    {
+        chatWidget->SetPlayerName(PlayerState->GetPlayerName());
+    }
 }
 
 void AMbRPlayerController::SendChatMessageToServer_Implementation(const FString& message)

@@ -33,7 +33,7 @@ public :
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerName(FString name) { playerName = name; }
 	UFUNCTION(BlueprintCallable)
-		void SetKeyboardFocusOnText();
+		void SetKeyboardFocusOnText() {	chatMessageTextBox->SetKeyboardFocus();	}
 	UFUNCTION(BlueprintCallable)
 		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
 	UFUNCTION(BlueprintCallable)
@@ -72,6 +72,6 @@ private :
 	UPROPERTY()
 		float maxY = 370.0F;
 	UPROPERTY()
-		float minY = 120.0F;
+		float minY = 130.0F;
 
 };
