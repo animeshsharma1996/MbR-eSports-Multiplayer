@@ -36,6 +36,7 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
 void UChatWidget::OnChatMessageTypedToAll(const FString& message)
 {
     UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
+    SetVisibility(ESlateVisibility::Visible);
     if (chatMessageWidget)
     {
         chatTextWidget = Cast<UChatMessageWidget>(CreateWidget<UUserWidget>(GetWorld(), chatMessageWidget));

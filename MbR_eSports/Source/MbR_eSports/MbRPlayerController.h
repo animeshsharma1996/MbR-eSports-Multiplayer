@@ -19,6 +19,7 @@ class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
 	GENERATED_BODY()
         virtual void BeginPlay() override;
+        virtual void SetupInputComponent() override;
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
@@ -27,7 +28,9 @@ public:
     UFUNCTION(Client, Unreliable)
         void CreateChatWidget();
     UFUNCTION(BlueprintCallable)
-        void SetWidget();
+        void SetWidget();  
+    UFUNCTION(BlueprintCallable)
+        void BringUpChat();
     UFUNCTION(Server, Unreliable)
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(Client, Unreliable)

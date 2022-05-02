@@ -6,6 +6,13 @@
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 
+void AMbRPlayerController::SetupInputComponent()
+{
+    Super::SetupInputComponent();
+
+    InputComponent->BindAction("BringChat", IE_Pressed, this, &AMbRPlayerController::BringUpChat);
+}
+
 void AMbRPlayerController::BeginPlay()
 {
     if (GetWorld()->GetMapName() != "MainMenu")
@@ -26,7 +33,6 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
             chatWidget = createdWidget;
             chatWidget->AddToViewport();
             chatWidget->SetPlayerName("PC");
-            
             if (PlayerState != nullptr)
             {
                 chatWidget->SetPlayerName(PlayerState->GetPlayerName());
@@ -41,6 +47,11 @@ void AMbRPlayerController::SetWidget()
     FScriptDelegate messageSendDelegate;
     messageSendDelegate.BindUFunction(this, "SendChatMessageToServer");
     chatWidget->messageSendDel.Add(messageSendDelegate);
+}
+
+void AMbRPlayerController::BringUpChat()
+{
+    chatWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AMbRPlayerController::SendChatMessageToServer_Implementation(const FString& message)
