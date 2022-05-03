@@ -12,20 +12,22 @@
 /**
 Here the class is utilised to initialise and start the widgets (MainMenu, ServerSlot) and the GameInstance.
 The variables and functions names are self explanatory.
- **/
+**/
 UCLASS()
 class MBR_ESPORTS_API AUIManager : public AHUD
 {
 	GENERATED_BODY()
 
 public:
-		virtual void BeginPlay() override;	
+		virtual void BeginPlay() override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> mainMenuWidget;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> serverSlotWidget;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
+        TSubclassOf<UUserWidget> chatWidget;    
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<AActor> rpcActorClass;
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
@@ -44,7 +46,7 @@ private:
     UPROPERTY()
         UUserWidget* mainMenuUserWidget;   
     UPROPERTY()   
-        APlayerController* playerController;
+        APlayerController* playerController;   
     UPROPERTY() 
         UWorld* world;
     UPROPERTY()

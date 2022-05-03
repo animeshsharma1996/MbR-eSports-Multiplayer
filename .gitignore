@@ -110,3 +110,9 @@ MbR_eSports/Intermediate/ProjectFiles/
 MbR_eSports/.vscode/
 
 *.code-workspace
+
+MbR_eSports/Intermediate/ReimportCache/
+
+MbR_eSports/Intermediate/Config/CoalescedSourceConfigs/
+
+MbR_eSports/Binaries/Win32/

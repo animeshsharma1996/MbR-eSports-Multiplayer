@@ -3,8 +3,10 @@
 #include "UIManager.h"
 #include "Blueprint/UserWidget.h"
 #include "MainMenu/MainMenuWidget.h"
+#include "ChatSystem/ChatWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MbR_eSports.h"
 
@@ -43,15 +45,13 @@ void AUIManager::BeginPlay()
     if (world->GetMapName() != defaultGameMapName)
     {
         CreateMainMenuWidget();
-
-       
     }
     else
     {
         //Spawn the replicated RPC actor in the level
         if (rpcActorClass != nullptr)
         {
-            rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
+             rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
         }
     }
 
@@ -95,7 +95,7 @@ void AUIManager::CreateMainMenuWidget()
 //The in-game menu should bring up in any map except for main menu (will only happen if there is a player controller)
 void AUIManager::BringUpInGameMenu()
 {
-    if (GetWorld() && GetWorld()->GetMapName() != mainMenuMapName)
+    if (world && world->GetMapName() != mainMenuMapName)
     {
         //Press escape to bring up the In game menu (possible only when mainMenuUserWidget is not null)
         if (mainMenuUserWidget != nullptr && !isInGameMenuUp)

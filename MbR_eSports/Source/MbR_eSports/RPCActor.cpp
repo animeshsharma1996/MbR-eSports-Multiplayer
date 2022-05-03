@@ -5,12 +5,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "MbRGameInstance.h"
+#include "MbR_eSportsGameModeBase.h"
+
+ARPCActor::ARPCActor(const class FObjectInitializer& PCIP) : Super(PCIP)
+{
+    bReplicates = true;
+}
 
 //Initialise the Replicated RPC Actor and assign the delegates to the game Instance
 void ARPCActor::Initialise(UMbRGameInstance* gameInstance)
 {
-    UE_LOG(LogTemp, Warning, TEXT("RPC Actor Initialisation"));
-
     FScriptDelegate serverEndDel;
     serverEndDel.BindUFunction(this, "HandleEndSession");
     mbRGameInstance = gameInstance;

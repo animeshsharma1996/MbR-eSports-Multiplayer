@@ -6,7 +6,6 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
-#include "RPCActor.h"
 #include "MbRGameInstance.generated.h"
 
 /*

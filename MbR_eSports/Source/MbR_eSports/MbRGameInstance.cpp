@@ -49,8 +49,6 @@ void UMbRGameInstance::Init()
 
 void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Game Instance Assinables Set"));
-
 	lobbyMapName = lobbyMap;
 	mainMenuMapName = mainMenuMap;
 	playerController = pController;
