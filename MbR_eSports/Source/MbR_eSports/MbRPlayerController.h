@@ -11,9 +11,9 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
 
-/**
- *  
- */
+/* 
+Player Controller class to recieve input, create chat widget and own it for the purpose of runnning RPCs
+*/
 UCLASS()
 class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
@@ -34,9 +34,11 @@ public:
     UFUNCTION(Server, Unreliable)
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(Client, Unreliable)
-        void SendMessageToAll(const FString& message);
+        void SendMessageToClient(const FString& message);
 
 protected:
     UPROPERTY()
         UChatWidget* chatWidget;
+    UPROPERTY()
+        bool isNameSetup = false;
 };

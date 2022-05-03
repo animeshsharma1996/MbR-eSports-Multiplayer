@@ -17,7 +17,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSendMessage, const FString&, message);
 
 /**
- * 
+ * Chat Widget responsible to creating chat box, binding variables and writing/adding chat messages
  */
 UCLASS()
 class MBR_ESPORTS_API UChatWidget : public UUserWidget
@@ -33,11 +33,15 @@ public :
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerName(FString name) { playerName = name; }
 	UFUNCTION(BlueprintCallable)
+		FString GetPlayerName() { return playerName; }
+	UFUNCTION(BlueprintCallable)
 		void SetKeyboardFocusOnText() {	chatMessageTextBox->SetKeyboardFocus();	}
+	UFUNCTION(BlueprintCallable)
+		void UnHideChatWidget();
 	UFUNCTION(BlueprintCallable)
 		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
 	UFUNCTION(BlueprintCallable)
-		void OnChatMessageTypedToAll(const FString& chatMessage);
+		void AddTheChatMessageToChatBox(const FString& chatMessage);
 
 protected :
 	UPROPERTY(meta = (BindWidget))
@@ -64,11 +68,13 @@ private :
 	UPROPERTY()
 		FString playerName;
 	UPROPERTY()
-		float chatHideDelay = 5.0F;
+		float chatHideDelay = 10.0F;
 	UPROPERTY()
 		float currentY = 0.0F;
 	UPROPERTY()
 		float currentX = 0.0F;
+	UPROPERTY()
+		float incrementInY = 40.0F;	
 	UPROPERTY()
 		float maxY = 370.0F;
 	UPROPERTY()

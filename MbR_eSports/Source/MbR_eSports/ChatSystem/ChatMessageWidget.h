@@ -8,7 +8,7 @@
 #include "ChatMessageWidget.generated.h"
 
 /**
- * 
+ * Class Widget responsible for chat message texts created and added to the chat box when a message is typed and sent to other clients
  */
 UCLASS()
 class MBR_ESPORTS_API UChatMessageWidget : public UUserWidget
