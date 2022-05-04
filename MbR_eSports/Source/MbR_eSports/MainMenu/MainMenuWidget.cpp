@@ -22,6 +22,7 @@ bool UMainMenuWidget::Initialize()
 	initialSearchForServers = false;
 	isServersListPressed = false;
 	isFriendsListPressed = false;
+	listMenuIndex = 0;
 	
 	//Bind each button variable defined in the header file (with "meta = (BindWidget)") with relevant function dynamically
 	customServerButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnCustomServerButtonClicked);
@@ -57,8 +58,11 @@ bool UMainMenuWidget::Initialize()
 		mbRGameInstance->serversListDel.Add(serversListDelegate);
 		mbRGameInstance->searchingForServers.Add(serversSearchingDelegate);
 		mbRGameInstance->endServerDel.Add(serverEndDelegate);
+		if (mbRGameInstance->onlineSubsystem->GetSubsystemName() == "NULL")
+		{
+			friendsServersListButton->SetIsEnabled(false);
+		}
 	}
-
 	return true;
 }
 
@@ -80,7 +84,9 @@ void UMainMenuWidget::OnServersListButtonClicked()
 {
 	isServersListPressed = true;
 	initialSearchForServers = true;
-	OnRefreshServersButtonClicked();
+	listMenuIndex = 1;
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	RefreshOrSearchServers();
 }
 
 //Takes the player to the friends' servers list menu
@@ -88,13 +94,32 @@ void UMainMenuWidget::OnFriendsListButtonClicked()
 {
 	isFriendsListPressed = true;
 	initialSearchForServers = true;
-	OnRefreshServersButtonClicked();
+	listMenuIndex = 2;
+	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	RefreshOrSearchServers();
 }
 
 //Clears the list of the servers/friends' servers and researches to find servers/friends' servers
 void UMainMenuWidget::OnRefreshServersButtonClicked()
 {	
-	widgetSwitcherServerList->SetActiveWidgetIndex(1);
+	initialSearchForServers = true;
+	switch (listMenuIndex)
+	{
+	case 1: 
+		isServersListPressed = true;
+		isFriendsListPressed = false;
+		break;
+	case 2: 
+		isServersListPressed = false;
+		isFriendsListPressed = true;
+		break;
+	}
+	RefreshOrSearchServers();
+}
+
+//Refresh the servers list or search servers depending upon the button click
+void UMainMenuWidget::RefreshOrSearchServers()
+{
 	if (initialSearchForServers)
 	{
 		serverListScrollBox->ClearChildren();
@@ -165,10 +190,11 @@ void UMainMenuWidget::SearchingForServers(bool isSearching)
 	}
 }
 
-//Back button (from host screen) takes the player back to the main menu 
+//Back button (from host screen/join screen) takes the player back to the main menu 
 void UMainMenuWidget::OnBackButtonClicked()
 {
 	backgroundImage->SetVisibility(ESlateVisibility::Visible);
+	listMenuIndex = 0;
 	widgetSwitcherServerList->SetActiveWidgetIndex(0);
 
 }
@@ -185,6 +211,9 @@ void UMainMenuWidget::OnBackToMainMenuButtonClicked()
 			OnBackButtonClicked();
 		}
 	}
+	listMenuIndex = 0;
+	isServersListPressed = false;
+	isFriendsListPressed = false;
 }
 
 //Cancel Button removes the in game menu and unpauses for the local player

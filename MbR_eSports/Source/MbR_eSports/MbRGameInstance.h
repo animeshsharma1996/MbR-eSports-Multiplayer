@@ -26,6 +26,7 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 
 public:
 	UMbRGameInstance();
+		IOnlineSubsystem* onlineSubsystem;
 
 	UFUNCTION(BlueprintCallable)
 		void SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld);
@@ -69,7 +70,6 @@ protected:
 		FName defaultSessionName;
 
 private:
-		IOnlineSubsystem* onlineSubsystem;
 		TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
 	UPROPERTY()
 		APlayerController* playerController;
