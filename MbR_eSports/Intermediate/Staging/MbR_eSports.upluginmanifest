@@ -160,6 +160,52 @@
 			}
 		},
 		{
+			"File": "../../../Engine/Plugins/Runtime/Steam/SteamSockets/SteamSockets.uplugin",
+			"Descriptor": 
+			{
+				"FileVersion": 3,
+				"Version": 1,
+				"VersionName": "1.0",
+				"FriendlyName": "Steam Sockets",
+				"Description": "New Steamworks Networking code that supports the SteamSockets interface. NOTE: This plugin is only compatible with the SteamSockets Netdriver. It will not work if the proper netdriver definitions have not been set.",
+				"Category": "Networking",
+				"CreatedBy": "Epic Games, Inc.",
+				"CreatedByURL": "https://epicgames.com",
+				"DocsURL": "",
+				"MarketplaceURL": "",
+				"SupportURL": "",
+				"EnabledByDefault": false,
+				"CanContainContent": false,
+				"Modules": [
+					{
+						"Name": "SteamSockets",
+						"Type": "Runtime",
+						"LoadingPhase": "Default",
+						"WhitelistPlatforms": [
+							"Win32",
+							"Win64",
+							"Mac",
+							"Linux"
+						]
+					}
+				],
+				"Plugins": [
+					{
+						"Name": "OnlineSubsystem",
+						"Enabled": true
+					},
+					{
+						"Name": "OnlineSubsystemSteam",
+						"Enabled": true
+					},
+					{
+						"Name": "SteamShared",
+						"Enabled": true
+					}
+				]
+			}
+		},
+		{
 			"File": "../../../Engine/Plugins/2D/Paper2D/Paper2D.uplugin",
 			"Descriptor": 
 			{
