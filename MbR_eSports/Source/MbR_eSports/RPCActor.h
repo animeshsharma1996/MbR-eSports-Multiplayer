@@ -22,6 +22,8 @@ public:
         void HandleEndSession(bool successful);
     UFUNCTION(BlueprintCallable)
         UMbRGameInstance* GetGameInstance() { return mbRGameInstance; }
+    UFUNCTION(Server, Reliable)
+        void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
 
 private:
     UPROPERTY()

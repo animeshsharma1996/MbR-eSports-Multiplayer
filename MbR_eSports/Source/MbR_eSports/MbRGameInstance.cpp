@@ -13,6 +13,8 @@
 #include "OnlineSubsystemUtils.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Interfaces/OnlineSharingInterface.h"
+#include "UObject/CoreOnline.h"
+#include "SocketSubsystem.h"
 #include "Templates/SharedPointer.h"
 
 //Constructor to define default session name and the online subsystem
@@ -142,6 +144,13 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 	}
 }
 
+//Register Player on the server
+void UMbRGameInstance::RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Runs");
+	sessionInterface->RegisterPlayer(sessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
+}
+
 /*
 Should end the server when the match is finished or when the host leaves the lobby/match
 Also called if the client tries to leave the server/session
@@ -168,6 +177,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	if (successful && !lobbyMapName.ToString().IsEmpty())
 	{
 		sessionInterface->StartSession(serverName);
+		sessionInterface->RegisterPlayer(serverName, *GetFirstGamePlayer()->GetPreferredUniqueNetId().GetUniqueNetId().Get(),false);
 		serverCreation.Broadcast(successful);
 		UGameplayStatics::OpenLevel(world, lobbyMapName, true, "listen");
 	}
@@ -223,11 +233,33 @@ void UMbRGameInstance::OnAssignSearchResults(const TArray<FOnlineSessionSearchRe
 
 		result.Session.SessionSettings.Get(FName("SERVER_NAME_KEY"), serverName);
 
+		//ISocketSubsystem* socketSubsystem = ISocketSubsystem::Get();
+		//FString ConnectInfo;
+		//sessionInterface->GetResolvedConnectString(result, GamePort, ConnectInfo);
+		//TSharedRef<FInternetAddr> Addr = socketSubsystem->CreateInternetAddr();
+		//bool bIsValid;
+		//Addr->SetIp(*ConnectInfo, bIsValid);
+		//if (bIsValid)
+		//{
+		//	// Creating client socket
+		//	auto socket = socketSubsystem->CreateSocket(FName("SteamClientSocket"), FString("PingSocket"), true);
+		//	FString msg = FString::Printf(TEXT("Ping %f", FPlatformTime::Seconds()));
+		//	FArrayWriter Writer;
+		//	int32 BytesSent;
+		//	Writer << msg; // Creating packet data
+		//	// Sending 10 ping packets
+		//	for (int32 i = 0; i < 10; i++)
+		//	{
+		//		socket->SendTo(Writer.GetData(), Writer.Num(), BytesSent, Addr.Get());
+		//	}
+		//	socketSubsystem->DestroySocket(socket);
+		//}
+
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
 		serverInfo.isLan = result.Session.SessionSettings.bIsLANMatch;
-		serverInfo.ping = result.PingInMs;
+		serverInfo.ping = result.PingInMs; 
 		serverInfo.serverArrayIndex = serverArrayIndex;
 		serversListDel.Broadcast(serverInfo);
 
@@ -252,6 +284,8 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 
 		if (!joinAddress.IsEmpty())
 		{
+			registerPlayersDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
+			sessionInterface->RegisterPlayer(sessionName, *GetFirstGamePlayer()->GetPreferredUniqueNetId().GetUniqueNetId().Get(), false);
 			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
 		}
 		sessionInterface->StartSession(sessionName);

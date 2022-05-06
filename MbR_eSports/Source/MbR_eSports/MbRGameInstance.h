@@ -6,6 +6,8 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "UObject/CoreOnline.h"
+#include "GameFramework/OnlineReplStructs.h"
 #include "MbRGameInstance.generated.h"
 
 /*
@@ -13,11 +15,11 @@ The Game Instance class derived from the UGameInstance to create, find and join 
 and prebuild virtual functions such as OnCreateSessionComplete, OnFindSessionsComplete, etc.
 The variables and functions names are self explanatory.
 */
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, serversListDel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServerSearching, bool, searchingForServers);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateEndServer, bool, successful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDelegateRegisterPlayer, FName, sessionName, const FUniqueNetIdRepl, playerId, bool, bWasInvited);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -26,6 +28,7 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 
 public:
 	UMbRGameInstance();
+		IOnlineSubsystem* onlineSubsystem;
 
 	UFUNCTION(BlueprintCallable)
 		void SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld);
@@ -38,6 +41,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void JoinServer(int32 arrayIndex, FName joinSessionName);	
 	UFUNCTION(BlueprintCallable)
+		void RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited);
+	UFUNCTION(BlueprintCallable)
 		void EndServer();
 	UFUNCTION(BlueprintCallable)
 		void OnEndServer();
@@ -49,7 +54,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServerSearching searchingForServers;
 	UPROPERTY(BlueprintAssignable)
-		FDelegateEndServer endServerDel;
+		FDelegateEndServer endServerDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateRegisterPlayer registerPlayersDel;
 
 protected:
 		IOnlineSessionPtr sessionInterface;
@@ -69,7 +76,6 @@ protected:
 		FName defaultSessionName;
 
 private:
-		IOnlineSubsystem* onlineSubsystem;
 		TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
 	UPROPERTY()
 		APlayerController* playerController;

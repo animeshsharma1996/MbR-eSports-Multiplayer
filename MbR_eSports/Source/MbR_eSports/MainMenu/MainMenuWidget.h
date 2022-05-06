@@ -75,7 +75,9 @@ private :
 	UFUNCTION()
 		void OnFriendsListButtonClicked();
 	UFUNCTION()
-		void OnRefreshServersButtonClicked();	
+		void OnRefreshServersButtonClicked();
+	UFUNCTION()
+		void RefreshOrSearchServers();
 	UFUNCTION()
 		void OnHostCustomServerButtonClicked();
 	UFUNCTION()
@@ -100,6 +102,8 @@ private :
 		bool isServersListPressed;	
 	UPROPERTY()
 		bool isFriendsListPressed;
+	UPROPERTY()
+		int listMenuIndex;
 	UPROPERTY()
 		bool isServerEnded;
 	UPROPERTY()
