@@ -206,12 +206,11 @@ void UMainMenuWidget::OnBackToMainMenuButtonClicked()
 	{
 		mbRGameInstance->EndServer();
 
-		if (isServerEnded)
-		{
-			OnBackButtonClicked();
-		}
+		//if (isServerEnded)
+		//{
+		//	OnBackButtonClicked();
+		//}
 	}
-	listMenuIndex = 0;
 	isServersListPressed = false;
 	isFriendsListPressed = false;
 }
