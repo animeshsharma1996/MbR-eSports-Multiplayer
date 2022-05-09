@@ -70,6 +70,7 @@ protected:
 		virtual void OnFindFriendSessionComplete(int32 localPlayer, bool successful, const TArray<FOnlineSessionSearchResult>& sessionInfo);
 		virtual void OnJoinSessionComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result);
 		virtual void OnEndSessionComplete(FName sessionName, bool successful);
+		virtual void HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver,	ENetworkFailure::Type FailureType,	const FString& ErrorString);
 		void OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo);
 
 	UPROPERTY()

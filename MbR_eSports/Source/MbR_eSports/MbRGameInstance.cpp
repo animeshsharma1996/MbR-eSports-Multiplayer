@@ -46,6 +46,12 @@ void UMbRGameInstance::Init()
 			sessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnJoinSessionComplete);
 			sessionInterface->OnEndSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnEndSessionComplete);
 		}
+
+		UEngine* uEngine = GetEngine();
+		if (uEngine)
+		{
+			uEngine->OnNetworkFailure().AddUObject(this, &UMbRGameInstance::HandleNetworkFailure);
+		}
 	}
 }
 
@@ -304,5 +310,14 @@ void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 			UE_LOG(LogTemp, Warning, TEXT("Destroy Session"));
 			sessionInterface->DestroySession(sessionName);
 		}
+	}
+}
+
+//Handle Network Failure when the host closes the game/press Alt-F4 
+void UMbRGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	if (FailureType == ENetworkFailure::ConnectionLost)
+	{
+		EndServer();
 	}
 }
