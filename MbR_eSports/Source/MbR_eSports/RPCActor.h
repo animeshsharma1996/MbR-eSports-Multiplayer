@@ -13,7 +13,6 @@ UCLASS()
 class MBR_ESPORTS_API ARPCActor : public AActor
 {
     GENERATED_BODY()
-        ARPCActor(const class FObjectInitializer& PCIP);
 
 public:
     UFUNCTION()
@@ -28,6 +27,7 @@ public:
 private:
     UPROPERTY()
         UMbRGameInstance* mbRGameInstance;
+
     UFUNCTION(NetMulticast, Reliable)
         void ClientOnEndSession();
 
