@@ -15,7 +15,7 @@ void ARPCActor::Initialise(UMbRGameInstance* gameInstance)
     registerPlayerDel.BindUFunction(this, "RegisterPlayer");
     mbRGameInstance = gameInstance;
     mbRGameInstance->endServerDel.Add(serverEndDel);
-    mbRGameInstance->registerPlayersDel.Add(registerPlayerDel);
+    mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
 }
 
 //Delegate function fired when any player tries to leave the game
@@ -28,6 +28,12 @@ void ARPCActor::HandleEndSession(bool successful)
 void ARPCActor::RegisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited)
 {
     Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->RegisterPlayer(sessionName, playerId, bWasInvited);
+}
+
+//Function runnning on the server to unregister the player in the session
+void ARPCActor::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId)
+{
+    Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->UnregisterPlayer(sessionName, playerId);
 }
 
 /*RPC function -> If the host leaves, the RPC is called on each client. If the connected played leaves, the RPC is 

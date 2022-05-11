@@ -20,6 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServerSearching, bool, searchingForServers);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateEndServer, bool, successful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDelegateRegisterPlayer, FName, sessionName, const FUniqueNetIdRepl, playerId, bool, bWasInvited);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateUnregisterPlayer, FName, sessionName, const FUniqueNetIdRepl, playerId);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -41,7 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void JoinServer(int32 arrayIndex, FName joinSessionName);	
 	UFUNCTION(BlueprintCallable)
-		void RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited);
+		void RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited);	
+	UFUNCTION(BlueprintCallable)
+		void UnregisterPlayer(FName sessionName, FUniqueNetIdRepl playerId);
 	UFUNCTION(BlueprintCallable)
 		void EndServer();
 	UFUNCTION(BlueprintCallable)
@@ -56,7 +59,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FDelegateEndServer endServerDel;	
 	UPROPERTY(BlueprintAssignable)
-		FDelegateRegisterPlayer registerPlayersDel;
+		FDelegateRegisterPlayer registerPlayerDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateUnregisterPlayer unregisterPlayerDel;
 
 protected:
 		IOnlineSessionPtr sessionInterface;

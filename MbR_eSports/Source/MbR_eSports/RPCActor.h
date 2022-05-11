@@ -22,7 +22,9 @@ public:
     UFUNCTION(BlueprintCallable)
         UMbRGameInstance* GetGameInstance() { return mbRGameInstance; }
     UFUNCTION(Server, Reliable)
-        void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
+        void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);   
+    UFUNCTION(Server, Reliable)
+        void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
 
 private:
     UPROPERTY()

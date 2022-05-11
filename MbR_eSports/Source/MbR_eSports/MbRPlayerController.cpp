@@ -50,11 +50,14 @@ void AMbRPlayerController::SetWidget()
 //Bring up the chat on screen/unhide along with setting player name in the chat (if empty)
 void AMbRPlayerController::BringUpChat()
 {
-    chatWidget->UnHideChatWidget();
+    if (chatWidget != nullptr)
+    {
+        chatWidget->UnHideChatWidget();
+    }
 
     if (!isNameSetup)
     {
-        if (PlayerState != nullptr)
+        if (PlayerState != nullptr && chatWidget != nullptr)
         {
             chatWidget->SetPlayerName(PlayerState->GetPlayerName());
             isNameSetup = true;
