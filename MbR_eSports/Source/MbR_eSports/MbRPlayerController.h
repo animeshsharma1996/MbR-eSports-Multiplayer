@@ -12,24 +12,26 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
 
-/* 
+/*
 Player Controller class to recieve input, create chat widget and own it for the purpose of runnning RPCs
 */
 UCLASS()
 class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
-	GENERATED_BODY()
-        virtual void BeginPlay() override;
+    GENERATED_BODY()
+        //virtual void BeginPlay() override;
         virtual void SetupInputComponent() override;
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")
         TSubclassOf<UUserWidget> chatWidgetClass;
 
+    UFUNCTION(BlueprintCallable)
+        void Begin();
     UFUNCTION(Client, Unreliable)
         void CreateChatWidget();
     UFUNCTION(BlueprintCallable)
-        void SetWidget();  
+        void SetWidget();
     UFUNCTION(BlueprintCallable)
         void BringUpChat();
     UFUNCTION(BlueprintCallable)
@@ -38,12 +40,10 @@ public:
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(Client, Unreliable)
         void SendMessageToClient(const FString& message);
-    UFUNCTION()
-        void OnUnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
     UFUNCTION(Server, Reliable)
         void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
     UFUNCTION(Server, Reliable)
-        void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, APlayerController* playerController);
+        void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
 
 protected:
     UPROPERTY()

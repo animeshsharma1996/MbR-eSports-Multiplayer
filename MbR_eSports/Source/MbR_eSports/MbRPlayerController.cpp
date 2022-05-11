@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MbRPlayerController.h"
 #include "Blueprint/WidgetTree.h"
 #include "GameFramework/Controller.h"
@@ -16,7 +15,7 @@ void AMbRPlayerController::SetupInputComponent()
 }
 
 //Create the Chat Widget and own it if the game is loaded into the main level
-void AMbRPlayerController::BeginPlay()
+void AMbRPlayerController::Begin()
 {
     FScriptDelegate serverEndDel;
     FScriptDelegate registerPlayerDel;
@@ -24,7 +23,7 @@ void AMbRPlayerController::BeginPlay()
 
     serverEndDel.BindUFunction(this, "HandleEndSession");
     registerPlayerDel.BindUFunction(this, "RegisterPlayer");
-    unregisterPlayerDel.BindUFunction(this, "OnUnregisterPlayer");
+    unregisterPlayerDel.BindUFunction(this, "UnregisterPlayer");
 
     mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
     if (mbRGameInstance != nullptr)
@@ -113,16 +112,9 @@ void AMbRPlayerController::RegisterPlayer_Implementation(FName sessionName, cons
 }
 
 //Function runnning on the server to unregister the player in the session
-void AMbRPlayerController::OnUnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId)
-{
-    UnregisterPlayer(sessionName, playerId, this);
-}
-
-//Function runnning on the server to unregister the player in the session
-void AMbRPlayerController::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, APlayerController* playerController)
+void AMbRPlayerController::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId)
 {
     UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
-    UGameplayStatics::RemovePlayer(playerController, true);
     if (mbRGameInstance != nullptr)
     {
         mbRGameInstance->UnregisterPlayer(sessionName, playerId);

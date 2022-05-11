@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "RPCActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -16,7 +15,7 @@ void ARPCActor::Initialise(UMbRGameInstance* gameInstance)
     registerPlayerDel.BindUFunction(this, "RegisterPlayer");
     unregisterPlayerDel.BindUFunction(this, "UnregisterPlayer");
     mbRGameInstance = gameInstance;
-    //mbRGameInstance->endServerDel.Add(serverEndDel);
+    mbRGameInstance->endServerDel.Add(serverEndDel);
     //mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
     //mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
 }
