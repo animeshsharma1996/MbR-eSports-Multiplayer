@@ -16,15 +16,23 @@ void ARPCActor::Initialise(UMbRGameInstance* gameInstance)
     registerPlayerDel.BindUFunction(this, "RegisterPlayer");
     unregisterPlayerDel.BindUFunction(this, "UnregisterPlayer");
     mbRGameInstance = gameInstance;
-    mbRGameInstance->endServerDel.Add(serverEndDel);
-    mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
-    mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
+    //mbRGameInstance->endServerDel.Add(serverEndDel);
+    //mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
+    //mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
 }
 
 //Delegate function fired when any player tries to leave the game
 void ARPCActor::HandleEndSession(bool successful)
 {
     ClientOnEndSession();
+}
+
+/*RPC function -> If the host leaves, the RPC is called on each client. If the connected played leaves, the RPC is
+called on the client (that particular connected player) only*/
+void ARPCActor::ClientOnEndSession_Implementation()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Initiate End Session"));
+    Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->OnEndServer();
 }
 
 //Function runnning on the server to register the player in the session
@@ -39,12 +47,4 @@ void ARPCActor::UnregisterPlayer_Implementation(FName sessionName, const FUnique
 {
     UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
     Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->UnregisterPlayer(sessionName, playerId);
-}
-
-/*RPC function -> If the host leaves, the RPC is called on each client. If the connected played leaves, the RPC is 
-called on the client (that particular connected player) only*/
-void ARPCActor::ClientOnEndSession_Implementation()
-{
-    UE_LOG(LogTemp, Warning, TEXT("Initiate End Session"));
-    Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->OnEndServer();
 }

@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"
 #include "ChatSystem/ChatMessageWidget.h"
 #include "GameFramework/PlayerController.h"
+#include "MbRGameInstance.h"
 #include "MbRPlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
@@ -31,14 +32,27 @@ public:
         void SetWidget();  
     UFUNCTION(BlueprintCallable)
         void BringUpChat();
+    UFUNCTION(BlueprintCallable)
+        void HandleEndSession(bool successful);
     UFUNCTION(Server, Unreliable)
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(Client, Unreliable)
         void SendMessageToClient(const FString& message);
+    UFUNCTION()
+        void OnUnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
+    UFUNCTION(Server, Reliable)
+        void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
+    UFUNCTION(Server, Reliable)
+        void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, APlayerController* playerController);
 
 protected:
     UPROPERTY()
         UChatWidget* chatWidget;
     UPROPERTY()
         bool isNameSetup = false;
+    UPROPERTY()
+        UMbRGameInstance* mbRGameInstance;
+
+    UFUNCTION(NetMulticast, Reliable)
+        void ClientOnEndSession();
 };

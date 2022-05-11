@@ -32,5 +32,4 @@ private:
 
     UFUNCTION(NetMulticast, Reliable)
         void ClientOnEndSession();
-
 };

@@ -6,6 +6,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/PlayerState.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 //Setup the input component 
 void AMbRPlayerController::SetupInputComponent()
@@ -17,6 +18,22 @@ void AMbRPlayerController::SetupInputComponent()
 //Create the Chat Widget and own it if the game is loaded into the main level
 void AMbRPlayerController::BeginPlay()
 {
+    FScriptDelegate serverEndDel;
+    FScriptDelegate registerPlayerDel;
+    FScriptDelegate unregisterPlayerDel;
+
+    serverEndDel.BindUFunction(this, "HandleEndSession");
+    registerPlayerDel.BindUFunction(this, "RegisterPlayer");
+    unregisterPlayerDel.BindUFunction(this, "OnUnregisterPlayer");
+
+    mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    if (mbRGameInstance != nullptr)
+    {
+        mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
+        mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
+        mbRGameInstance->endServerDel.Add(serverEndDel);
+    }
+
     if (GetWorld()->GetMapName() != "MainMenu")
     {
         CreateChatWidget();
@@ -82,5 +99,49 @@ void AMbRPlayerController::SendMessageToClient_Implementation(const FString& mes
     {
         UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients FN Invoke"));
         chatWidget->AddTheChatMessageToChatBox(message);
+    }
+}
+
+//Function runnning on the server to register the player in the session
+void AMbRPlayerController::RegisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Register Player"));
+    if (mbRGameInstance != nullptr)
+    {
+        mbRGameInstance->RegisterPlayer(sessionName, playerId, bWasInvited);
+    }
+}
+
+//Function runnning on the server to unregister the player in the session
+void AMbRPlayerController::OnUnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId)
+{
+    UnregisterPlayer(sessionName, playerId, this);
+}
+
+//Function runnning on the server to unregister the player in the session
+void AMbRPlayerController::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, APlayerController* playerController)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
+    UGameplayStatics::RemovePlayer(playerController, true);
+    if (mbRGameInstance != nullptr)
+    {
+        mbRGameInstance->UnregisterPlayer(sessionName, playerId);
+    }
+}
+
+//Delegate function fired when any player tries to leave the game
+void AMbRPlayerController::HandleEndSession(bool successful)
+{
+    ClientOnEndSession();
+}
+
+/*RPC function -> If the host leaves, the RPC is called on each client. If the connected played leaves, the RPC is
+called on the client (that particular connected player) only*/
+void AMbRPlayerController::ClientOnEndSession_Implementation()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Initiate End Session"));
+    if (mbRGameInstance != nullptr)
+    {
+        mbRGameInstance->OnEndServer();
     }
 }
