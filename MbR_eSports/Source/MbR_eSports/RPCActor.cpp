@@ -11,11 +11,14 @@ void ARPCActor::Initialise(UMbRGameInstance* gameInstance)
 {
     FScriptDelegate serverEndDel;
     FScriptDelegate registerPlayerDel;
+    FScriptDelegate unregisterPlayerDel;
     serverEndDel.BindUFunction(this, "HandleEndSession");
     registerPlayerDel.BindUFunction(this, "RegisterPlayer");
+    unregisterPlayerDel.BindUFunction(this, "UnregisterPlayer");
     mbRGameInstance = gameInstance;
     mbRGameInstance->endServerDel.Add(serverEndDel);
     mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
+    mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
 }
 
 //Delegate function fired when any player tries to leave the game
@@ -27,12 +30,14 @@ void ARPCActor::HandleEndSession(bool successful)
 //Function runnning on the server to register the player in the session
 void ARPCActor::RegisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Register Player"));
     Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->RegisterPlayer(sessionName, playerId, bWasInvited);
 }
 
 //Function runnning on the server to unregister the player in the session
 void ARPCActor::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
     Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->UnregisterPlayer(sessionName, playerId);
 }
 
