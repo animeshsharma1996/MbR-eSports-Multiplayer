@@ -3,6 +3,7 @@
 #include "MbRPlayerController.h"
 #include "Blueprint/WidgetTree.h"
 #include "GameFramework/Controller.h"
+#include "MbR_eSportsGameModeBase.h"
 #include "GameFramework/PlayerState.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -144,4 +145,18 @@ void AMbRPlayerController::ClientOnEndSession_Implementation()
     {
         mbRGameInstance->OnEndServer();
     }
+}
+
+//In built function called upon players leaving the game
+void AMbRPlayerController::OnNetCleanup(UNetConnection* connection)
+{
+    if (GetLocalRole() == ROLE_Authority && PlayerState != NULL)
+    {
+        AMbR_eSportsGameModeBase* gameMode = Cast<AMbR_eSportsGameModeBase>(GetWorld()->GetAuthGameMode());
+        if (gameMode)
+        {
+            gameMode->PreLogout(this);
+        }
+    }
+    Super::OnNetCleanup(connection);
 }

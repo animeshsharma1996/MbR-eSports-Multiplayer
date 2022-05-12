@@ -18,7 +18,10 @@ class MBR_ESPORTS_API AMbR_eSportsGameModeBase : public AGameModeBase
 
 public:
         AMbR_eSportsGameModeBase();
-        virtual void PostLogin(APlayerController* NewPlayer) override;
+        virtual void PostLogin(APlayerController* inPlayerController) override;
+    UFUNCTION()
+        void PreLogout(APlayerController* inPlayerController);
+
 private:
     UPROPERTY()
         UMbRGameInstance* mbRGameInstance = nullptr;

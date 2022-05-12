@@ -21,6 +21,7 @@ class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
     GENERATED_BODY()
         virtual void SetupInputComponent() override;
+        virtual void OnNetCleanup(UNetConnection* connection) override;
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WidgetAssignment")

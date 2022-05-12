@@ -13,29 +13,30 @@ AMbR_eSportsGameModeBase::AMbR_eSportsGameModeBase()
     sessionName = FName("Empty Session");
 }
 
-void AMbR_eSportsGameModeBase::PostLogin(APlayerController* InPlayerController)
+//Inbuilt function to mainly register the player into the session
+void AMbR_eSportsGameModeBase::PostLogin(APlayerController* inPlayerController)
 {
-    check(IsValid(InPlayerController));
+    check(IsValid(inPlayerController));
 
     // This code handles logins for both the local player (listen server) and remote players (net connection).
     FUniqueNetIdRepl UniqueNetIdRepl;
-    if (InPlayerController->IsLocalPlayerController())
+    if (inPlayerController->IsLocalPlayerController())
     {
-        ULocalPlayer* LocalPlayer = InPlayerController->GetLocalPlayer();
+        ULocalPlayer* LocalPlayer = inPlayerController->GetLocalPlayer();
         if (IsValid(LocalPlayer))
         {
             UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
         }
         else
         {
-            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(InPlayerController->Player);
+            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(inPlayerController->Player);
             check(IsValid(RemoteNetConnection));
             UniqueNetIdRepl = RemoteNetConnection->PlayerId;
         }
     }
     else
     {
-        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(InPlayerController->Player);
+        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(inPlayerController->Player);
         check(IsValid(RemoteNetConnection));
         UniqueNetIdRepl = RemoteNetConnection->PlayerId;
     }
@@ -61,5 +62,49 @@ void AMbR_eSportsGameModeBase::PostLogin(APlayerController* InPlayerController)
         UE_LOG(LogTemp, Warning, TEXT("Player couldn't be registered"));
     }
 
-    Super::PostLogin(InPlayerController);
+    Super::PostLogin(inPlayerController);
+}
+
+//Custom function to mainly unregister the player from the session
+void AMbR_eSportsGameModeBase::PreLogout(APlayerController* inPlayerController)
+{
+    check(IsValid(inPlayerController));
+
+    // This code handles logins for both the local player (listen server) and remote players (net connection).
+    FUniqueNetIdRepl UniqueNetIdRepl;
+    if (inPlayerController->IsLocalPlayerController())
+    {
+        ULocalPlayer* LocalPlayer = inPlayerController->GetLocalPlayer();
+        if (IsValid(LocalPlayer))
+        {
+            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
+        }
+        else
+        {
+            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(inPlayerController->Player);
+            check(IsValid(RemoteNetConnection));
+            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+        }
+    }
+    else
+    {
+        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(inPlayerController->Player);
+        check(IsValid(RemoteNetConnection));
+        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+    }
+
+    // Get the unique player ID.
+    TSharedPtr<const FUniqueNetId> UniqueNetId = UniqueNetIdRepl.GetUniqueNetId();
+    check(UniqueNetId != nullptr);
+
+    // Get the online session interface.
+    IOnlineSubsystem* subsystem = IOnlineSubsystem::Get();
+    IOnlineSessionPtr session = subsystem->GetSessionInterface();
+
+    // Unregister the player with the "MyLocalSessionName" session; this name should match the name you provided in CreateSession.
+    if (!session->UnregisterPlayer(sessionName, *UniqueNetId))
+    {
+        // The player could not be unregistered.
+        UE_LOG(LogTemp, Warning, TEXT("Player couldn't be unregistered"));
+    }
 }

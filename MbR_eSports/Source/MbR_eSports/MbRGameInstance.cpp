@@ -55,6 +55,7 @@ void UMbRGameInstance::Init()
 	}
 }
 
+//Function to Set Assignable variables -> Map Names, player Controller, world
 void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld)
 {
 	lobbyMapName = lobbyMap;
