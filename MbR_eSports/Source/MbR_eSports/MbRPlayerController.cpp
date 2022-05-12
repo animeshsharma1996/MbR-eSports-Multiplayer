@@ -53,8 +53,11 @@ void AMbRPlayerController::CreateChatWidget_Implementation()
 void AMbRPlayerController::SetWidget()
 {
     FScriptDelegate messageSendDelegate;
+    FScriptDelegate kickPlayerDelegate;
     messageSendDelegate.BindUFunction(this, "SendChatMessageToServer");
+    kickPlayerDelegate.BindUFunction(this, "HandleEndSession");
     chatWidget->messageSendDel.Add(messageSendDelegate);
+    chatWidget->kickPlayerDel.Add(kickPlayerDelegate);
 }
 
 //Bring up the chat on screen/unhide along with setting player name in the chat (if empty)

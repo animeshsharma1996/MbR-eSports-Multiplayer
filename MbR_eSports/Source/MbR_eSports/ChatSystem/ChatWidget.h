@@ -16,6 +16,7 @@
 #include "ChatWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSendMessage, const FString&, message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateKickPlayerDel, bool, kickPlayerDel);
 
 /**
  * Chat Widget responsible to creating chat box, binding variables and writing/adding chat messages
@@ -30,6 +31,8 @@ public :
 
 	UPROPERTY(BlueprintAssignable)
 		FDelegateSendMessage messageSendDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateKickPlayerDel kickPlayerDel;
 
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerName(FString name) { playerName = name; }
@@ -82,5 +85,7 @@ private :
 		float maxY = 370.0F;
 	UPROPERTY()
 		float minY = 130.0F;
+	UPROPERTY()
+		int toxicityCounter;
 
 };

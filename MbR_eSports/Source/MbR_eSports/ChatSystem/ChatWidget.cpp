@@ -19,6 +19,7 @@ void UChatWidget::NativeConstruct()
     canvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(chatWidgetBorder);
     currentY = canvasPanelSlot->GetSize().Y;
     currentX = canvasPanelSlot->GetSize().X;
+    toxicityCounter = 3;
 }
 
 //Unhide the chat widget -> Called by the player controller when pressed enter
@@ -37,6 +38,22 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
         FString textString = Text.ToString();
         if (!playerName.IsEmpty() && !textString.IsEmpty())
         {
+            if (textString.Contains("BABA"))
+            {
+                if (toxicityCounter > 0)
+                {
+                    FString warningMessage = "SYSTEM WARNING : DON'T BE TOXIC or you will get KICKED after " + toxicityCounter + " more toxic messages.";
+                    AddTheChatMessageToChatBox(warningMessage);
+                    chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
+                    --toxicityCounter;
+                }
+                else
+                {
+                    //Kick Player
+
+                }
+                return;
+            }
             FString messageString = playerName + ": " + textString;
             messageSendDel.Broadcast(messageString);
             chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
@@ -47,7 +64,6 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
 //Add the chat message to the chat box after making it visible on screen
 void UChatWidget::AddTheChatMessageToChatBox(const FString& message)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
     //Clear the timer handle and set the chat to visible
     GetWorld()->GetTimerManager().ClearTimer(timerHandle);
     SetVisibility(ESlateVisibility::Visible);
