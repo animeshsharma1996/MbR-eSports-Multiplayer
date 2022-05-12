@@ -11,6 +11,7 @@
 #include "MbRPlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateToxicSentMessage, const FString&, toxicChatString);
 
 /*
 Player Controller class to recieve input, create chat widget and own it for the purpose of runnning RPCs

@@ -12,6 +12,7 @@
 #include "Net/UnrealNetwork.h"
 #include "SlateBasics.h"
 #include "ChatMessageWidget.h"
+#include "Containers/Array.h"
 #include "ChatWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSendMessage, const FString&, message);
@@ -52,6 +53,8 @@ protected :
 		class UBorder* chatWidgetBorder;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TSubclassOf<UUserWidget> chatMessageWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TArray<FString> toxicWords;
 
 	UFUNCTION(BlueprintCallable)
 		void SetMessageText(FText text) { chatMessageTextBox->SetText(text); }	
