@@ -104,19 +104,27 @@ void AMbRPlayerController::SendMessageToClient_Implementation(const FString& mes
 //Function runnning on the server to register the player in the session
 void AMbRPlayerController::RegisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Register Player"));
     if (mbRGameInstance != nullptr)
     {
+        UE_LOG(LogTemp, Warning, TEXT("Register Player"));
         mbRGameInstance->RegisterPlayer(sessionName, playerId, bWasInvited);
+        /*for (FConstPlayerControllerIterator pC = GetWorld()->GetPlayerControllerIterator(); pC; ++pC)
+        {
+            AMbRPlayerController* pController = Cast<AMbRPlayerController>(pC->Get());
+            if (GetWorld()->IsServer())
+            {
+                pController->GetGameInstance()->RegisterPlayer(sessionName, playerId, bWasInvited);
+            }
+        }*/
     }
 }
 
 //Function runnning on the server to unregister the player in the session
 void AMbRPlayerController::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
     if (mbRGameInstance != nullptr)
     {
+        UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
         mbRGameInstance->UnregisterPlayer(sessionName, playerId);
     }
 }

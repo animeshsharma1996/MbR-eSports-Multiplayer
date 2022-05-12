@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Net/UnrealNetwork.h"
+#include "MbRGameInstance.h"
 #include "MbR_eSportsGameModeBase.generated.h"
 
 /*
@@ -17,4 +18,10 @@ class MBR_ESPORTS_API AMbR_eSportsGameModeBase : public AGameModeBase
 
 public:
         AMbR_eSportsGameModeBase();
+        virtual void PostLogin(APlayerController* NewPlayer) override;
+private:
+    UPROPERTY()
+        UMbRGameInstance* mbRGameInstance = nullptr;
+    UPROPERTY()
+        FName sessionName;
 };

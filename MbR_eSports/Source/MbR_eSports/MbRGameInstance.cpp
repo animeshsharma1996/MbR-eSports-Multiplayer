@@ -153,13 +153,13 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 //Register Player on the server
 void UMbRGameInstance::RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited)
 {
-	sessionInterface->RegisterPlayer(sessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
+	sessionInterface->RegisterPlayer(defaultSessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
 }
 
 //UnRegister Player on the server
 void UMbRGameInstance::UnregisterPlayer(FName sessionName, FUniqueNetIdRepl playerId)
 {
-	sessionInterface->UnregisterPlayer(sessionName, *playerId.GetUniqueNetId().Get());
+	sessionInterface->UnregisterPlayer(defaultSessionName, *playerId.GetUniqueNetId().Get());
 }
 
 /*
@@ -188,7 +188,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	if (successful && !lobbyMapName.ToString().IsEmpty())
 	{
 		sessionInterface->StartSession(serverName);
-		RegisterPlayer(serverName, GetFirstGamePlayer()->GetPreferredUniqueNetId(),false);
+		RegisterPlayer(serverName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
 		serverCreation.Broadcast(successful);
 		UGameplayStatics::OpenLevel(world, lobbyMapName, true, "listen");
 	}
@@ -203,7 +203,6 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	if (successful)
 	{
 		OnAssignSearchResults(sessionSearch->SearchResults);
-		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionSearch->SearchResults.Num());
 	}
 }
 
@@ -273,9 +272,10 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 
 		if (!joinAddress.IsEmpty())
 		{
-			registerPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
-			//sessionInterface->RegisterPlayer(sessionName, *GetFirstGamePlayer()->GetPreferredUniqueNetId().GetUniqueNetId().Get(), false);
+			//RegisterPlayer(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
+			//registerPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
 			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
+
 		}
 		sessionInterface->StartSession(sessionName);
 	}
@@ -288,7 +288,8 @@ void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 	if(successful)
 	{
 		UGameplayStatics::OpenLevel(world, "MainMenu", successful);
-		unregisterPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId());
+		//UnregisterPlayer(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId());
+		//unregisterPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId());
 		if (world->IsServer())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Destroy Session"));

@@ -28,7 +28,7 @@ class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	UMbRGameInstance();
+		UMbRGameInstance();
 		IOnlineSubsystem* onlineSubsystem;
 
 	UFUNCTION(BlueprintCallable)
@@ -48,7 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void EndServer();
 	UFUNCTION(BlueprintCallable)
-		void OnEndServer();
+		void OnEndServer();	
+	UFUNCTION(BlueprintCallable)
+		FName GetSessionName() { return defaultSessionName; }
 
 	UPROPERTY(BlueprintAssignable)
 		FDelegateServer serversListDel;	

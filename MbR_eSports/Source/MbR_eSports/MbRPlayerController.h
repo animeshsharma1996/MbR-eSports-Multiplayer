@@ -14,12 +14,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&
 
 /*
 Player Controller class to recieve input, create chat widget and own it for the purpose of runnning RPCs
+Player Controller is also responsible for Ending Session
 */
 UCLASS()
 class MBR_ESPORTS_API AMbRPlayerController : public APlayerController
 {
     GENERATED_BODY()
-        //virtual void BeginPlay() override;
         virtual void SetupInputComponent() override;
 
 public:
@@ -44,6 +44,8 @@ public:
         void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
     UFUNCTION(Server, Reliable)
         void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
+    UFUNCTION()
+        UMbRGameInstance* GetGameInstance() { return mbRGameInstance; }
 
 protected:
     UPROPERTY()
