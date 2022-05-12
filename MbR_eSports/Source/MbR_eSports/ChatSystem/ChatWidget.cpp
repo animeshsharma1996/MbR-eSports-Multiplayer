@@ -19,7 +19,7 @@ void UChatWidget::NativeConstruct()
     canvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(chatWidgetBorder);
     currentY = canvasPanelSlot->GetSize().Y;
     currentX = canvasPanelSlot->GetSize().X;
-    toxicityCounter = 3;
+    toxicityCounter = 2;
 }
 
 //Unhide the chat widget -> Called by the player controller when pressed enter
@@ -42,7 +42,8 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
             {
                 if (toxicityCounter > 0)
                 {
-                    FString warningMessage = "SYSTEM WARNING : DON'T BE TOXIC or you will get KICKED after " + toxicityCounter + " more toxic messages.";
+                    FString warningMessage = "SYSTEM WARNING : DON'T BE TOXIC or you will get KICKED after " + toxicityCounter;
+                    warningMessage += " more toxic messages.";
                     AddTheChatMessageToChatBox(warningMessage);
                     chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
                     --toxicityCounter;
@@ -50,7 +51,7 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
                 else
                 {
                     //Kick Player
-
+                    kickPlayerDel.Broadcast(true);
                 }
                 return;
             }
