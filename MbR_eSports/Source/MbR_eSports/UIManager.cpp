@@ -46,14 +46,6 @@ void AUIManager::BeginPlay()
     {
         CreateMainMenuWidget();
     }
-    else
-    {
-        //Spawn the replicated RPC actor in the level
-        if (rpcActorClass != nullptr)
-        {
-             rPCActor = Cast<ARPCActor>(world->SpawnActor(rpcActorClass));
-        }
-    }
 
     //Assinging the Game Instance variables and adding server creation delegates
     if (mbRGameInstance != nullptr)
@@ -67,12 +59,6 @@ void AUIManager::BeginPlay()
             playerController->bEnableMouseOverEvents = true;
 
             mbRGameInstance->SetAssignables(FName(defaultGameMapName), FName(mainMenuMapName), playerController, world);
-        }
-
-        //Initialise the replicated RPC actor
-        if (rPCActor != nullptr)
-        {
-            rPCActor->Initialise(mbRGameInstance);
         }
     }
 }

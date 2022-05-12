@@ -46,9 +46,16 @@ void UMbRGameInstance::Init()
 			sessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnJoinSessionComplete);
 			sessionInterface->OnEndSessionCompleteDelegates.AddUObject(this, &UMbRGameInstance::OnEndSessionComplete);
 		}
+
+		UEngine* uEngine = GetEngine();
+		if (uEngine)
+		{
+			uEngine->OnNetworkFailure().AddUObject(this, &UMbRGameInstance::HandleNetworkFailure);
+		}
 	}
 }
 
+//Function to Set Assignable variables -> Map Names, player Controller, world
 void UMbRGameInstance::SetAssignables(FName lobbyMap, FName mainMenuMap, APlayerController* pController, UWorld* uWorld)
 {
 	lobbyMapName = lobbyMap;
@@ -147,8 +154,7 @@ void UMbRGameInstance::JoinServer(int32 arrayIndex, FName joinSessionName)
 //Register Player on the server
 void UMbRGameInstance::RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Runs");
-	sessionInterface->RegisterPlayer(sessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
+	sessionInterface->RegisterPlayer(defaultSessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
 }
 
 /*
@@ -177,7 +183,7 @@ void UMbRGameInstance::OnCreateSessionComplete(FName serverName, bool successful
 	if (successful && !lobbyMapName.ToString().IsEmpty())
 	{
 		sessionInterface->StartSession(serverName);
-		sessionInterface->RegisterPlayer(serverName, *GetFirstGamePlayer()->GetPreferredUniqueNetId().GetUniqueNetId().Get(),false);
+		RegisterPlayer(serverName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
 		serverCreation.Broadcast(successful);
 		UGameplayStatics::OpenLevel(world, lobbyMapName, true, "listen");
 	}
@@ -192,7 +198,6 @@ void UMbRGameInstance::OnFindSessionsComplete(bool successful)
 	if (successful)
 	{
 		OnAssignSearchResults(sessionSearch->SearchResults);
-		UE_LOG(LogTemp, Warning, TEXT("SearchResults, Server Count: %d"), sessionSearch->SearchResults.Num());
 	}
 }
 
@@ -233,28 +238,6 @@ void UMbRGameInstance::OnAssignSearchResults(const TArray<FOnlineSessionSearchRe
 
 		result.Session.SessionSettings.Get(FName("SERVER_NAME_KEY"), serverName);
 
-		//ISocketSubsystem* socketSubsystem = ISocketSubsystem::Get();
-		//FString ConnectInfo;
-		//sessionInterface->GetResolvedConnectString(result, GamePort, ConnectInfo);
-		//TSharedRef<FInternetAddr> Addr = socketSubsystem->CreateInternetAddr();
-		//bool bIsValid;
-		//Addr->SetIp(*ConnectInfo, bIsValid);
-		//if (bIsValid)
-		//{
-		//	// Creating client socket
-		//	auto socket = socketSubsystem->CreateSocket(FName("SteamClientSocket"), FString("PingSocket"), true);
-		//	FString msg = FString::Printf(TEXT("Ping %f", FPlatformTime::Seconds()));
-		//	FArrayWriter Writer;
-		//	int32 BytesSent;
-		//	Writer << msg; // Creating packet data
-		//	// Sending 10 ping packets
-		//	for (int32 i = 0; i < 10; i++)
-		//	{
-		//		socket->SendTo(Writer.GetData(), Writer.Num(), BytesSent, Addr.Get());
-		//	}
-		//	socketSubsystem->DestroySocket(socket);
-		//}
-
 		serverInfo.serverName = serverName;
 		serverInfo.maxPlayers = result.Session.SessionSettings.NumPublicConnections;
 		serverInfo.currentPlayers = serverInfo.maxPlayers - result.Session.NumOpenPublicConnections;
@@ -284,9 +267,8 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 
 		if (!joinAddress.IsEmpty())
 		{
-			registerPlayersDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
-			sessionInterface->RegisterPlayer(sessionName, *GetFirstGamePlayer()->GetPreferredUniqueNetId().GetUniqueNetId().Get(), false);
 			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
+
 		}
 		sessionInterface->StartSession(sessionName);
 	}
@@ -304,5 +286,14 @@ void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 			UE_LOG(LogTemp, Warning, TEXT("Destroy Session"));
 			sessionInterface->DestroySession(sessionName);
 		}
+	}
+}
+
+//Handle Network Failure when the host closes the game/press Alt-F4 
+void UMbRGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	if (FailureType == ENetworkFailure::ConnectionLost)
+	{
+		EndServer();
 	}
 }
