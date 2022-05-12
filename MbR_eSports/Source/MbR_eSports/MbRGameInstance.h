@@ -19,8 +19,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServer, FServerInfo, server
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateCreation, bool, successful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateServerSearching, bool, searchingForServers);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateEndServer, bool, successful);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDelegateRegisterPlayer, FName, sessionName, const FUniqueNetIdRepl, playerId, bool, bWasInvited);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDelegateUnregisterPlayer, FName, sessionName, const FUniqueNetIdRepl, playerId);
 
 UCLASS()
 class MBR_ESPORTS_API UMbRGameInstance : public UGameInstance
@@ -44,8 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void RegisterPlayer(FName sessionName, FUniqueNetIdRepl playerId, bool bWasInvited);	
 	UFUNCTION(BlueprintCallable)
-		void UnregisterPlayer(FName sessionName, FUniqueNetIdRepl playerId);
-	UFUNCTION(BlueprintCallable)
 		void EndServer();
 	UFUNCTION(BlueprintCallable)
 		void OnEndServer();	
@@ -60,10 +56,6 @@ public:
 		FDelegateServerSearching searchingForServers;
 	UPROPERTY(BlueprintAssignable)
 		FDelegateEndServer endServerDel;	
-	UPROPERTY(BlueprintAssignable)
-		FDelegateRegisterPlayer registerPlayerDel;	
-	UPROPERTY(BlueprintAssignable)
-		FDelegateUnregisterPlayer unregisterPlayerDel;
 
 protected:
 		IOnlineSessionPtr sessionInterface;
@@ -80,11 +72,10 @@ protected:
 		virtual void HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver,	ENetworkFailure::Type FailureType,	const FString& ErrorString);
 		void OnAssignSearchResults(const TArray<FOnlineSessionSearchResult>& sessionInfo);
 
-	UPROPERTY()
-		FName defaultSessionName;
-
 private:
 		TArray<TSharedRef<FOnlineFriend>> onlineFriendList;
+	UPROPERTY()
+		FName defaultSessionName;
 	UPROPERTY()
 		APlayerController* playerController;
 	UPROPERTY()

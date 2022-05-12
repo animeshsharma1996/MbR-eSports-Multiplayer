@@ -41,10 +41,6 @@ public:
         void SendChatMessageToServer(const FString& message);
     UFUNCTION(Client, Unreliable)
         void SendMessageToClient(const FString& message);
-    UFUNCTION(Server, Reliable)
-        void RegisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited);
-    UFUNCTION(Server, Reliable)
-        void UnregisterPlayer(FName sessionName, const FUniqueNetIdRepl playerId);
     UFUNCTION()
         UMbRGameInstance* GetGameInstance() { return mbRGameInstance; }
 

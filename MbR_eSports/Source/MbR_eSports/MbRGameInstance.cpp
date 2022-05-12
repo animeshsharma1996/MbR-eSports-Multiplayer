@@ -157,12 +157,6 @@ void UMbRGameInstance::RegisterPlayer(FName sessionName, FUniqueNetIdRepl player
 	sessionInterface->RegisterPlayer(defaultSessionName, *playerId.GetUniqueNetId().Get(), bWasInvited);
 }
 
-//UnRegister Player on the server
-void UMbRGameInstance::UnregisterPlayer(FName sessionName, FUniqueNetIdRepl playerId)
-{
-	sessionInterface->UnregisterPlayer(defaultSessionName, *playerId.GetUniqueNetId().Get());
-}
-
 /*
 Should end the server when the match is finished or when the host leaves the lobby/match
 Also called if the client tries to leave the server/session
@@ -273,8 +267,6 @@ void UMbRGameInstance::OnJoinSessionComplete(FName sessionName, EOnJoinSessionCo
 
 		if (!joinAddress.IsEmpty())
 		{
-			//RegisterPlayer(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
-			//registerPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId(), false);
 			playerController->ClientTravel(joinAddress, ETravelType::TRAVEL_Absolute);
 
 		}
@@ -289,8 +281,6 @@ void UMbRGameInstance::OnEndSessionComplete(FName sessionName, bool successful)
 	if(successful)
 	{
 		UGameplayStatics::OpenLevel(world, "MainMenu", successful);
-		//UnregisterPlayer(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId());
-		//unregisterPlayerDel.Broadcast(sessionName, GetFirstGamePlayer()->GetPreferredUniqueNetId());
 		if (world->IsServer())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Destroy Session"));

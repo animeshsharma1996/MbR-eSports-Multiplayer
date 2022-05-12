@@ -7,8 +7,8 @@
 #include "MbR_eSportsGameModeBase.generated.h"
 
 /*
-The GameModeBase class is being derived from AGameModeBase. Generally meant to define the rules of the game 
-(Should be extended to accomplish that task).
+The GameModeBase class is being derived from AGameModeBase. Handles function like PostLogin, PreLogout.
+Generally meant to define the rules of the game (Should be extended to accomplish that task).
 */
 
 UCLASS()

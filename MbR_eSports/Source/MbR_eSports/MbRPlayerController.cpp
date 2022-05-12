@@ -19,18 +19,11 @@ void AMbRPlayerController::SetupInputComponent()
 void AMbRPlayerController::Begin()
 {
     FScriptDelegate serverEndDel;
-    FScriptDelegate registerPlayerDel;
-    FScriptDelegate unregisterPlayerDel;
-
     serverEndDel.BindUFunction(this, "HandleEndSession");
-    registerPlayerDel.BindUFunction(this, "RegisterPlayer");
-    unregisterPlayerDel.BindUFunction(this, "UnregisterPlayer");
 
     mbRGameInstance = Cast<UMbRGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
     if (mbRGameInstance != nullptr)
     {
-        mbRGameInstance->registerPlayerDel.Add(registerPlayerDel);
-        mbRGameInstance->unregisterPlayerDel.Add(unregisterPlayerDel);
         mbRGameInstance->endServerDel.Add(serverEndDel);
     }
 
@@ -99,34 +92,6 @@ void AMbRPlayerController::SendMessageToClient_Implementation(const FString& mes
     {
         UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients FN Invoke"));
         chatWidget->AddTheChatMessageToChatBox(message);
-    }
-}
-
-//Function runnning on the server to register the player in the session
-void AMbRPlayerController::RegisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId, bool bWasInvited)
-{
-    if (mbRGameInstance != nullptr)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Register Player"));
-        mbRGameInstance->RegisterPlayer(sessionName, playerId, bWasInvited);
-        /*for (FConstPlayerControllerIterator pC = GetWorld()->GetPlayerControllerIterator(); pC; ++pC)
-        {
-            AMbRPlayerController* pController = Cast<AMbRPlayerController>(pC->Get());
-            if (GetWorld()->IsServer())
-            {
-                pController->GetGameInstance()->RegisterPlayer(sessionName, playerId, bWasInvited);
-            }
-        }*/
-    }
-}
-
-//Function runnning on the server to unregister the player in the session
-void AMbRPlayerController::UnregisterPlayer_Implementation(FName sessionName, const FUniqueNetIdRepl playerId)
-{
-    if (mbRGameInstance != nullptr)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Unregister Player"));
-        mbRGameInstance->UnregisterPlayer(sessionName, playerId);
     }
 }
 
