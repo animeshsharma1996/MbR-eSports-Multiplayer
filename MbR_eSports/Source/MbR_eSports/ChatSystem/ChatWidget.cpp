@@ -42,7 +42,7 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
             {
                 if (toxicityCounter > 0)
                 {
-                    FString warningMessage = "SYSTEM WARNING : DON'T BE TOXIC or you will get KICKED after " + toxicityCounter;
+                    FString warningMessage = "WARNING : DON'T BE TOXIC or you will get KICKED after " + FString::FromInt(toxicityCounter);
                     warningMessage += " more toxic messages.";
                     AddTheChatMessageToChatBox(warningMessage);
                     chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
@@ -51,6 +51,8 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
                 else
                 {
                     //Kick Player
+                    FString kickMessageString = playerName + " has been kicked for being toxic!";
+                    messageSendDel.Broadcast(kickMessageString);
                     kickPlayerDel.Broadcast(true);
                 }
                 return;
