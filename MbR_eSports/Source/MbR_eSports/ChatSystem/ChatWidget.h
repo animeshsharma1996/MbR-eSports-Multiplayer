@@ -39,11 +39,7 @@ public :
 	UFUNCTION(BlueprintCallable)
 		FString GetPlayerName() { return playerName; }
 	UFUNCTION(BlueprintCallable)
-		void SetKeyboardFocusOnText() {	chatMessageTextBox->SetKeyboardFocus();	}
-	UFUNCTION(BlueprintCallable)
 		void UnHideChatWidget();
-	UFUNCTION(BlueprintCallable)
-		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
 	UFUNCTION(BlueprintCallable)
 		void AddTheChatMessageToChatBox(const FString& chatMessage);
 
@@ -59,6 +55,12 @@ protected :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TArray<FString> toxicWords;
 
+	UFUNCTION(BlueprintCallable)
+		void SetKeyboardFocusOnText() { chatMessageTextBox->SetKeyboardFocus(); }
+	UFUNCTION(BlueprintCallable)
+		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
+	UFUNCTION(BlueprintCallable)
+		bool CheckIfTextIsToxic(FString messageToCheck);
 	UFUNCTION(BlueprintCallable)
 		void SetMessageText(FText text) { chatMessageTextBox->SetText(text); }	
 	UFUNCTION(BlueprintCallable)

@@ -38,7 +38,7 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
         FString textString = Text.ToString();
         if (!playerName.IsEmpty() && !textString.IsEmpty())
         {
-            if (textString.Contains("BABA"))
+            if (CheckIfTextIsToxic(textString))
             {
                 if (toxicityCounter > 0)
                 {
@@ -62,6 +62,19 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
             chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
         }
     }
+}
+
+//Check to see if any of the typed message is toxic
+bool UChatWidget::CheckIfTextIsToxic(FString messageToCheck)
+{
+    for (auto toxicMessage : toxicWords)
+    {
+        if (messageToCheck.Contains(toxicMessage))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 //Add the chat message to the chat box after making it visible on screen
