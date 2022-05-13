@@ -12,9 +12,11 @@
 #include "Net/UnrealNetwork.h"
 #include "SlateBasics.h"
 #include "ChatMessageWidget.h"
+#include "Containers/Array.h"
 #include "ChatWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSendMessage, const FString&, message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateKickPlayerDel, bool, kickPlayerDel);
 
 /**
  * Chat Widget responsible to creating chat box, binding variables and writing/adding chat messages
@@ -29,17 +31,15 @@ public :
 
 	UPROPERTY(BlueprintAssignable)
 		FDelegateSendMessage messageSendDel;	
+	UPROPERTY(BlueprintAssignable)
+		FDelegateKickPlayerDel kickPlayerDel;
 
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerName(FString name) { playerName = name; }
 	UFUNCTION(BlueprintCallable)
 		FString GetPlayerName() { return playerName; }
 	UFUNCTION(BlueprintCallable)
-		void SetKeyboardFocusOnText() {	chatMessageTextBox->SetKeyboardFocus();	}
-	UFUNCTION(BlueprintCallable)
 		void UnHideChatWidget();
-	UFUNCTION(BlueprintCallable)
-		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
 	UFUNCTION(BlueprintCallable)
 		void AddTheChatMessageToChatBox(const FString& chatMessage);
 
@@ -52,7 +52,15 @@ protected :
 		class UBorder* chatWidgetBorder;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TSubclassOf<UUserWidget> chatMessageWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TArray<FString> toxicWords;
 
+	UFUNCTION(BlueprintCallable)
+		void SetKeyboardFocusOnText() { chatMessageTextBox->SetKeyboardFocus(); }
+	UFUNCTION(BlueprintCallable)
+		void OnChatMessageTyped(const FText& Text, const ETextCommit::Type CommitMethod);
+	UFUNCTION(BlueprintCallable)
+		bool CheckIfTextIsToxic(FString messageToCheck);
 	UFUNCTION(BlueprintCallable)
 		void SetMessageText(FText text) { chatMessageTextBox->SetText(text); }	
 	UFUNCTION(BlueprintCallable)
@@ -79,5 +87,7 @@ private :
 		float maxY = 370.0F;
 	UPROPERTY()
 		float minY = 130.0F;
+	UPROPERTY()
+		int toxicityCounter;
 
 };

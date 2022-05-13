@@ -10,8 +10,6 @@
 #include "MbRGameInstance.h"
 #include "MbRPlayerController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateSentMessage, const FString&, chatString);
-
 /*
 Player Controller class to recieve input, create chat widget and own it for the purpose of runnning RPCs
 Player Controller is also responsible for Ending Session

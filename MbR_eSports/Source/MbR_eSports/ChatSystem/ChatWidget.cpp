@@ -19,6 +19,7 @@ void UChatWidget::NativeConstruct()
     canvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(chatWidgetBorder);
     currentY = canvasPanelSlot->GetSize().Y;
     currentX = canvasPanelSlot->GetSize().X;
+    toxicityCounter = 2;
 }
 
 //Unhide the chat widget -> Called by the player controller when pressed enter
@@ -37,6 +38,25 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
         FString textString = Text.ToString();
         if (!playerName.IsEmpty() && !textString.IsEmpty())
         {
+            if (CheckIfTextIsToxic(textString))
+            {
+                if (toxicityCounter > 0)
+                {
+                    FString warningMessage = "WARNING : DON'T BE TOXIC or you will get KICKED after " + FString::FromInt(toxicityCounter);
+                    warningMessage += " more toxic messages.";
+                    AddTheChatMessageToChatBox(warningMessage);
+                    chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
+                    --toxicityCounter;
+                }
+                else
+                {
+                    //Kick Player
+                    FString kickMessageString = playerName + " has been kicked for being toxic!";
+                    messageSendDel.Broadcast(kickMessageString);
+                    kickPlayerDel.Broadcast(true);
+                }
+                return;
+            }
             FString messageString = playerName + ": " + textString;
             messageSendDel.Broadcast(messageString);
             chatMessageTextBox->SetText(FText::AsCultureInvariant(""));
@@ -44,10 +64,22 @@ void UChatWidget::OnChatMessageTyped(const FText& Text, ETextCommit::Type Commit
     }
 }
 
+//Check to see if any of the typed message is toxic
+bool UChatWidget::CheckIfTextIsToxic(FString messageToCheck)
+{
+    for (auto toxicMessage : toxicWords)
+    {
+        if (messageToCheck.Contains(toxicMessage))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 //Add the chat message to the chat box after making it visible on screen
 void UChatWidget::AddTheChatMessageToChatBox(const FString& message)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Sent Message To All Clients %s"), *message);
     //Clear the timer handle and set the chat to visible
     GetWorld()->GetTimerManager().ClearTimer(timerHandle);
     SetVisibility(ESlateVisibility::Visible);
